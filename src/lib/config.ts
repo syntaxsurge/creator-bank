@@ -30,6 +30,32 @@ const DEFAULT_CHAIN_CONFIG: Record<MezoChainId, ChainConfig> = {
   }
 }
 
+const PUBLIC_ENV_VARS = {
+  NEXT_PUBLIC_MEZO_RPC_URLS: process.env.NEXT_PUBLIC_MEZO_RPC_URLS ?? '',
+  NEXT_PUBLIC_MEZO_BLOCK_EXPLORER_URL:
+    process.env.NEXT_PUBLIC_MEZO_BLOCK_EXPLORER_URL ?? '',
+  NEXT_PUBLIC_MEMBERSHIP_CONTRACT_ADDRESS:
+    process.env.NEXT_PUBLIC_MEMBERSHIP_CONTRACT_ADDRESS ?? '',
+  NEXT_PUBLIC_REGISTRAR_CONTRACT_ADDRESS:
+    process.env.NEXT_PUBLIC_REGISTRAR_CONTRACT_ADDRESS ?? '',
+  NEXT_PUBLIC_MARKETPLACE_CONTRACT_ADDRESS:
+    process.env.NEXT_PUBLIC_MARKETPLACE_CONTRACT_ADDRESS ?? '',
+  NEXT_PUBLIC_BADGE_CONTRACT_ADDRESS:
+    process.env.NEXT_PUBLIC_BADGE_CONTRACT_ADDRESS ?? '',
+  NEXT_PUBLIC_REVENUE_SPLIT_ROUTER_ADDRESS:
+    process.env.NEXT_PUBLIC_REVENUE_SPLIT_ROUTER_ADDRESS ?? '',
+  NEXT_PUBLIC_PLATFORM_TREASURY_ADDRESS:
+    process.env.NEXT_PUBLIC_PLATFORM_TREASURY_ADDRESS ?? '',
+  NEXT_PUBLIC_WRAPPED_BTC_ADDRESS:
+    process.env.NEXT_PUBLIC_WRAPPED_BTC_ADDRESS ?? '',
+  NEXT_PUBLIC_MUSD_CONTRACT_ADDRESS:
+    process.env.NEXT_PUBLIC_MUSD_CONTRACT_ADDRESS ?? '',
+  NEXT_PUBLIC_PYTH_CONTRACT_ADDRESS:
+    process.env.NEXT_PUBLIC_PYTH_CONTRACT_ADDRESS ?? '',
+  NEXT_PUBLIC_TIGRIS_ROUTER_ADDRESS:
+    process.env.NEXT_PUBLIC_TIGRIS_ROUTER_ADDRESS ?? ''
+} as const
+
 function isSupportedChainId(value: unknown): value is MezoChainId {
   return value === 31611 || value === 31612
 }
@@ -140,15 +166,8 @@ function readChainScopedEnv(
   key: string,
   chainId: MezoChainId
 ): string | undefined {
-  const scopedKey = `${key}_${chainId}`
-  const scopedValue = process.env[scopedKey]
-  if (scopedValue) return scopedValue
-
-  if (chainId === DEFAULT_CHAIN_ID) {
-    return process.env[key]
-  }
-
-  return undefined
+  void chainId
+  return PUBLIC_ENV_VARS[key as keyof typeof PUBLIC_ENV_VARS]
 }
 
 export function getRpcUrls(chainId?: MezoChainId): string[] {
@@ -175,11 +194,7 @@ export function getBlockExplorerUrl(chainId?: MezoChainId): string {
 function getAddressForKey(key: string, chainId?: MezoChainId): string {
   const resolvedChainId = chainId ?? getActiveChainId()
   const configured = readChainScopedEnv(key, resolvedChainId)
-  if (configured && configured.trim()) {
-    return configured.trim()
-  }
-  const fallback = process.env[key]
-  return fallback?.trim() ?? ''
+  return configured?.trim() ?? ''
 }
 
 export function getPlatformTreasuryAddress(chainId?: MezoChainId): string {
