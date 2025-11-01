@@ -54,8 +54,6 @@ The default setup connects to Mezo Testnet (`chainId: 31611`). Update `.env.loca
 override individual values per chain using the `_<chainId>` suffix.
 
 ```env
-# Core routing
-NEXT_PUBLIC_CONVEX_URL="https://<your-convex-deployment>.convex.cloud"
 NEXT_PUBLIC_MEZO_CHAIN_ID="31611"  # default preference shown on first load
 
 # RPC + explorer endpoints (fallback to these when a chain-specific value is missing)

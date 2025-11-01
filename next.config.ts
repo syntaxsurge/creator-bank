@@ -19,6 +19,12 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  transpilePackages: [
+    '@mezo-org/orangekit',
+    '@mezo-org/orangekit-smart-account',
+    '@mezo-org/orangekit-contracts',
+    '@mezo-org/passport'
+  ],
   images: {
     remotePatterns: [
       {
