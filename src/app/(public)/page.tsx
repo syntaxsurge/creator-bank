@@ -350,7 +350,7 @@ export default function HomePage() {
                 <div className='relative aspect-video overflow-hidden rounded-2xl bg-black/5'>
                   <iframe
                     className='absolute inset-0 h-full w-full'
-                    src='https://www.youtube.com/embed/C_squUflvDs'
+                    src='https://www.youtube.com/embed/xxxxx'
                     title='CreatorBank Demo'
                     allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
                     allowFullScreen

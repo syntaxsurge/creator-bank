@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 import { GroupSwitcher } from './group-switcher'
-import { NetworkToggle } from './network-toggle'
 import { ThemeToggle } from './theme-toggle'
 import { WalletMenu } from './wallet-menu'
 
@@ -65,7 +64,6 @@ export function AppNavbar() {
           </nav>
         </div>
         <div className='flex items-center gap-3'>
-          <NetworkToggle />
           <ThemeToggle />
           <WalletMenu />
         </div>
