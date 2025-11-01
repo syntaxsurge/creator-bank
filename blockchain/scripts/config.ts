@@ -64,19 +64,11 @@ const env = process.env as Record<string, string | undefined>;
  *   1. Explicit ADMIN_ADDRESS env var
  *   2. Address derived from PRIVATE_KEY (checksummed)
  */
-const privateKey = env.PRIVATE_KEY ?? "";
-export const adminAddress = env.ADMIN_ADDRESS
-  ? normalise(env.ADMIN_ADDRESS)
-  : privateKey.length === 66 || privateKey.length === 64
-    ? new Wallet(privateKey).address
-    : "";
-
-/* Fail fast if we still have no valid admin address */
-if (!adminAddress) {
-  throw new Error(
-    "ADMIN_ADDRESS env var is missing and PRIVATE_KEY is not set – please supply at least one so deployment scripts can assign ADMIN_ROLE"
-  );
+const privateKey = env.PRIVATE_KEY?.trim() ?? "";
+if (privateKey.length !== 66 && privateKey.length !== 64) {
+  throw new Error("PRIVATE_KEY env var must be set to a hex-encoded 32-byte value");
 }
+export const adminAddress = new Wallet(privateKey).address;
 
 export const membershipURI = env.MEMBERSHIP_METADATA_URI;
 export const badgeURI = env.BADGE_METADATA_URI;
