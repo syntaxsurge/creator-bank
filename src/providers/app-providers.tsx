@@ -1,14 +1,14 @@
 'use client'
 
-import { ReactNode, useEffect, useMemo, useState } from 'react'
+import { ReactNode, useMemo } from 'react'
 
 import { RainbowKitProvider } from '@rainbow-me/rainbowkit'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ThemeProvider as NextThemeProvider } from 'next-themes'
-import type { Config as WagmiConfig } from 'wagmi'
 import { WagmiProvider } from 'wagmi'
 
 import { ConvexClientProvider } from '@/providers/convex-client-provider'
+import { usePassportConfig } from '@/providers/hooks/use-passport-config'
 
 type AppProvidersProps = {
   children: ReactNode
@@ -20,25 +20,7 @@ type AppProvidersProps = {
  */
 export function AppProviders({ children }: AppProvidersProps) {
   const queryClient = useMemo(() => new QueryClient(), [])
-  const [wagmiConfig, setWagmiConfig] = useState<WagmiConfig | null>(null)
-
-  useEffect(() => {
-    let cancelled = false
-
-    async function loadConfig() {
-      const passport = await import('@mezo-org/passport')
-      const config = passport.getConfig({ appName: 'CreatorBank' })
-      if (!cancelled) {
-        setWagmiConfig(config)
-      }
-    }
-
-    loadConfig()
-
-    return () => {
-      cancelled = true
-    }
-  }, [])
+  const wagmiConfig = usePassportConfig()
 
   if (!wagmiConfig) {
     return null
