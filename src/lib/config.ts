@@ -175,7 +175,11 @@ export function getBlockExplorerUrl(chainId?: MezoChainId): string {
 function getAddressForKey(key: string, chainId?: MezoChainId): string {
   const resolvedChainId = chainId ?? getActiveChainId()
   const configured = readChainScopedEnv(key, resolvedChainId)
-  return configured?.trim() ?? ''
+  if (configured && configured.trim()) {
+    return configured.trim()
+  }
+  const fallback = process.env[key]
+  return fallback?.trim() ?? ''
 }
 
 export function getPlatformTreasuryAddress(chainId?: MezoChainId): string {

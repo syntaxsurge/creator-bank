@@ -54,6 +54,10 @@ const nextConfig: NextConfig = {
       path.resolve('./src/lib/async-storage-shim.ts')
     config.resolve.alias['@farcaster/frame-sdk'] = '@farcaster/miniapp-sdk'
     config.resolve.alias.punycode = 'punycode/'
+    config.resolve.fallback ??= {}
+    if (typeof config.resolve.fallback !== 'undefined') {
+      config.resolve.fallback.encoding = false
+    }
 
     if (!config.infrastructureLogging) {
       config.infrastructureLogging = {}

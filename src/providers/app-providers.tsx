@@ -7,8 +7,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ThemeProvider as NextThemeProvider } from 'next-themes'
 import { WagmiProvider } from 'wagmi'
 
+import { usePassportConfig } from '@/hooks/use-passport-config'
 import { ConvexClientProvider } from '@/providers/convex-client-provider'
-import { usePassportConfig } from '@/providers/hooks/use-passport-config'
 
 type AppProvidersProps = {
   children: ReactNode
