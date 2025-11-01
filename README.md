@@ -49,48 +49,35 @@ The default setup connects to Mezo Testnet (`chainId: 31611`). Update `.env.loca
 
 ## Environment variables (frontend)
 
-`CreatorBank` reads contract + RPC settings per chain. Set a default chain with
-`NEXT_PUBLIC_MEZO_CHAIN_ID` (defaults to Mezo Testnet `31611`), then optionally
-override individual values per chain using the `_<chainId>` suffix.
+`CreatorBank` reads contract + RPC settings from a single set of environment
+variables. Set `NEXT_PUBLIC_MEZO_CHAIN_ID` (defaults to Mezo Testnet `31611`) and
+define the required endpoints and contract addresses directly.
 
 ```env
 NEXT_PUBLIC_MEZO_CHAIN_ID="31611"  # default preference shown on first load
 
-# RPC + explorer endpoints (fallback to these when a chain-specific value is missing)
+# RPC + explorer endpoints
 NEXT_PUBLIC_MEZO_RPC_URLS="https://rpc.test.mezo.org"
-NEXT_PUBLIC_MEZO_RPC_URLS_31612="https://rpc-http.mezo.boar.network,https://rpc_evm-mezo.imperator.co,https://mainnet.mezo.public.validationcloud.io"
 NEXT_PUBLIC_MEZO_BLOCK_EXPLORER_URL="https://explorer.test.mezo.org/"
-NEXT_PUBLIC_MEZO_BLOCK_EXPLORER_URL_31612="https://explorer.mezo.org/"
 
-# Contract addresses (supply per chain you plan to support)
-NEXT_PUBLIC_MEMBERSHIP_CONTRACT_ADDRESS_31611="0x..."
-NEXT_PUBLIC_MEMBERSHIP_CONTRACT_ADDRESS_31612="0x..."
-NEXT_PUBLIC_BADGE_CONTRACT_ADDRESS_31611="0x..."
-NEXT_PUBLIC_BADGE_CONTRACT_ADDRESS_31612="0x..."
-NEXT_PUBLIC_REGISTRAR_CONTRACT_ADDRESS_31611="0x..."
-NEXT_PUBLIC_REGISTRAR_CONTRACT_ADDRESS_31612="0x..."
-NEXT_PUBLIC_MARKETPLACE_CONTRACT_ADDRESS_31611="0x..."
-NEXT_PUBLIC_MARKETPLACE_CONTRACT_ADDRESS_31612="0x..."
-NEXT_PUBLIC_REVENUE_SPLIT_ROUTER_ADDRESS_31611="0x..."
-NEXT_PUBLIC_REVENUE_SPLIT_ROUTER_ADDRESS_31612="0x..."
-NEXT_PUBLIC_PLATFORM_TREASURY_ADDRESS_31611="0x..."
-NEXT_PUBLIC_PLATFORM_TREASURY_ADDRESS_31612="0x..."
-NEXT_PUBLIC_MUSD_CONTRACT_ADDRESS_31611="0x..."
-NEXT_PUBLIC_MUSD_CONTRACT_ADDRESS_31612="0x..."
-NEXT_PUBLIC_PYTH_CONTRACT_ADDRESS="0x2880aB155794e7179c9eE2e38200202908C17B43" # same on both networks
-NEXT_PUBLIC_TIGRIS_ROUTER_ADDRESS_31611="0x9a1ff7FE3a0F69959A3fBa1F1e5ee18e1A9CD7E9"
-NEXT_PUBLIC_TIGRIS_ROUTER_ADDRESS_31612="0x16A76d3cd3C1e3CE843C6680d6B37E9116b5C706"
-NEXT_PUBLIC_WRAPPED_BTC_ADDRESS_31611="0x..."
-NEXT_PUBLIC_WRAPPED_BTC_ADDRESS_31612="0x..."
+# Contract addresses (update with your deployed values)
+NEXT_PUBLIC_MEMBERSHIP_CONTRACT_ADDRESS="0x..."
+NEXT_PUBLIC_BADGE_CONTRACT_ADDRESS="0x..."
+NEXT_PUBLIC_REGISTRAR_CONTRACT_ADDRESS="0x..."
+NEXT_PUBLIC_MARKETPLACE_CONTRACT_ADDRESS="0x..."
+NEXT_PUBLIC_REVENUE_SPLIT_ROUTER_ADDRESS="0x..."
+NEXT_PUBLIC_PLATFORM_TREASURY_ADDRESS="0x..."
+NEXT_PUBLIC_MUSD_CONTRACT_ADDRESS="0x..."
+NEXT_PUBLIC_PYTH_CONTRACT_ADDRESS="0x2880aB155794e7179c9eE2e38200202908C17B43"
+NEXT_PUBLIC_TIGRIS_ROUTER_ADDRESS="0x..."
+NEXT_PUBLIC_WRAPPED_BTC_ADDRESS="0x..."
 
 # Platform configuration
 NEXT_PUBLIC_SUBSCRIPTION_PRICE_USD="99"
 ```
 
-> **Tip:** Values without the suffix apply to the default chain only. When you
-> toggle networks in the header, the app automatically pulls the `_31611` / `_31612`
-> overrides and refreshes services without a rebuild. RPC entries accept a
-> comma-separated list and are passed to viem’s `fallback()` transport.
+> **Tip:** The network selector in the UI just reuses these values; update the
+> single source of truth in `.env` / `.env.local` before switching chains.
 
 ## Environment variables (Hardhat workspace)
 
