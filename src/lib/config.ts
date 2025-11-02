@@ -30,7 +30,7 @@ const DEFAULT_CHAIN_CONFIG: Record<MezoChainId, ChainConfig> = {
   }
 }
 
-const PUBLIC_ENV_VARS = {
+const PUBLIC_ENV_VARS: Record<string, string> = {
   NEXT_PUBLIC_MEZO_RPC_URLS: process.env.NEXT_PUBLIC_MEZO_RPC_URLS ?? '',
   NEXT_PUBLIC_MEZO_BLOCK_EXPLORER_URL:
     process.env.NEXT_PUBLIC_MEZO_BLOCK_EXPLORER_URL ?? '',
@@ -53,8 +53,10 @@ const PUBLIC_ENV_VARS = {
   NEXT_PUBLIC_PYTH_CONTRACT_ADDRESS:
     process.env.NEXT_PUBLIC_PYTH_CONTRACT_ADDRESS ?? '',
   NEXT_PUBLIC_TIGRIS_ROUTER_ADDRESS:
-    process.env.NEXT_PUBLIC_TIGRIS_ROUTER_ADDRESS ?? ''
-} as const
+    process.env.NEXT_PUBLIC_TIGRIS_ROUTER_ADDRESS ?? '',
+  NEXT_PUBLIC_TIGRIS_MUSD_BTC_POOL_ADDRESS:
+    process.env.NEXT_PUBLIC_TIGRIS_MUSD_BTC_POOL_ADDRESS ?? ''
+}
 
 function isSupportedChainId(value: unknown): value is MezoChainId {
   return value === 31611 || value === 31612
@@ -241,6 +243,10 @@ export function getTigrisRouterAddress(chainId?: MezoChainId): string {
     getAddressForKey('NEXT_PUBLIC_TIGRIS_ROUTER_ADDRESS', chainId) ||
     '0x16A76d3cd3C1e3CE843C6680d6B37E9116b5C706'
   )
+}
+
+export function getTigrisMusdBtcPoolAddress(chainId?: MezoChainId): string {
+  return getAddressForKey('NEXT_PUBLIC_TIGRIS_MUSD_BTC_POOL_ADDRESS', chainId)
 }
 
 export function getChainName(

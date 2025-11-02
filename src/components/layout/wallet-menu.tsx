@@ -3,11 +3,12 @@
 import { useMemo } from 'react'
 
 import { ConnectButton } from '@rainbow-me/rainbowkit'
+
 import { Badge } from '@/components/ui/badge'
 import { useSettlementTokenBalance } from '@/hooks/use-settlement-token-balance'
 import { useWalletAccount } from '@/hooks/use-wallet-account'
-import { formatSettlementToken } from '@/lib/settlement-token'
 import { SETTLEMENT_TOKEN_SYMBOL } from '@/lib/config'
+import { formatSettlementToken } from '@/lib/settlement-token'
 
 const CHAIN_LABELS: Record<number, string> = {
   31611: 'Mezo Testnet',
@@ -15,13 +16,13 @@ const CHAIN_LABELS: Record<number, string> = {
 }
 
 export function WalletMenu() {
+  const { address, chainId: walletChainId, isConnected } = useWalletAccount()
   const {
-    address,
-    chainId: walletChainId,
-    isConnected
-  } = useWalletAccount()
-  const { value: musdBalance, isSupportedChain, isLoading, isError } =
-    useSettlementTokenBalance({ address, chainId: walletChainId })
+    value: musdBalance,
+    isSupportedChain,
+    isLoading,
+    isError
+  } = useSettlementTokenBalance({ address, chainId: walletChainId })
   const networkLabel = useMemo(() => {
     if (!walletChainId) return null
     return CHAIN_LABELS[walletChainId] ?? `Chain ${walletChainId}`

@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { toast } from 'sonner'
-import { Address, formatUnits, parseUnits } from 'viem'
+import { Address, formatUnits, parseAbi, parseUnits } from 'viem'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -15,6 +15,7 @@ import {
   SETTLEMENT_TOKEN_DECIMALS,
   SETTLEMENT_TOKEN_SYMBOL,
   getMusdContractAddress,
+  getTigrisMusdBtcPoolAddress,
   getTigrisRouterAddress,
   getWrappedBtcContractAddress
 } from '@/lib/config'
@@ -27,23 +28,31 @@ import {
 type SwapDirection = 'musdToBtc' | 'btcToMusd'
 
 const DEFAULT_SLIPPAGE = '0.5'
+const TIGRIS_POOL_ABI = parseAbi([
+  'function token0() view returns (address)',
+  'function token1() view returns (address)'
+])
 
 export function SwapSection() {
   const { address, walletClient, publicClient } = useWalletAccount()
   const { chainId } = useChainPreference()
 
-  const routerAddress = useMemo(
-    () => getTigrisRouterAddress(chainId) || '',
-    [chainId]
-  )
-  const musdAddress = useMemo(
-    () => getMusdContractAddress(chainId) || '',
-    [chainId]
-  )
-  const wrappedBtcAddress = useMemo(
-    () => getWrappedBtcContractAddress(chainId) || '',
-    [chainId]
-  )
+  const routerAddress = useMemo(() => {
+    const value = getTigrisRouterAddress(chainId)
+    return value ? (value as Address) : undefined
+  }, [chainId])
+  const musdAddress = useMemo(() => {
+    const value = getMusdContractAddress(chainId)
+    return value ? (value as Address) : undefined
+  }, [chainId])
+  const configuredBtcAddress = useMemo(() => {
+    const value = getWrappedBtcContractAddress(chainId)
+    return value ? (value as Address) : undefined
+  }, [chainId])
+  const poolAddress = useMemo(() => {
+    const value = getTigrisMusdBtcPoolAddress(chainId)
+    return value ? (value as Address) : undefined
+  }, [chainId])
 
   const [direction, setDirection] = useState<SwapDirection>('musdToBtc')
   const [amountIn, setAmountIn] = useState('')
@@ -58,6 +67,8 @@ export function SwapSection() {
   const [musdBalance, setMusdBalance] = useState<bigint | null>(null)
   const [btcBalance, setBtcBalance] = useState<bigint | null>(null)
   const [pendingSwap, setPendingSwap] = useState(false)
+  const [discoveredBtcAddress, setDiscoveredBtcAddress] =
+    useState<Address | null>(null)
 
   const routerService = useMemo(() => {
     if (!publicClient || !walletClient || !routerAddress) {
@@ -67,7 +78,7 @@ export function SwapSection() {
       return new TigrisRouterService({
         publicClient,
         walletClient,
-        address: routerAddress as Address,
+        address: routerAddress,
         account: address as Address | undefined
       })
     } catch (error) {
@@ -84,7 +95,7 @@ export function SwapSection() {
       return new Erc20Service({
         publicClient,
         walletClient,
-        address: musdAddress as Address,
+        address: musdAddress,
         account: address as Address | undefined
       })
     } catch (error) {
@@ -94,21 +105,28 @@ export function SwapSection() {
   }, [address, publicClient, walletClient, musdAddress])
 
   const btcService = useMemo(() => {
-    if (!publicClient || !walletClient || !wrappedBtcAddress) {
+    const btcAddress = configuredBtcAddress ?? discoveredBtcAddress ?? undefined
+    if (!publicClient || !walletClient || !btcAddress) {
       return null
     }
     try {
       return new Erc20Service({
         publicClient,
         walletClient,
-        address: wrappedBtcAddress as Address,
+        address: btcAddress,
         account: address as Address | undefined
       })
     } catch (error) {
       console.error(error)
       return null
     }
-  }, [address, publicClient, walletClient, wrappedBtcAddress])
+  }, [
+    address,
+    configuredBtcAddress,
+    discoveredBtcAddress,
+    publicClient,
+    walletClient
+  ])
 
   useEffect(() => {
     const fetchDecimals = async () => {
@@ -127,6 +145,49 @@ export function SwapSection() {
     }
     fetchDecimals()
   }, [musdService, btcService])
+
+  useEffect(() => {
+    if (!publicClient || !poolAddress || !musdAddress) {
+      setDiscoveredBtcAddress(null)
+      return
+    }
+
+    let cancelled = false
+
+    const resolvePoolTokens = async () => {
+      try {
+        const [token0, token1] = await Promise.all([
+          publicClient.readContract({
+            abi: TIGRIS_POOL_ABI,
+            address: poolAddress,
+            functionName: 'token0'
+          }) as Promise<Address>,
+          publicClient.readContract({
+            abi: TIGRIS_POOL_ABI,
+            address: poolAddress,
+            functionName: 'token1'
+          }) as Promise<Address>
+        ])
+        const normalizedMusd = musdAddress.toLowerCase()
+        const candidate =
+          token0.toLowerCase() === normalizedMusd ? token1 : token0
+        if (!cancelled) {
+          setDiscoveredBtcAddress(candidate as Address)
+        }
+      } catch (error) {
+        console.error('Unable to resolve Tigris pool tokens', error)
+        if (!cancelled) {
+          setDiscoveredBtcAddress(null)
+        }
+      }
+    }
+
+    resolvePoolTokens()
+
+    return () => {
+      cancelled = true
+    }
+  }, [musdAddress, poolAddress, publicClient])
 
   const refreshBalances = useCallback(async () => {
     if (!address) return
@@ -148,15 +209,14 @@ export function SwapSection() {
     refreshBalances()
   }, [refreshBalances])
 
+  const btcTokenAddress =
+    configuredBtcAddress ?? discoveredBtcAddress ?? undefined
+
   const inputTokenAddress =
-    direction === 'musdToBtc'
-      ? (musdAddress as Address | undefined)
-      : (wrappedBtcAddress as Address | undefined)
+    direction === 'musdToBtc' ? musdAddress : btcTokenAddress
 
   const outputTokenAddress =
-    direction === 'musdToBtc'
-      ? (wrappedBtcAddress as Address | undefined)
-      : (musdAddress as Address | undefined)
+    direction === 'musdToBtc' ? btcTokenAddress : musdAddress
 
   const inputDecimals = direction === 'musdToBtc' ? musdDecimals : btcDecimals
   const outputDecimals = direction === 'musdToBtc' ? btcDecimals : musdDecimals
@@ -306,10 +366,10 @@ export function SwapSection() {
     }
   }
 
-  if (!routerAddress || !musdAddress || !wrappedBtcAddress) {
+  if (!routerAddress || !musdAddress || !btcTokenAddress) {
     return (
       <div className='rounded-2xl border border-dashed border-border/70 bg-muted/30 p-10 text-sm text-muted-foreground'>
-        Configure the Tigris router, MUSD, and wrapped BTC contract addresses to
+        Configure the Tigris router, MUSD, and BTC liquidity pool addresses to
         enable swaps.
       </div>
     )
