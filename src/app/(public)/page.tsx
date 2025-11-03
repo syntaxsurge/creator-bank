@@ -21,6 +21,7 @@ import {
   Play
 } from 'lucide-react'
 
+import { AspectRatio } from '@/components/ui/aspect-ratio'
 import { Button } from '@/components/ui/button'
 import { api } from '@/convex/_generated/api'
 import { useWalletAccount } from '@/hooks/use-wallet-account'
@@ -296,6 +297,86 @@ export default function HomePage() {
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className='relative py-24'>
+        <div className='mx-auto max-w-7xl px-6 lg:px-8'>
+          <div className='mx-auto max-w-5xl'>
+            <div className='mb-12 text-center'>
+              <div className='mb-6 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-sm font-medium text-primary backdrop-blur-sm'>
+                <Play className='h-4 w-4' />
+                <span>See CreatorBank in action</span>
+              </div>
+              <h2 className='mb-4 text-4xl font-bold tracking-tight text-foreground sm:text-5xl'>
+                Watch the{' '}
+                <span className='bg-gradient-to-r from-brand-teal-dark to-accent-dark bg-clip-text text-transparent drop-shadow-sm'>
+                  Platform Demo
+                </span>
+              </h2>
+              <p className='mx-auto max-w-2xl text-lg leading-relaxed text-muted-foreground'>
+                Get a complete walkthrough of CreatorBank's payment tools,
+                membership management, and automated workflows—all in under 5
+                minutes.
+              </p>
+            </div>
+
+            <div className='group relative'>
+              <div className='pointer-events-none absolute -inset-1 rounded-3xl bg-gradient-to-r from-primary/20 via-accent/20 to-primary/20 opacity-75 blur-xl transition-all group-hover:opacity-100' />
+              <div className='relative overflow-hidden rounded-2xl border border-primary/30 bg-card/95 p-2 backdrop-blur-xl shadow-2xl shadow-primary/10 transition-all group-hover:border-primary/50 group-hover:shadow-primary/20'>
+                <AspectRatio ratio={16 / 9} className='overflow-hidden rounded-xl'>
+                  <iframe
+                    src='https://www.youtube.com/embed/_4w0iCNmg_g'
+                    title='CreatorBank Platform Demo'
+                    allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
+                    allowFullScreen
+                    className='h-full w-full border-0'
+                  />
+                </AspectRatio>
+              </div>
+            </div>
+
+            <div className='mt-10 grid gap-6 sm:grid-cols-3'>
+              <div className='rounded-2xl border border-primary/20 bg-card/90 p-6 text-center backdrop-blur-xl transition-all hover:border-primary/40 hover:shadow-lg hover:shadow-primary/10'>
+                <div className='mb-3 inline-flex rounded-xl bg-primary/10 p-3 ring-1 ring-primary/20'>
+                  <Wallet className='h-6 w-6 text-primary' />
+                </div>
+                <h3 className='mb-2 font-semibold text-foreground'>
+                  Payment Flows
+                </h3>
+                <p className='text-sm text-muted-foreground'>
+                  See how pay handles, invoices, and MUSD settlement work
+                  together.
+                </p>
+              </div>
+
+              <div className='rounded-2xl border border-primary/20 bg-card/90 p-6 text-center backdrop-blur-xl transition-all hover:border-primary/40 hover:shadow-lg hover:shadow-primary/10'>
+                <div className='mb-3 inline-flex rounded-xl bg-primary/10 p-3 ring-1 ring-primary/20'>
+                  <Users className='h-6 w-6 text-primary' />
+                </div>
+                <h3 className='mb-2 font-semibold text-foreground'>
+                  Member Access
+                </h3>
+                <p className='text-sm text-muted-foreground'>
+                  Learn how wallet-based gating protects your content and
+                  community.
+                </p>
+              </div>
+
+              <div className='rounded-2xl border border-primary/20 bg-card/90 p-6 text-center backdrop-blur-xl transition-all hover:border-primary/40 hover:shadow-lg hover:shadow-primary/10'>
+                <div className='mb-3 inline-flex rounded-xl bg-primary/10 p-3 ring-1 ring-primary/20'>
+                  <Split className='h-6 w-6 text-primary' />
+                </div>
+                <h3 className='mb-2 font-semibold text-foreground'>
+                  Automated Splits
+                </h3>
+                <p className='text-sm text-muted-foreground'>
+                  Discover how recurring payouts eliminate manual
+                  reconciliation.
+                </p>
               </div>
             </div>
           </div>
