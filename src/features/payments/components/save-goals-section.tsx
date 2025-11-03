@@ -6,6 +6,19 @@ import { useMutation, useQuery } from 'convex/react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
+import { Plus, TrendingUp, TrendingDown, Trash2, Activity } from 'lucide-react'
+
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger
+} from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -103,11 +116,13 @@ function GoalMovementDialog({
   goal,
   type,
   triggerLabel,
+  triggerIcon,
   settlementTokenAddress
 }: {
   goal: GoalDoc
   type: MovementDoc['type']
   triggerLabel: string
+  triggerIcon?: React.ReactNode
   settlementTokenAddress: string
 }) {
   const [open, setOpen] = useState(false)
@@ -162,7 +177,13 @@ function GoalMovementDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button type='button' variant='outline' size='sm'>
+        <Button
+          type='button'
+          variant={type === 'credit' ? 'default' : 'outline'}
+          size='sm'
+          className='gap-2'
+        >
+          {triggerIcon}
           {triggerLabel}
         </Button>
       </DialogTrigger>
@@ -354,6 +375,7 @@ function GoalCard({
   })
 
   const [showActivity, setShowActivity] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
 
   const handleArchive = async () => {
     if (!address) {
@@ -362,80 +384,154 @@ function GoalCard({
     }
 
     try {
+      setIsDeleting(true)
       await archiveGoal({ ownerAddress: address, goalId: goal._id })
-      toast.success('Goal archived.')
+      toast.success('Goal deleted.')
     } catch (error) {
       console.error(error)
       toast.error(
         error instanceof Error
           ? error.message
-          : 'Unable to mark this goal complete right now.'
+          : 'Unable to delete this goal right now.'
       )
+    } finally {
+      setIsDeleting(false)
     }
   }
 
   return (
-    <div className='rounded-2xl border border-border bg-card/70 p-6 shadow-sm'>
-      <div className='flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between'>
-        <div className='space-y-2'>
-          <h3 className='text-xl font-semibold text-foreground'>{goal.name}</h3>
-          <p className='text-sm text-muted-foreground'>
-            Target:{' '}
-            <span className='font-medium text-foreground'>{targetLabel}</span>
-          </p>
-          <p className='text-sm text-muted-foreground'>
-            Allocated:{' '}
-            <span className='font-medium text-foreground'>{currentLabel}</span>
-          </p>
-          {goal.targetDate ? (
-            <p className='text-xs uppercase tracking-wide text-muted-foreground'>
-              Goal date: {formatDate(goal.targetDate)}
-            </p>
-          ) : null}
-          {goal.notes ? (
-            <p className='text-sm text-muted-foreground'>{goal.notes}</p>
-          ) : null}
-          {typeof percentComplete === 'number'
-            ? renderProgressBar(percentComplete)
-            : null}
+    <div className='group relative overflow-hidden rounded-3xl border border-border/50 bg-gradient-to-br from-card/95 via-card/90 to-card/85 p-8 shadow-lg backdrop-blur-sm transition-all hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5'>
+      {/* Decorative gradient orb */}
+      <div className='pointer-events-none absolute -right-12 -top-12 h-48 w-48 rounded-full bg-gradient-to-br from-primary/10 to-accent/5 blur-3xl transition-all group-hover:scale-125' />
+
+      <div className='relative space-y-6'>
+        {/* Header Section */}
+        <div className='flex items-start justify-between gap-4'>
+          <div className='flex-1 space-y-3'>
+            <h3 className='text-2xl font-bold text-foreground'>{goal.name}</h3>
+            {goal.notes ? (
+              <p className='text-sm leading-relaxed text-muted-foreground'>
+                {goal.notes}
+              </p>
+            ) : null}
+            {goal.targetDate ? (
+              <div className='inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1.5'>
+                <span className='text-xs font-medium text-primary'>
+                  Target: {formatDate(goal.targetDate)}
+                </span>
+              </div>
+            ) : null}
+          </div>
+
+          {/* Delete Button */}
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button
+                type='button'
+                variant='ghost'
+                size='icon'
+                className='h-9 w-9 text-muted-foreground hover:text-destructive'
+                disabled={isDeleting}
+              >
+                <Trash2 className='h-4 w-4' />
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Delete this savings goal?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This will permanently remove "{goal.name}" and all its activity
+                  history. This action cannot be undone.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={handleArchive}
+                  className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
+                >
+                  Delete goal
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
-        <div className='flex flex-col items-start gap-2 sm:items-end'>
+
+        {/* Progress Section */}
+        <div className='space-y-4 rounded-2xl border border-border/40 bg-background/40 p-6 backdrop-blur-sm'>
+          <div className='grid gap-4 sm:grid-cols-2'>
+            <div>
+              <p className='text-xs font-medium uppercase tracking-wider text-muted-foreground'>
+                Current Amount
+              </p>
+              <p className='mt-1 bg-gradient-to-r from-primary to-accent bg-clip-text text-3xl font-bold text-transparent'>
+                {currentLabel}
+              </p>
+            </div>
+            <div>
+              <p className='text-xs font-medium uppercase tracking-wider text-muted-foreground'>
+                Target Amount
+              </p>
+              <p className='mt-1 text-3xl font-bold text-foreground'>
+                {targetLabel}
+              </p>
+            </div>
+          </div>
+
+          {typeof percentComplete === 'number' ? (
+            <div className='space-y-2'>
+              <div className='flex items-center justify-between text-sm'>
+                <span className='font-medium text-foreground'>Progress</span>
+                <span className='font-semibold text-primary'>
+                  {percentComplete}%
+                </span>
+              </div>
+              {renderProgressBar(percentComplete)}
+            </div>
+          ) : null}
+        </div>
+
+        {/* Action Buttons */}
+        <div className='flex flex-wrap gap-3'>
           <GoalMovementDialog
             goal={goal}
             type='credit'
-            triggerLabel='Log contribution'
+            triggerLabel='Add funds'
+            triggerIcon={<Plus className='h-4 w-4' />}
             settlementTokenAddress={settlementTokenAddress}
           />
           <GoalMovementDialog
             goal={goal}
             type='debit'
-            triggerLabel='Log withdrawal'
+            triggerLabel='Withdraw'
+            triggerIcon={<TrendingDown className='h-4 w-4' />}
             settlementTokenAddress={settlementTokenAddress}
           />
           <Button
             type='button'
-            variant='ghost'
+            variant='outline'
             size='sm'
             onClick={() => setShowActivity(value => !value)}
+            className='gap-2'
           >
+            <Activity className='h-4 w-4' />
             {showActivity ? 'Hide activity' : 'View activity'}
           </Button>
-          <Button
-            type='button'
-            variant='secondary'
-            size='sm'
-            onClick={handleArchive}
-          >
-            Mark complete
-          </Button>
         </div>
+
+        {/* Activity Section */}
+        {showActivity ? (
+          <>
+            <Separator className='my-6' />
+            <div className='space-y-3'>
+              <h4 className='text-sm font-semibold text-foreground'>
+                Activity History
+              </h4>
+              <GoalActivityList goalId={goal._id} ownerAddress={address} />
+            </div>
+          </>
+        ) : null}
       </div>
-      {showActivity ? (
-        <>
-          <Separator className='my-6' />
-          <GoalActivityList goalId={goal._id} ownerAddress={address} />
-        </>
-      ) : null}
     </div>
   )
 }
