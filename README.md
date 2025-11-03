@@ -1,5 +1,7 @@
 # CreatorBank: Bitcoin‑Native Memberships on Mezo
 
+[![CreatorBank Demo](public/images/creator-bank-demo.png)](https://creator-bank.vercel.app/demo-video)
+
 CreatorBank is a full‑stack dApp for creators and communities to run bitcoin‑backed memberships, on‑chain invoices, paylinks, and classroom experiences on the [Mezo](https://mezo.org/) network. The platform uses Mezo Passport for wallet onboarding, settles payments in MUSD, and reads/writes chain data via viem‑powered services.
 
 Demo links
