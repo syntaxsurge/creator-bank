@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useCallback, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import { ChevronDown, ExternalLink, Wallet } from 'lucide-react'
 
@@ -11,30 +11,17 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
-import { useChainPreference } from '@/hooks/use-chain-preference'
 import { useSettlementTokenBalance } from '@/hooks/use-settlement-token-balance'
 import { useWalletAccount } from '@/hooks/use-wallet-account'
-import {
-  MEZO_TESTNET_HUB_URL,
-  SETTLEMENT_TOKEN_SYMBOL,
-  getChainName,
-  type MezoChainId
-} from '@/lib/config'
+import { MEZO_TESTNET_HUB_URL, SETTLEMENT_TOKEN_SYMBOL } from '@/lib/config'
 import { formatSettlementToken } from '@/lib/settlement-token'
 
 export function HeaderUtilityMenu() {
   const [open, setOpen] = useState(false)
   const { address, chainId: walletChainId, isConnected } = useWalletAccount()
-  const {
-    chainId,
-    supportedChainIds,
-    setChainId
-  } = useChainPreference()
   const {
     value: musdBalance,
     isLoading: isBalanceLoading,
@@ -62,7 +49,7 @@ export function HeaderUtilityMenu() {
   const balanceHint = useMemo(() => {
     if (!isConnected) return 'Connect your wallet to view settlement funds.'
     if (!isSupportedChain) {
-      return 'Switch your wallet to a supported Mezo network to sync balance.'
+      return 'Switch your wallet to Mezo Testnet (chain 31611) to sync balance.'
     }
     if (isBalanceError) return 'Unable to sync balance right now.'
     if (isBalanceLoading) return 'Fetching the latest balance...'
@@ -73,25 +60,6 @@ export function HeaderUtilityMenu() {
     isConnected,
     isSupportedChain
   ])
-
-  const walletChainMessage = useMemo(() => {
-    if (!isConnected || !walletChainId) return null
-    if (walletChainId === chainId) return null
-    return `Wallet is connected to chain ${walletChainId}.`
-  }, [chainId, isConnected, walletChainId])
-
-  const handleChainChange = useCallback(
-    (value: string) => {
-      const next = Number(value)
-      if (
-        Number.isFinite(next) &&
-        supportedChainIds.includes(next as MezoChainId)
-      ) {
-        setChainId(next as MezoChainId)
-      }
-    },
-    [setChainId, supportedChainIds]
-  )
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
@@ -124,36 +92,6 @@ export function HeaderUtilityMenu() {
           <p className='text-lg font-semibold text-foreground'>{balanceText}</p>
           <p className='mt-1 text-xs text-muted-foreground'>{balanceHint}</p>
         </div>
-
-        <DropdownMenuSeparator />
-
-        <DropdownMenuLabel className='text-xs uppercase tracking-wide text-muted-foreground'>
-          Preferred network
-        </DropdownMenuLabel>
-        <DropdownMenuRadioGroup
-          value={String(chainId)}
-          onValueChange={handleChainChange}
-        >
-          {supportedChainIds.map(option => (
-            <DropdownMenuRadioItem
-              key={option}
-              value={String(option)}
-              className='flex items-center justify-between gap-3 rounded-md px-2'
-            >
-              <span className='text-sm font-medium text-foreground'>
-                {getChainName(option)}
-              </span>
-              <span className='text-xs text-muted-foreground'>
-                Chain {option}
-              </span>
-            </DropdownMenuRadioItem>
-          ))}
-        </DropdownMenuRadioGroup>
-        {walletChainMessage ? (
-          <p className='px-2 pt-1 text-xs text-muted-foreground'>
-            {walletChainMessage}
-          </p>
-        ) : null}
 
         <DropdownMenuSeparator />
 

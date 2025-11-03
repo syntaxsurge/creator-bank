@@ -16,7 +16,7 @@ CreatorBank is a full-stack dApp for creators and communities to run bitcoin-bac
 - Convex-backed data model for groups, posts, classroom content, paylinks, invoices, and membership rosters.
 - Marketplace with listing, cancellation, renewal, and cooldown enforcement for membership passes.
 - Creator dashboard with save goals, payouts, a Mezo hub link for securing MUSD liquidity, and status monitors for RPC/oracle health.
-- Network controls pin the experience to Mezo Testnet, keeping RPCs, explorer links, and contract wiring consistent for demos.
+- RainbowKit’s built-in chain indicator keeps the experience pinned to Mezo Testnet, so RPCs, explorer links, and contract wiring stay consistent for demos.
 
 ## Prerequisites
 

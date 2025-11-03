@@ -7,7 +7,6 @@ export function WalletMenu() {
     <div className='flex items-center'>
       <ConnectButton
         label='Connect wallet'
-        chainStatus='none'
         showBalance={false}
       />
     </div>

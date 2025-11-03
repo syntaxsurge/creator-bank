@@ -174,6 +174,7 @@ export const registerOnchain = mutation({
       registryAddress: normalizeAddress(args.registryAddress),
       registryInvoiceId: args.registryInvoiceId,
       referenceHash: args.referenceHash,
+      chainId: 31611,
       issuanceTxHash: args.txHash,
       status: 'issued',
       updatedAt: Date.now()

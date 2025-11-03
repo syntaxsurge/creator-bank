@@ -57,7 +57,6 @@ import { Separator } from '@/components/ui/separator'
 import { Textarea } from '@/components/ui/textarea'
 import { api } from '@/convex/_generated/api'
 import type { Doc } from '@/convex/_generated/dataModel'
-import { useChainPreference } from '@/hooks/use-chain-preference'
 import { useWalletAccount } from '@/hooks/use-wallet-account'
 import type { MezoChainId } from '@/lib/config'
 import {
@@ -112,6 +111,8 @@ function truncateHash(hash: string, front = 8, back = 6) {
   return `${hash.slice(0, front)}…${hash.slice(-back)}`
 }
 
+const MEZO_TESTNET_CHAIN_ID: MezoChainId = 31611
+
 function normalizeChainId(value: unknown): number | null {
   if (typeof value === 'number' && Number.isFinite(value)) {
     return value
@@ -137,7 +138,6 @@ function normalizeChainId(value: unknown): number | null {
 
 export function InvoicesSection() {
   const { address, publicClient, walletClient } = useWalletAccount()
-  const { chainId } = useChainPreference()
   const [origin, setOrigin] = useState<string | null>(null)
 
   useEffect(() => {
@@ -188,12 +188,12 @@ export function InvoicesSection() {
   })
 
   const musdAddress = useMemo(
-    () => getMusdContractAddress(chainId) || '',
-    [chainId]
+    () => getMusdContractAddress(MEZO_TESTNET_CHAIN_ID) || '',
+    []
   )
   const registryAddress = useMemo(
-    () => getInvoiceRegistryAddress(chainId) || '',
-    [chainId]
+    () => getInvoiceRegistryAddress(MEZO_TESTNET_CHAIN_ID) || '',
+    []
   )
 
   const publishInvoiceOnchain = useCallback(
@@ -211,20 +211,6 @@ export function InvoicesSection() {
 
       if (!publicClient || !walletClient) {
         throw new Error('Wallet client unavailable. Reconnect your wallet.')
-      }
-
-      const targetChainId = normalizeChainId(params.chainId) as
-        | MezoChainId
-        | null
-
-      const describeChain = (id: number | null) => {
-        if (id === 31611) {
-          return 'Mezo Testnet (chain 31611)'
-        }
-        if (id === null) {
-          return 'an unknown network'
-        }
-        return `chain ${id}`
       }
 
       const readWalletChainId = async () => {
@@ -245,22 +231,14 @@ export function InvoicesSection() {
 
       const walletChainId = await readWalletChainId()
 
-      if (
-        targetChainId !== null &&
-        walletChainId !== null &&
-        walletChainId !== targetChainId
-      ) {
+      if (walletChainId !== null && walletChainId !== MEZO_TESTNET_CHAIN_ID) {
         throw new Error(
-          `Switch your wallet to ${describeChain(
-            targetChainId
-          )} before issuing. Detected ${describeChain(walletChainId)} instead.`
+          'Switch your wallet to Mezo Testnet (chain 31611) before issuing.'
         )
       }
 
-      const resolvedTargetChainId =
-        targetChainId ?? (params.chainId as MezoChainId)
       const resolvedRegistryAddress =
-        getInvoiceRegistryAddress(resolvedTargetChainId) || registryAddress
+        getInvoiceRegistryAddress(MEZO_TESTNET_CHAIN_ID) || registryAddress
 
       if (!resolvedRegistryAddress) {
         throw new Error('Invoice registry contract address is not configured.')
@@ -373,7 +351,7 @@ export function InvoicesSection() {
         payerAddress: payerAddressInput,
         lineItems: sanitizedLineItems,
         tokenAddress: musdAddress,
-        chainId
+        chainId: MEZO_TESTNET_CHAIN_ID
       })
 
       form.reset({
@@ -400,7 +378,7 @@ export function InvoicesSection() {
         totalAmount: created.totalAmount,
         tokenAddress: musdAddress,
         payerAddress: payerAddressInput,
-        chainId
+        chainId: MEZO_TESTNET_CHAIN_ID
       })
 
       toast.success(`Invoice ${created.number} issued on-chain.`, {
@@ -460,7 +438,7 @@ export function InvoicesSection() {
           totalAmount: invoice.totalAmount,
           tokenAddress: invoice.tokenAddress,
           payerAddress: invoice.payerAddress ?? undefined,
-          chainId: invoice.chainId
+          chainId: MEZO_TESTNET_CHAIN_ID
         })
 
         toast.success(`Invoice ${invoice.number} issued on-chain.`, {
@@ -791,7 +769,7 @@ export function InvoicesSection() {
               const issuingThis = issuingSlug === invoice.slug
               const archivingThis = archivingSlug === invoice.slug
               const explorerBaseUrl = getBlockExplorerUrl(
-                invoice.chainId as MezoChainId
+                MEZO_TESTNET_CHAIN_ID
               )
               const issuanceExplorerUrl =
                 invoice.issuanceTxHash && explorerBaseUrl
