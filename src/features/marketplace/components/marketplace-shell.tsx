@@ -740,7 +740,7 @@ function Hero({
         <h1 className='text-5xl font-bold leading-tight sm:text-6xl'>
           Discover & Trade
           <br />
-          <span className='bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent'>
+          <span className='bg-gradient-to-r from-brand-teal-dark to-accent-dark bg-clip-text text-transparent drop-shadow-[0_2px_12px_rgba(0,0,0,0.5)]'>
             Course Memberships
           </span>
         </h1>

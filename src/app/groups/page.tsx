@@ -45,7 +45,7 @@ export default function GroupsPage() {
             <h1 className='text-5xl font-bold leading-tight sm:text-6xl'>
               <span className='text-foreground'>Join CreatorBank</span>
               <br />
-              <span className='bg-gradient-to-r from-brand-teal to-accent bg-clip-text text-transparent'>
+              <span className='bg-gradient-to-r from-brand-teal-dark to-accent-dark bg-clip-text text-transparent drop-shadow-[0_2px_8px_rgba(0,0,0,0.2)]'>
                 Communities on Mezo
               </span>
             </h1>

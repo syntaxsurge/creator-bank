@@ -175,7 +175,7 @@ export default function HomePage() {
                 <h1 className='text-5xl font-bold leading-[1.1] tracking-tight sm:text-6xl lg:text-7xl'>
                   <span className='text-foreground'>Own your</span>
                   <br />
-                  <span className='bg-gradient-to-r from-brand-teal via-brand-teal-light to-accent bg-clip-text text-transparent'>
+                  <span className='bg-gradient-to-r from-brand-teal-dark via-brand-teal to-accent bg-clip-text text-transparent drop-shadow-[0_2px_8px_rgba(0,0,0,0.3)]'>
                     Payments & Memberships
                   </span>
                 </h1>
@@ -234,7 +234,7 @@ export default function HomePage() {
                         <p className='text-sm font-medium text-muted-foreground'>
                           Demo dashboard
                         </p>
-                        <p className='mt-1 bg-gradient-to-r from-brand-teal to-accent bg-clip-text text-3xl font-bold text-transparent'>
+                        <p className='mt-1 bg-gradient-to-r from-brand-teal-dark to-accent-dark bg-clip-text text-3xl font-bold text-transparent drop-shadow-sm'>
                           12.6k MUSD
                         </p>
                       </div>
@@ -317,7 +317,7 @@ export default function HomePage() {
                     <div className='mb-4 inline-flex rounded-2xl bg-primary/10 p-3 ring-1 ring-primary/20'>
                       <Icon className='h-6 w-6 text-primary' />
                     </div>
-                    <p className='bg-gradient-to-r from-brand-teal to-accent bg-clip-text text-5xl font-bold text-transparent'>
+                    <p className='bg-gradient-to-r from-brand-teal-dark to-accent-dark bg-clip-text text-5xl font-bold text-transparent drop-shadow-sm'>
                       {stat.value}
                     </p>
                     <p className='mt-2 text-lg font-semibold text-foreground'>
@@ -386,7 +386,7 @@ export default function HomePage() {
           <div className='mx-auto mb-16 max-w-2xl text-center'>
             <h2 className='mb-6 text-4xl font-bold tracking-tight text-foreground sm:text-5xl'>
               Go live in{' '}
-              <span className='bg-gradient-to-r from-brand-teal to-accent bg-clip-text text-transparent'>
+              <span className='bg-gradient-to-r from-brand-teal-dark to-accent-dark bg-clip-text text-transparent drop-shadow-sm'>
                 Three Steps
               </span>
             </h2>

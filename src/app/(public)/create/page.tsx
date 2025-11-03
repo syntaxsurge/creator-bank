@@ -419,11 +419,11 @@ export default function Create() {
   return (
     <>
       <div className='relative min-h-screen overflow-hidden bg-gradient-to-br from-background via-background to-muted/20'>
-        {/* Enhanced decorative background with logo blue */}
+        {/* Enhanced decorative background with teal and orange */}
         <div className='absolute inset-0 overflow-hidden'>
-          <div className='absolute -left-4 top-0 h-72 w-72 rounded-full bg-[radial-gradient(circle,_hsl(var(--brand-blue)/0.15),_transparent_65%)] blur-3xl' />
-          <div className='absolute -right-4 top-1/4 h-96 w-96 rounded-full bg-[radial-gradient(circle,_hsl(var(--brand-blue-light)/0.12),_transparent_65%)] blur-3xl' />
-          <div className='absolute bottom-0 left-1/3 h-80 w-80 rounded-full bg-[radial-gradient(circle,_hsl(var(--brand-blue)/0.1),_transparent_70%)] blur-3xl' />
+          <div className='absolute -left-4 top-0 h-72 w-72 rounded-full bg-[radial-gradient(circle,_hsl(var(--brand-teal)/0.15),_transparent_65%)] blur-3xl' />
+          <div className='absolute -right-4 top-1/4 h-96 w-96 rounded-full bg-[radial-gradient(circle,_hsl(var(--brand-orange)/0.08),_transparent_65%)] blur-3xl' />
+          <div className='absolute bottom-0 left-1/3 h-80 w-80 rounded-full bg-[radial-gradient(circle,_hsl(var(--brand-teal)/0.1),_transparent_70%)] blur-3xl' />
         </div>
 
         <div className='relative mx-auto max-w-6xl px-6 py-12'>
@@ -433,8 +433,11 @@ export default function Create() {
               <Logo className='text-2xl' />
             </div>
             <h1 className='mb-4 text-5xl font-bold tracking-tight md:text-6xl'>
-              <span className='bg-gradient-to-r from-foreground via-brand-blue-dark to-brand-blue-light bg-clip-text text-transparent'>
-                Create Your Universal App
+              <span className='text-foreground'>
+                Create Your{' '}
+                <span className='bg-gradient-to-r from-brand-teal to-accent bg-clip-text text-transparent drop-shadow-sm'>
+                  Universal App
+                </span>
               </span>
             </h1>
             <p className='mx-auto max-w-2xl text-lg text-muted-foreground'>
@@ -752,7 +755,7 @@ export default function Create() {
                     <Button
                       type='submit'
                       disabled={isProcessing}
-                      className='h-12 w-full bg-gradient-to-r from-brand-blue to-brand-blue-light text-base font-semibold uppercase tracking-wide shadow-lg shadow-primary/20 hover:opacity-90'
+                      className='h-12 w-full bg-gradient-to-r from-brand-teal to-accent text-base font-semibold uppercase tracking-wide shadow-lg shadow-primary/20 hover:opacity-90'
                       size='lg'
                     >
                       {isProcessing

@@ -43,7 +43,7 @@ export function PaymentsDashboard() {
             <span>MEZO Payments Hub</span>
           </div>
 
-          <h1 className='bg-gradient-to-r from-brand-teal via-brand-teal-light to-accent bg-clip-text text-5xl font-bold tracking-tight text-transparent'>
+          <h1 className='bg-gradient-to-r from-brand-teal-dark via-brand-teal to-accent bg-clip-text text-5xl font-bold tracking-tight text-transparent drop-shadow-[0_2px_8px_rgba(0,0,0,0.2)]'>
             Payments Command Center
           </h1>
           <p className='max-w-3xl text-lg leading-relaxed text-muted-foreground'>
