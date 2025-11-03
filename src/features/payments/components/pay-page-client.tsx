@@ -5,6 +5,7 @@ import { useEffect, useMemo } from 'react'
 import { useAction, useQuery } from 'convex/react'
 import { toast } from 'sonner'
 
+import { LoadingIndicator } from '@/components/feedback/loading-indicator'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
@@ -112,6 +113,10 @@ export function PayPageClient({
       console.error(error)
       toast.error('Unable to copy address right now.')
     }
+  }
+
+  if (paylink === undefined) {
+    return <LoadingIndicator fullScreen />
   }
 
   if (!paylink) {
