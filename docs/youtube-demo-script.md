@@ -85,7 +85,7 @@ This script outlines a 7–8 minute walkthrough of CreatorBank on the Mezo netwo
 ## Segment 7 – Classroom: Create Course, Modules, Lessons (04:55 – 05:35)
 
 1. **On-screen:** Switch to the Classroom tab and click `Create a course`.
-   - **Voice-over 12:** “I create a course that will hold modules and lessons. In this tutorial I will copy sample content from a public YouTube playlist and paste the titles and details here so you can see the flow. In production, creators use this same flow to publish their own lessons and sell access as part of their community. I add a module and a lesson, paste a YouTube link which the app converts to a safe embed, write a short lesson description, and save.”
+   - **Voice-over 12:** “I create a course that will hold modules and lessons. In this tutorial I will copy sample content from a public YouTube playlist and paste the titles and details here so you can see the flow. In production, creators use this same flow to publish their own lessons and sell access as part of their community.”
 
 ## Segment 8 – Join the Paid Community as a Member (05:35 – 06:05)
 
