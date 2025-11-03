@@ -62,6 +62,7 @@ import { useWalletAccount } from '@/hooks/use-wallet-account'
 import type { MezoChainId } from '@/lib/config'
 import {
   SETTLEMENT_TOKEN_SYMBOL,
+  getChainName,
   getBlockExplorerUrl,
   getInvoiceRegistryAddress,
   getMusdContractAddress
@@ -110,6 +111,29 @@ function truncateHash(hash: string, front = 8, back = 6) {
     return hash
   }
   return `${hash.slice(0, front)}…${hash.slice(-back)}`
+}
+
+function normalizeChainId(value: unknown): number | null {
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    return value
+  }
+
+  if (typeof value === 'bigint') {
+    return Number(value)
+  }
+
+  if (typeof value === 'string') {
+    const trimmed = value.trim()
+    if (!trimmed) {
+      return null
+    }
+    const parsed = trimmed.startsWith('0x')
+      ? Number.parseInt(trimmed, 16)
+      : Number(trimmed)
+    return Number.isFinite(parsed) ? parsed : null
+  }
+
+  return null
 }
 
 export function InvoicesSection() {
@@ -190,21 +214,54 @@ export function InvoicesSection() {
         throw new Error('Wallet client unavailable. Reconnect your wallet.')
       }
 
-      const walletChainId =
-        typeof walletClient.getChainId === 'function'
-          ? await walletClient.getChainId()
-          : walletClient.chain?.id
+      const targetChainId = normalizeChainId(params.chainId) as
+        | MezoChainId
+        | null
 
-      if (
-        typeof walletChainId === 'number' &&
-        walletChainId !== params.chainId
-      ) {
-        throw new Error('Switch your wallet to the invoice chain before issuing.')
+      const describeChain = (id: number | null) => {
+        if (id === 31611 || id === 31612) {
+          return `${getChainName(id)} (chain ${id})`
+        }
+        if (id === null) {
+          return 'an unknown network'
+        }
+        return `chain ${id}`
       }
 
-      const targetChainId = params.chainId as MezoChainId
+      const readWalletChainId = async () => {
+        if (typeof walletClient.getChainId === 'function') {
+          try {
+            const detected = await walletClient.getChainId()
+            const normalized = normalizeChainId(detected)
+            if (normalized !== null) {
+              return normalized
+            }
+          } catch (error) {
+            console.warn('[CreatorBank] Unable to read wallet chain id', error)
+          }
+        }
+
+        return normalizeChainId(walletClient.chain?.id)
+      }
+
+      const walletChainId = await readWalletChainId()
+
+      if (
+        targetChainId !== null &&
+        walletChainId !== null &&
+        walletChainId !== targetChainId
+      ) {
+        throw new Error(
+          `Switch your wallet to ${describeChain(
+            targetChainId
+          )} before issuing. Detected ${describeChain(walletChainId)} instead.`
+        )
+      }
+
+      const resolvedTargetChainId =
+        targetChainId ?? (params.chainId as MezoChainId)
       const resolvedRegistryAddress =
-        getInvoiceRegistryAddress(targetChainId) || registryAddress
+        getInvoiceRegistryAddress(resolvedTargetChainId) || registryAddress
 
       if (!resolvedRegistryAddress) {
         throw new Error('Invoice registry contract address is not configured.')
