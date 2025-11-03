@@ -1,6 +1,6 @@
 # CreatorBank Smart Contracts
 
-This Hardhat workspace contains the Solidity contracts powering CreatorBank’s memberships, marketplace, registrar, split payouts, and badges on Mezo.
+This Hardhat workspace contains the Solidity contracts powering CreatorBank’s memberships, marketplace, registrar, invoice ledger, split payouts, and badges on Mezo.
 
 ## Contract Suite
 
@@ -12,6 +12,7 @@ This Hardhat workspace contains the Solidity contracts powering CreatorBank’s 
 | `helpers/SplitPayout.sol` | Pull-based splitter for collaborator payouts (one instance per course). |
 | `Badge1155.sol` | Soulbound badges awarded on course completion. |
 | `RevenueSplitRouter.sol` | Optional helper to route membership revenue directly to collaborators. |
+| `InvoiceRegistry.sol` | Minimal ledger that records invoice metadata and settles payments in ERC-20 tokens. |
 
 ## Getting started
 
@@ -37,6 +38,7 @@ Populate `.env` using the template below. Scripts bail out when required values 
 | `MARKETPLACE_MAX_LISTING_DURATION_SECONDS` | Max secondary listing duration (default 7 days). | Optional |
 | `MEMBERSHIP_CONTRACT_ADDRESS` | Populated after deploying `MembershipPass1155`. Required for registrar/marketplace scripts. | After contract deployment |
 | `REGISTRAR_CONTRACT_ADDRESS` | Populated after deploying `Registrar`. Required when updating marketplace hooks. | After contract deployment |
+| `INVOICE_REGISTRY_CONTRACT_ADDRESS` | Populated after deploying `InvoiceRegistry`. Consumed by the frontend to issue on-chain invoices. | After contract deployment |
 
 Each deployment logs addresses to `deployment.log`. Mirror the values into `.env` so subsequent runs reattach instead of redeploying. Copy any frontend-facing addresses into the app’s `.env.local` prefixed with `NEXT_PUBLIC_`.
 
@@ -49,6 +51,7 @@ npx hardhat run scripts/deployRegistrar.ts --network mezotestnet
 npx hardhat run scripts/deployMarketplace.ts --network mezotestnet
 npx hardhat run scripts/deployBadge1155.ts --network mezotestnet
 npx hardhat run scripts/deployRevenueSplitRouter.ts --network mezotestnet
+npx hardhat run scripts/deployInvoiceRegistry.ts --network mezotestnet
 ```
 
 Compilation outputs ABIs under `artifacts/` and TypeScript bindings under `typechain-types/`.
@@ -60,6 +63,7 @@ Compilation outputs ABIs under `artifacts/` and TypeScript bindings under `typec
 3. **Registrar** – requires `MEMBERSHIP_CONTRACT_ADDRESS`. Grants registrar role on the pass contract.
 4. **MembershipMarketplace** – requires membership + treasury addresses. Configures fees and cooldowns.
 5. **RevenueSplitRouter** – optional helper for direct revenue distribution.
+6. **InvoiceRegistry** – mints the canonical invoice ledger so the app can issue and settle invoices on-chain.
 
 Registrar deploys a fresh `SplitPayout` per course. Minting and renewals always flow through the marketplace to enforce cooldowns and revenue splits.
 
