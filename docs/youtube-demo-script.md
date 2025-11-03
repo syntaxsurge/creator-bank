@@ -34,7 +34,7 @@ This script outlines a 7–8 minute walkthrough of CreatorBank on the Mezo netwo
      - Customer name: `Northstar Labs Ltd.`
      - Customer email: `ops@northstarlabs.test`
      - Payer wallet (optional): Leave blank
-     - Due date: `2025-12-22`
+     - Due date: `2025-12-12`
      - Notes: `Scope: pilot deliverables and async support.`
      - Line items:
        - 1) Description: `Pilot deliverables (flat)` — Qty: `1` — Unit price (MUSD): `8.00`
