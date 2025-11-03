@@ -97,11 +97,6 @@ This script outlines a 7–8 minute walkthrough of CreatorBank on the Mezo netwo
 1. **On-screen:** With the member wallet still active, open `/marketplace` and click `List your membership`.
    - **Voice-over 14:** “I open the Marketplace page and click List Your Membership. Because I just joined there is a transfer cooldown. This prevents quick flip abuse and keeps value aligned with course timelines.”
 
-## Segment 10 – My Memberships & Cooldown Status (06:20 – 06:35)
-
-1. **On-screen:** Navigate to `/memberships`, highlight the pass card with expiry timestamp and cooldown chip.
-   - **Voice-over 15:** “In My Memberships I can see expiry and cooldown clearly. Listing stays blocked until the cooldown ends.”
-
 ## Segment 11 – Feed: Admin Post (06:35 – 06:55)
 
 1. **On-screen:** Switch back to the creator’s wallet, open the group page, and go to the `Feed` tab.
