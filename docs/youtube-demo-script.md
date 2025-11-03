@@ -97,22 +97,22 @@ This script outlines a 7–8 minute walkthrough of CreatorBank on the Mezo netwo
 1. **On-screen:** With the member wallet still active, open `/marketplace` and click `List your membership`.
    - **Voice-over 14:** “I open the Marketplace page and click List Your Membership. Because I just joined there is a transfer cooldown. This prevents quick flip abuse and keeps value aligned with course timelines.”
 
-## Segment 11 – Feed: Admin Post (06:35 – 06:55)
+## Segment 10 – Feed: Admin Post (06:35 – 06:55)
 
 1. **On-screen:** Switch back to the creator’s wallet, open the group page, and go to the `Feed` tab.
-   - **Voice-over 16:** “I switch back to the owner account, open my group, and go to the Feed tab. I click Write something, add a short welcome update with key links and expectations for the cohort, then publish it.”
+   - **Voice-over 15:** “I switch back to the owner account, open my group, and go to the Feed tab. I click Write something, add a short welcome update with key links and expectations for the cohort, then publish it.”
 
-## Segment 12 – Feed: Member Engagement (06:55 – 07:10)
+## Segment 11 – Feed: Member Engagement (06:55 – 07:10)
 
 1. **On-screen:** Return to the member wallet, open the same feed, click the thumbs-up icon on the post, and add a comment.
-   - **Voice-over 17:** “As a member I like the post and add a comment. The feed updates in real time.”
+   - **Voice-over 16:** “As a member I like the post and add a comment. The feed updates in real time.”
 
-## Segment 13 – Classroom: Member Learning (07:10 – 07:30)
+## Segment 12 – Classroom: Member Learning (07:10 – 07:30)
 
 1. **On-screen:** Staying on the member wallet, open the `Classroom` tab, enter the course created earlier, click the “Introduction” module, and select the “Welcome” lesson.
-   - **Voice-over 18:** “This course uses sample content from a YouTube playlist so you can see the flow. In production, creators publish their own lessons and grow a paid community around them.”
+   - **Voice-over 17:** “This course uses sample content from a YouTube playlist so you can see the flow. In production, creators publish their own lessons and grow a paid community around them.”
 
-## Segment 14 – Discover & Join a Free Community (07:30 – 07:50)
+## Segment 13 – Discover & Join a Free Community (07:30 – 07:50)
 
 1. **On-screen:** Open Discover/Groups at /groups. Show a mix of free and paid groups. Click a free group card. On the group page, click Join for free. Tabs for Feed, Classroom, and Members appear. Open Feed to see a history of admin and user interactions. Open Classroom to view courses; click a course to see its modules and lessons. Navigate to another course and repeat.
-   - **Voice-over 19:** “On the Discover page you can see both free and paid groups. We already joined a paid group, so now I’ll join a free group. I click the free group and hit Join for free. Access unlocks immediately, so Feed, Classroom, and Members appear. I can scroll the feed to see past admin posts and member activity. In the classroom I can open a course, browse its modules, and view lessons. I can also jump into other courses and do the same.
+   - **Voice-over 18:** “On the Discover page you can see both free and paid groups. We already joined a paid group, so now I’ll join a free group. I click the free group and hit Join for free. Access unlocks immediately, so Feed, Classroom, and Members appear. I can scroll the feed to see past admin posts and member activity. In the classroom I can open a course, browse its modules, and view lessons. I can also jump into other courses and do the same.”
