@@ -29,15 +29,15 @@ This script outlines a 7–8 minute walkthrough of CreatorBank on the Mezo netwo
 4. **On-screen:** Open the `Invoices` tab, add one line item, set an optional `Payer wallet`, attach a SatsPay handle, and click `Issue invoice`.
    - **Voice-over:** “Invoices are issued on‑chain via the Invoice Registry. CreatorBank hashes the invoice slug, records token and amount, and keeps the registry ID for later verification.”
    - Field inputs — type exactly:
-     - Invoice title: `Q4 Campaign — Signal Studio`
+     - Invoice title: `Pilot Package — Northstar Labs`
      - Paylink handle: `@creatorbankdemo`
-     - Customer name: `Harbor & Pine Co.`
-     - Customer email: `payables@harborpine.test`
+     - Customer name: `Northstar Labs Ltd.`
+     - Customer email: `ops@northstarlabs.test`
      - Payer wallet (optional): Leave blank
-     - Due date: `2025-12-15`
-     - Notes: `Includes priority support and two revision cycles.`
+     - Due date: `2025-12-22`
+     - Notes: `Scope: pilot deliverables and async support.`
      - Line items:
-       - 1) Description: `Channel Audit (starter pack)` — Qty: `1` — Unit price (MUSD): `9.00`
+       - 1) Description: `Pilot deliverables (flat)` — Qty: `1` — Unit price (MUSD): `8.00`
 5. **On-screen:** Open `Recurring Payouts`, add two collaborators with shares, and save.
    - **Voice-over:** “Payout schedules use the split router to push MUSD to each wallet in one transaction.”
    - Field inputs — type exactly:
