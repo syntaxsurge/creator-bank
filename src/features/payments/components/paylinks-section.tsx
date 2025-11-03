@@ -6,8 +6,19 @@ import { useAction, useMutation, useQuery } from 'convex/react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
-import { Trash2 } from 'lucide-react'
+import { Copy, RefreshCw, Trash2, Link2, Wallet } from 'lucide-react'
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger
+} from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -76,77 +87,138 @@ function PaylinkCard({
     }
   }
 
+  const handleArchiveClick = async () => {
+    await onArchive(paylink._id)
+  }
+
   return (
-    <div className='rounded-2xl border border-border bg-card/70 p-6 shadow-sm'>
-      <div className='flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between'>
-        <div className='space-y-2'>
-          <div>
-            <p className='text-xs uppercase tracking-wide text-muted-foreground'>
-              Handle
-            </p>
-            <p className='font-mono text-lg text-foreground'>
-              @{paylink.handle}
-            </p>
+    <div className='group relative overflow-hidden rounded-3xl border border-border/50 bg-gradient-to-br from-card/95 via-card/90 to-card/85 p-8 shadow-lg backdrop-blur-sm transition-all hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5'>
+      {/* Decorative gradient orb */}
+      <div className='pointer-events-none absolute -right-12 -top-12 h-48 w-48 rounded-full bg-gradient-to-br from-primary/10 to-accent/5 blur-3xl transition-all group-hover:scale-125' />
+
+      <div className='relative space-y-6'>
+        {/* Header Section */}
+        <div className='flex items-start justify-between gap-4'>
+          <div className='flex-1 space-y-3'>
+            <div className='flex items-center gap-3'>
+              <div className='flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-primary/20 to-accent/10 ring-1 ring-primary/20'>
+                <Link2 className='h-6 w-6 text-primary' />
+              </div>
+              <div>
+                <p className='text-xs font-medium uppercase tracking-wider text-muted-foreground'>
+                  Pay Handle
+                </p>
+                <p className='font-mono text-2xl font-bold text-foreground'>
+                  @{paylink.handle}
+                </p>
+              </div>
+            </div>
+
+            {paylink.title ? (
+              <h3 className='text-xl font-semibold text-foreground'>
+                {paylink.title}
+              </h3>
+            ) : null}
+
+            {paylink.description ? (
+              <p className='max-w-2xl text-sm leading-relaxed text-muted-foreground'>
+                {paylink.description}
+              </p>
+            ) : null}
           </div>
-          {paylink.title ? (
-            <p className='text-base font-medium text-foreground'>
-              {paylink.title}
-            </p>
-          ) : null}
-          {paylink.description ? (
-            <p className='max-w-xl text-sm text-muted-foreground'>
-              {paylink.description}
-            </p>
-          ) : null}
-          <div>
-            <p className='text-xs uppercase tracking-wide text-muted-foreground'>
-              Receiving address
-            </p>
-            <p className='font-mono text-sm text-foreground'>
+
+          {/* Delete Button */}
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button
+                type='button'
+                variant='ghost'
+                size='icon'
+                className='h-9 w-9 text-muted-foreground hover:text-destructive'
+                disabled={archiving}
+              >
+                <Trash2 className='h-4 w-4' />
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Remove this pay link?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This will remove the pay link "@{paylink.handle}" from your dashboard.
+                  Existing payment history will remain intact.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={handleArchiveClick}
+                  className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
+                >
+                  Remove link
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
+
+        {/* Info Cards */}
+        <div className='grid gap-4 sm:grid-cols-2'>
+          <div className='rounded-2xl border border-border/40 bg-background/40 p-4 backdrop-blur-sm'>
+            <div className='flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-muted-foreground'>
+              <Wallet className='h-3.5 w-3.5' />
+              Receiving Address
+            </div>
+            <p className='mt-2 font-mono text-sm text-foreground'>
               {paylink.receivingAddress}
             </p>
           </div>
-          <div className='flex flex-col gap-2 sm:flex-row sm:items-center'>
-            <Button
-              type='button'
-              variant='outline'
-              size='sm'
-              onClick={handleCopy}
-            >
-              Copy pay link
-            </Button>
-            <span className='text-xs text-muted-foreground'>
-              Share the link above to accept direct {SETTLEMENT_TOKEN_SYMBOL}{' '}
-              payments.
-            </span>
+
+          <div className='rounded-2xl border border-border/40 bg-background/40 p-4 backdrop-blur-sm'>
+            <div className='flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-muted-foreground'>
+              <Link2 className='h-3.5 w-3.5' />
+              Share Link
+            </div>
+            <p className='mt-2 break-all font-mono text-sm text-primary'>
+              {shareUrl}
+            </p>
           </div>
         </div>
-        <div className='flex flex-col gap-2 self-end sm:self-start'>
+
+        {/* Action Buttons */}
+        <div className='flex flex-wrap gap-3'>
           <Button
             type='button'
-            variant='secondary'
+            variant='default'
+            size='sm'
+            onClick={handleCopy}
+            className='gap-2'
+          >
+            <Copy className='h-4 w-4' />
+            Copy link
+          </Button>
+          <Button
+            type='button'
+            variant='outline'
             size='sm'
             onClick={() => onSync(paylink.handle)}
             disabled={syncing}
+            className='gap-2'
           >
+            <RefreshCw className={cn('h-4 w-4', syncing && 'animate-spin')} />
             {syncing ? 'Syncing...' : 'Sync receipts'}
           </Button>
-          <Button
-            type='button'
-            variant='ghost'
-            size='sm'
-            className='justify-start text-destructive hover:text-destructive'
-            onClick={() => onArchive(paylink._id)}
-            disabled={archiving}
-          >
-            <Trash2 className='mr-2 h-4 w-4' /> Remove link
-          </Button>
+        </div>
+
+        <Separator className='my-6' />
+
+        {/* Payments List */}
+        <div className='space-y-3'>
+          <h4 className='text-sm font-semibold text-foreground'>
+            Recent Payments
+          </h4>
+          <PaylinkPaymentsList paylinkId={paylink._id} explorerUrl={explorerUrl} />
         </div>
       </div>
-
-      <Separator className='my-6' />
-
-      <PaylinkPaymentsList paylinkId={paylink._id} explorerUrl={explorerUrl} />
     </div>
   )
 }
@@ -236,15 +308,6 @@ export function PaylinksSection() {
     if (!address) {
       toast.error('Connect your wallet to manage SatsPay links.')
       return
-    }
-
-    if (typeof window !== 'undefined') {
-      const confirmed = window.confirm(
-        'Remove this SatsPay link? Existing payment history stays intact.'
-      )
-      if (!confirmed) {
-        return
-      }
     }
 
     try {

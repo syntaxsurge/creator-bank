@@ -7,8 +7,27 @@ import { useFieldArray, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import type { Address } from 'viem'
 
-import { Trash2 } from 'lucide-react'
+import {
+  Trash2,
+  Users,
+  Percent,
+  Send,
+  Clock,
+  Wallet,
+  TrendingUp
+} from 'lucide-react'
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger
+} from '@/components/ui/alert-dialog'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -35,6 +54,7 @@ import {
   formatSettlementToken,
   parseSettlementTokenAmount
 } from '@/lib/settlement-token'
+import { cn } from '@/lib/utils'
 
 type RecipientFormValue = {
   address: string
@@ -127,77 +147,145 @@ function ScheduleCard({
     return total + recipient.shareBps
   }, 0)
 
+  const isValid = totalShare === 10000
+
   return (
-    <div className='rounded-2xl border border-border bg-card/70 p-6 shadow-sm'>
-      <div className='flex flex-col gap-4 md:flex-row md:items-start md:justify-between'>
-        <div className='space-y-2'>
-          <div className='flex items-center gap-2'>
-            <h3 className='text-lg font-semibold text-foreground'>
-              {schedule.name}
-            </h3>
-            <Badge variant={totalShare === 10000 ? 'secondary' : 'destructive'}>
-              {(totalShare / 100).toFixed(2)}%
-            </Badge>
-          </div>
-          <p className='text-sm text-muted-foreground'>
-            Distribute {SETTLEMENT_TOKEN_SYMBOL} according to collaborator
-            splits.
-          </p>
-        </div>
-        <div className='flex items-center gap-3'>
-          <Input
-            placeholder={`Amount in ${SETTLEMENT_TOKEN_SYMBOL}`}
-            value={runState.amount}
-            onChange={event => onChangeAmount(event.target.value)}
-            className='w-40'
-          />
-          <Button
-            type='button'
-            onClick={onExecute}
-            disabled={runState.pending || totalShare !== 10000}
-          >
-            {runState.pending ? 'Executing...' : 'Execute payout'}
-          </Button>
-          <Button
-            type='button'
-            variant='ghost'
-            size='sm'
-            className='text-destructive hover:text-destructive'
-            onClick={onDelete}
-            disabled={isDeleting}
-          >
-            <Trash2 className='mr-2 h-4 w-4' /> Remove
-          </Button>
-        </div>
-      </div>
+    <div className='group relative overflow-hidden rounded-3xl border border-border/50 bg-gradient-to-br from-card/95 via-card/90 to-card/85 p-8 shadow-lg backdrop-blur-sm transition-all hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5'>
+      {/* Decorative gradient orb */}
+      <div className='pointer-events-none absolute -right-12 -top-12 h-48 w-48 rounded-full bg-gradient-to-br from-primary/10 to-accent/5 blur-3xl transition-all group-hover:scale-125' />
 
-      <Separator className='my-5' />
-
-      <div className='space-y-4'>
-        <div className='grid gap-3 md:grid-cols-2'>
-          {schedule.recipients.map(recipient => (
-            <div
-              key={`${recipient.address}-${recipient.shareBps}`}
-              className='rounded-lg border border-border/50 bg-background/60 p-4'
-            >
-              <p className='font-mono text-sm text-foreground'>
-                {recipient.address}
-              </p>
-              <p className='text-xs text-muted-foreground'>
-                Allocation: {(recipient.shareBps / 100).toFixed(2)}%
-              </p>
-              {recipient.label ? (
-                <p className='text-xs text-muted-foreground'>
-                  Label: {recipient.label}
-                </p>
-              ) : null}
+      <div className='relative space-y-6'>
+        {/* Header Section */}
+        <div className='flex items-start justify-between gap-4'>
+          <div className='flex-1 space-y-3'>
+            <div className='flex items-center gap-3'>
+              <div className='flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-primary/20 to-accent/10 ring-1 ring-primary/20'>
+                <TrendingUp className='h-6 w-6 text-primary' />
+              </div>
+              <div>
+                <h3 className='text-2xl font-bold text-foreground'>
+                  {schedule.name}
+                </h3>
+                <div className='mt-1 flex items-center gap-2'>
+                  <Badge variant={isValid ? 'secondary' : 'destructive'}>
+                    {(totalShare / 100).toFixed(2)}% {isValid ? 'Valid' : 'Invalid'}
+                  </Badge>
+                  <span className='text-xs text-muted-foreground'>
+                    {schedule.recipients.length} recipients
+                  </span>
+                </div>
+              </div>
             </div>
-          ))}
+          </div>
+
+          {/* Delete Button */}
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button
+                type='button'
+                variant='ghost'
+                size='icon'
+                className='h-9 w-9 text-muted-foreground hover:text-destructive'
+                disabled={isDeleting}
+              >
+                <Trash2 className='h-4 w-4' />
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Delete this payout schedule?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This will permanently remove the "{schedule.name}" payout schedule.
+                  Execution history will be preserved on-chain.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={onDelete}
+                  className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
+                >
+                  Delete schedule
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
 
-        <div>
-          <h4 className='mb-2 text-sm font-medium text-foreground'>
-            Execution history
+        {/* Execute Payout Section */}
+        <div className='rounded-2xl border border-border/40 bg-background/40 p-6 backdrop-blur-sm'>
+          <h4 className='mb-4 flex items-center gap-2 text-sm font-semibold text-foreground'>
+            <Send className='h-4 w-4' />
+            Execute Payout
+          </h4>
+          <div className='flex flex-col gap-3 sm:flex-row'>
+            <Input
+              placeholder={`Amount in ${SETTLEMENT_TOKEN_SYMBOL}`}
+              value={runState.amount}
+              onChange={event => onChangeAmount(event.target.value)}
+              className='flex-1'
+            />
+            <Button
+              type='button'
+              onClick={onExecute}
+              disabled={runState.pending || !isValid}
+              className='gap-2'
+            >
+              <Send className='h-4 w-4' />
+              {runState.pending ? 'Executing...' : 'Execute'}
+            </Button>
+          </div>
+          {!isValid && (
+            <p className='mt-2 text-xs text-destructive'>
+              Total allocation must equal 100% to execute payouts
+            </p>
+          )}
+        </div>
+
+        {/* Recipients Grid */}
+        <div className='space-y-4'>
+          <h4 className='flex items-center gap-2 text-sm font-semibold text-foreground'>
+            <Users className='h-4 w-4' />
+            Recipients
+          </h4>
+          <div className='grid gap-4 sm:grid-cols-2'>
+            {schedule.recipients.map((recipient, idx) => (
+              <div
+                key={`${recipient.address}-${recipient.shareBps}`}
+                className='rounded-2xl border border-border/40 bg-background/40 p-4 backdrop-blur-sm'
+              >
+                <div className='flex items-start justify-between gap-2'>
+                  <div className='flex-1 space-y-2'>
+                    {recipient.label ? (
+                      <p className='text-sm font-medium text-foreground'>
+                        {recipient.label}
+                      </p>
+                    ) : (
+                      <p className='text-xs text-muted-foreground'>
+                        Recipient {idx + 1}
+                      </p>
+                    )}
+                    <p className='break-all font-mono text-xs text-muted-foreground'>
+                      {recipient.address}
+                    </p>
+                  </div>
+                  <div className='flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3 py-1'>
+                    <Percent className='h-3 w-3 text-primary' />
+                    <span className='text-sm font-semibold text-primary'>
+                      {(recipient.shareBps / 100).toFixed(1)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Execution History */}
+        <div className='space-y-3'>
+          <h4 className='flex items-center gap-2 text-sm font-semibold text-foreground'>
+            <Clock className='h-4 w-4' />
+            Execution History
           </h4>
           <ScheduleExecutions executions={executions} />
         </div>

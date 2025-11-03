@@ -8,8 +8,27 @@ import { isAddress, keccak256, stringToBytes } from 'viem'
 import type { Address } from 'viem'
 import { toast } from 'sonner'
 
-import { Trash2 } from 'lucide-react'
+import {
+  Copy,
+  FileText,
+  Send,
+  Trash2,
+  Calendar,
+  User,
+  Wallet
+} from 'lucide-react'
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger
+} from '@/components/ui/alert-dialog'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -379,17 +398,8 @@ export function InvoicesSection() {
       }
 
       if (invoice.status === 'paid') {
-        toast.error('Paid invoices cannot be removed.')
+        toast.error('Paid invoices cannot be archived.')
         return
-      }
-
-      if (typeof window !== 'undefined') {
-        const confirmed = window.confirm(
-          'Archive this invoice? This hides it from your dashboard but keeps on-chain records intact.'
-        )
-        if (!confirmed) {
-          return
-        }
       }
 
       try {
@@ -658,73 +668,108 @@ export function InvoicesSection() {
         </Form>
       </div>
 
-      <div className='space-y-4'>
-        <h2 className='text-lg font-semibold text-foreground'>
-          Recent invoices
+      <div className='space-y-6'>
+        <h2 className='text-2xl font-bold text-foreground'>
+          Recent Invoices
         </h2>
         {invoices && invoices.length > 0 ? (
-          <div className='space-y-4'>
+          <div className='space-y-6'>
             {invoices.map(invoice => {
               const total = formatSettlementToken(BigInt(invoice.totalAmount))
               const shareUrl = invoiceShareUrl(invoice)
               const isDraft = invoice.status === 'draft'
               const issuingThis = issuingSlug === invoice.slug
               const archivingThis = archivingSlug === invoice.slug
-              const shareDescription = isDraft
-                ? 'Issue this invoice on-chain to activate payment links.'
-                : shareUrl
-                  ? shareUrl
-                  : 'Attach a SatsPay handle to generate a link.'
 
               return (
                 <div
                   key={invoice._id}
-                  className='rounded-2xl border border-border bg-card/60 p-5 shadow-sm'
+                  className='group relative overflow-hidden rounded-3xl border border-border/50 bg-gradient-to-br from-card/95 via-card/90 to-card/85 p-8 shadow-lg backdrop-blur-sm transition-all hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5'
                 >
-                  <div className='flex flex-col gap-4 md:flex-row md:items-start md:justify-between'>
-                    <div className='space-y-1.5'>
-                      <div className='flex items-center gap-2'>
-                        <p className='text-sm font-medium text-foreground'>
-                          {invoice.number}
-                        </p>
-                        {formatStatus(invoice.status)}
+                  {/* Decorative gradient orb */}
+                  <div className='pointer-events-none absolute -right-12 -top-12 h-48 w-48 rounded-full bg-gradient-to-br from-primary/10 to-accent/5 blur-3xl transition-all group-hover:scale-125' />
+
+                  <div className='relative space-y-6'>
+                    {/* Header Section */}
+                    <div className='flex items-start justify-between gap-4'>
+                      <div className='flex-1 space-y-3'>
+                        <div className='flex items-center gap-3'>
+                          <div className='flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-primary/20 to-accent/10 ring-1 ring-primary/20'>
+                            <FileText className='h-6 w-6 text-primary' />
+                          </div>
+                          <div>
+                            <div className='flex items-center gap-2'>
+                              <p className='font-mono text-xl font-bold text-foreground'>
+                                {invoice.number}
+                              </p>
+                              {formatStatus(invoice.status)}
+                            </div>
+                            {invoice.title ? (
+                              <p className='text-sm text-muted-foreground'>
+                                {invoice.title}
+                              </p>
+                            ) : null}
+                          </div>
+                        </div>
                       </div>
-                      {invoice.title ? (
-                        <p className='text-base font-semibold text-foreground'>
-                          {invoice.title}
+
+                      {/* Amount Badge */}
+                      <div className='rounded-2xl border border-primary/20 bg-primary/10 px-6 py-3 text-center backdrop-blur-sm'>
+                        <p className='text-xs font-medium uppercase tracking-wider text-muted-foreground'>
+                          Total Amount
                         </p>
-                      ) : null}
-                      <p className='text-sm text-muted-foreground'>
-                        {invoice.customerName ?? 'No customer name provided'}
-                      </p>
-                      <p className='text-xs text-muted-foreground'>
-                        Due {formatDueDate(invoice)}
-                      </p>
+                        <p className='mt-1 bg-gradient-to-r from-primary to-accent bg-clip-text text-3xl font-bold text-transparent'>
+                          {total}
+                        </p>
+                      </div>
                     </div>
-                    <div className='text-right'>
-                      <p className='text-lg font-semibold text-foreground'>
-                        {total}
-                      </p>
-                      <p className='text-xs text-muted-foreground'>
-                        {invoice.paylinkHandle
-                          ? `@${invoice.paylinkHandle}`
-                          : 'No paylink attached'}
-                      </p>
+
+                    {/* Info Grid */}
+                    <div className='grid gap-4 sm:grid-cols-3'>
+                      <div className='rounded-2xl border border-border/40 bg-background/40 p-4 backdrop-blur-sm'>
+                        <div className='flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-muted-foreground'>
+                          <User className='h-3.5 w-3.5' />
+                          Customer
+                        </div>
+                        <p className='mt-2 text-sm font-medium text-foreground'>
+                          {invoice.customerName ?? 'No customer name'}
+                        </p>
+                      </div>
+
+                      <div className='rounded-2xl border border-border/40 bg-background/40 p-4 backdrop-blur-sm'>
+                        <div className='flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-muted-foreground'>
+                          <Calendar className='h-3.5 w-3.5' />
+                          Due Date
+                        </div>
+                        <p className='mt-2 text-sm font-medium text-foreground'>
+                          {formatDueDate(invoice)}
+                        </p>
+                      </div>
+
+                      <div className='rounded-2xl border border-border/40 bg-background/40 p-4 backdrop-blur-sm'>
+                        <div className='flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-muted-foreground'>
+                          <Wallet className='h-3.5 w-3.5' />
+                          Pay Handle
+                        </div>
+                        <p className='mt-2 font-mono text-sm font-medium text-primary'>
+                          {invoice.paylinkHandle
+                            ? `@${invoice.paylinkHandle}`
+                            : 'Not attached'}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                  <Separator className='my-4' />
-                  <div className='flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
-                    <div className='text-xs text-muted-foreground'>
-                      {shareDescription}
-                    </div>
-                    <div className='flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end sm:gap-2'>
+
+                    {/* Action Buttons */}
+                    <div className='flex flex-wrap items-center gap-3'>
                       {isDraft ? (
                         <Button
                           type='button'
                           size='sm'
                           onClick={() => handleIssueDraft(invoice)}
                           disabled={issuingThis || isSubmitting}
+                          className='gap-2'
                         >
+                          <Send className='h-4 w-4' />
                           {issuingThis ? 'Publishing…' : 'Issue on-chain'}
                         </Button>
                       ) : null}
@@ -734,19 +779,50 @@ export function InvoicesSection() {
                         size='sm'
                         disabled={!shareUrl}
                         onClick={() => handleCopyShare(invoice)}
+                        className='gap-2'
                       >
+                        <Copy className='h-4 w-4' />
                         Copy payment link
                       </Button>
-                      <Button
-                        type='button'
-                        variant='ghost'
-                        size='sm'
-                        className='justify-start text-destructive hover:text-destructive'
-                        disabled={invoice.status === 'paid' || archivingThis}
-                        onClick={() => handleArchiveInvoice(invoice)}
-                      >
-                        <Trash2 className='mr-2 h-4 w-4' /> Archive
-                      </Button>
+
+                      {/* Delete Button with AlertDialog */}
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button
+                            type='button'
+                            variant='ghost'
+                            size='sm'
+                            className='gap-2 text-muted-foreground hover:text-destructive'
+                            disabled={invoice.status === 'paid' || archivingThis}
+                          >
+                            <Trash2 className='h-4 w-4' />
+                            Archive
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Archive this invoice?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              This will archive invoice "{invoice.number}" and hide it from your
+                              dashboard. On-chain records will remain intact.
+                              {invoice.status === 'paid' && (
+                                <span className='mt-2 block font-semibold text-destructive'>
+                                  Paid invoices cannot be archived.
+                                </span>
+                              )}
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() => handleArchiveInvoice(invoice)}
+                              className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
+                            >
+                              Archive invoice
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     </div>
                   </div>
                 </div>
@@ -754,8 +830,10 @@ export function InvoicesSection() {
             })}
           </div>
         ) : (
-          <div className='rounded-2xl border border-dashed border-border/70 bg-muted/30 p-10 text-center text-sm text-muted-foreground'>
-            Issue your first invoice to populate this list.
+          <div className='rounded-3xl border border-dashed border-border/70 bg-muted/30 p-12 text-center'>
+            <p className='text-base text-muted-foreground'>
+              Issue your first invoice to populate this list.
+            </p>
           </div>
         )}
       </div>
