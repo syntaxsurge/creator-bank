@@ -8,12 +8,13 @@ import { toast } from 'sonner'
 import type { Address } from 'viem'
 
 import {
+  Loader2,
+  Plus,
   Trash2,
   Users,
   Percent,
   Send,
   Clock,
-  Wallet,
   TrendingUp
 } from 'lucide-react'
 
@@ -31,6 +32,15 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
+} from '@/components/ui/dialog'
+import {
   Form,
   FormControl,
   FormField,
@@ -39,7 +49,6 @@ import {
   FormMessage
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Separator } from '@/components/ui/separator'
 import { api } from '@/convex/_generated/api'
 import type { Id } from '@/convex/_generated/dataModel'
 import { useChainPreference } from '@/hooks/use-chain-preference'
@@ -54,7 +63,6 @@ import {
   formatSettlementToken,
   parseSettlementTokenAmount
 } from '@/lib/settlement-token'
-import { cn } from '@/lib/utils'
 
 type RecipientFormValue = {
   address: string
@@ -380,6 +388,7 @@ export function PayoutSchedulesSection() {
     control: form.control,
     name: 'recipients'
   })
+  const [openCreate, setOpenCreate] = useState(false)
 
   const handleSubmit = async (values: ScheduleFormValues) => {
     if (!address) {
@@ -430,6 +439,7 @@ export function PayoutSchedulesSection() {
           }
         ]
       })
+      setOpenCreate(false)
     } catch (error) {
       console.error(error)
       toast.error(
@@ -537,182 +547,204 @@ export function PayoutSchedulesSection() {
 
   return (
     <div className='space-y-8'>
-      <div className='rounded-2xl border border-border bg-card/80 p-6 shadow-sm'>
-        <div className='mb-5 space-y-1'>
-          <h2 className='text-lg font-semibold text-foreground'>
-            Configure recurring payouts
-          </h2>
-          <p className='text-sm text-muted-foreground'>
-            Define collaborator splits, then trigger on-chain transfers in one
-            click.
-          </p>
-        </div>
-
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(handleSubmit)}
-            className='space-y-5'
-          >
-            <FormField
-              control={form.control}
-              name='name'
-              rules={{ required: 'Enter a schedule name' }}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Schedule name</FormLabel>
-                  <FormControl>
-                    <Input placeholder='Creator payroll' {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <div className='space-y-4'>
-              <div className='flex items-center justify-between'>
-                <h3 className='text-sm font-medium text-foreground'>
-                  Recipients
-                </h3>
-                <Button
-                  type='button'
-                  variant='outline'
-                  size='sm'
-                  onClick={() =>
-                    append({
-                      address: '',
-                      shareBps: Math.max(
-                        0,
-                        Math.floor(10000 / (fields.length + 1))
-                      ),
-                      label: ''
-                    })
-                  }
+      <div className='rounded-2xl border border-border/80 bg-card/80 p-6 shadow-sm'>
+        <div className='flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between'>
+          <div className='space-y-2'>
+            <h2 className='text-xl font-semibold text-foreground'>
+              Recurring payout studio
+            </h2>
+            <p className='max-w-2xl text-sm text-muted-foreground'>
+              Define collaborator splits and launch on-chain transfers with one click.
+            </p>
+          </div>
+          <Dialog open={openCreate} onOpenChange={setOpenCreate}>
+            <DialogTrigger asChild>
+              <Button type='button' size='sm' className='gap-2'>
+                <Plus className='h-4 w-4' />
+                New payout schedule
+              </Button>
+            </DialogTrigger>
+            <DialogContent className='max-w-3xl'>
+              <DialogHeader>
+                <DialogTitle>Create payout schedule</DialogTitle>
+                <DialogDescription>
+                  Allocate percentages across recipients. Shares must total 100% before saving.
+                </DialogDescription>
+              </DialogHeader>
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(handleSubmit)}
+                  className='space-y-5'
+                  autoComplete='off'
                 >
-                  Add recipient
-                </Button>
-              </div>
+                  <FormField
+                    control={form.control}
+                    name='name'
+                    rules={{ required: 'Enter a schedule name' }}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Schedule name</FormLabel>
+                        <FormControl>
+                          <Input placeholder='Creator payroll' {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-              <div className='space-y-4'>
-                {fields.map((field, index) => (
-                  <div
-                    key={field.id}
-                    className='rounded-xl border border-border/70 bg-background/80 p-4 shadow-sm'
-                  >
-                    <div className='grid grid-cols-1 gap-3 md:grid-cols-3'>
-                      <FormField
-                        control={form.control}
-                        name={`recipients.${index}.address`}
-                        render={({ field: fieldItem }) => (
-                          <FormItem className='md:col-span-2'>
-                            <FormLabel>Wallet address</FormLabel>
-                            <FormControl>
-                              <Input
-                                placeholder='0x...'
-                                className='font-mono'
-                                {...fieldItem}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name={`recipients.${index}.shareBps`}
-                        render={({ field: fieldItem }) => {
-                          const { value, onChange, onBlur, name, ref, ...rest } =
-                            fieldItem
-
-                          const displayValue =
-                            typeof value === 'number'
-                              ? (value / 100).toString()
-                              : ''
-
-                          return (
-                            <FormItem>
-                              <FormLabel>Share (%)</FormLabel>
-                              <FormControl>
-                                <Input
-                                  type='number'
-                                  inputMode='decimal'
-                                  min={0}
-                                  max={100}
-                                  step='0.01'
-                                  name={name}
-                                  ref={ref}
-                                  {...rest}
-                                  value={displayValue}
-                                  onChange={event => {
-                                    const inputValue = event.target.value
-                                    const numeric = Number(inputValue)
-                                    if (Number.isNaN(numeric)) return
-                                    const clamped = Math.min(
-                                      100,
-                                      Math.max(0, numeric)
-                                    )
-                                    onChange(Math.round(clamped * 100))
-                                  }}
-                                  onBlur={event => {
-                                    if (event.target.value === '') {
-                                      onChange(0)
-                                    }
-                                    onBlur()
-                                  }}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )
-                        }}
-                      />
+                  <div className='space-y-4'>
+                    <div className='flex items-center justify-between'>
+                      <h3 className='text-sm font-medium text-foreground'>
+                        Recipients
+                      </h3>
+                      <Button
+                        type='button'
+                        variant='outline'
+                        size='sm'
+                        onClick={() =>
+                          append({
+                            address: '',
+                            shareBps: Math.max(
+                              0,
+                              Math.floor(10000 / (fields.length + 1))
+                            ),
+                            label: ''
+                          })
+                        }
+                      >
+                        Add recipient
+                      </Button>
                     </div>
-                    <div className='mt-3 grid grid-cols-1 gap-3 md:grid-cols-3'>
-                      <FormField
-                        control={form.control}
-                        name={`recipients.${index}.label`}
-                        render={({ field: fieldItem }) => (
-                          <FormItem className='md:col-span-2'>
-                            <FormLabel>Label</FormLabel>
-                            <FormControl>
-                              <Input
-                                placeholder='Optional note'
-                                {...fieldItem}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <div className='flex items-end justify-end'>
-                        {fields.length > 1 ? (
-                          <Button
-                            type='button'
-                            variant='ghost'
-                            size='sm'
-                            onClick={() => remove(index)}
-                          >
-                            Remove
-                          </Button>
-                        ) : null}
-                      </div>
+
+                    <div className='space-y-4'>
+                      {fields.map((field, index) => (
+                        <div
+                          key={field.id}
+                          className='rounded-xl border border-border/70 bg-background/80 p-4 shadow-sm'
+                        >
+                          <div className='grid grid-cols-1 gap-3 md:grid-cols-3'>
+                            <FormField
+                              control={form.control}
+                              name={`recipients.${index}.address`}
+                              render={({ field: fieldItem }) => (
+                                <FormItem className='md:col-span-2'>
+                                  <FormLabel>Wallet address</FormLabel>
+                                  <FormControl>
+                                    <Input
+                                      placeholder='0x...'
+                                      className='font-mono'
+                                      {...fieldItem}
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            <FormField
+                              control={form.control}
+                              name={`recipients.${index}.shareBps`}
+                              render={({ field: fieldItem }) => {
+                                const { value, onChange, onBlur, name, ref, ...rest } =
+                                  fieldItem
+
+                                const displayValue =
+                                  typeof value === 'number'
+                                    ? (value / 100).toString()
+                                    : ''
+
+                                return (
+                                  <FormItem>
+                                    <FormLabel>Share (%)</FormLabel>
+                                    <FormControl>
+                                      <Input
+                                        type='number'
+                                        inputMode='decimal'
+                                        min={0}
+                                        max={100}
+                                        step='0.01'
+                                        name={name}
+                                        ref={ref}
+                                        {...rest}
+                                        value={displayValue}
+                                        onChange={event => {
+                                          const inputValue = event.target.value
+                                          const numeric = Number(inputValue)
+                                          if (Number.isNaN(numeric)) return
+                                          const clamped = Math.min(
+                                            100,
+                                            Math.max(0, numeric)
+                                          )
+                                          onChange(Math.round(clamped * 100))
+                                        }}
+                                        onBlur={event => {
+                                          if (event.target.value === '') {
+                                            onChange(0)
+                                          }
+                                          onBlur()
+                                        }}
+                                      />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )
+                              }}
+                            />
+                          </div>
+                          <div className='mt-3 grid grid-cols-1 gap-3 md:grid-cols-3'>
+                            <FormField
+                              control={form.control}
+                              name={`recipients.${index}.label`}
+                              render={({ field: fieldItem }) => (
+                                <FormItem className='md:col-span-2'>
+                                  <FormLabel>Label</FormLabel>
+                                  <FormControl>
+                                    <Input
+                                      placeholder='Optional note'
+                                      {...fieldItem}
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            <div className='flex items-end justify-end'>
+                              {fields.length > 1 ? (
+                                <Button
+                                  type='button'
+                                  variant='ghost'
+                                  size='sm'
+                                  onClick={() => remove(index)}
+                                >
+                                  Remove
+                                </Button>
+                              ) : null}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
-                ))}
-              </div>
-            </div>
 
-            <div className='flex items-center justify-end'>
-              <Button type='submit'>Save schedule</Button>
-            </div>
-          </form>
-        </Form>
+                  <DialogFooter className='flex items-center justify-end'>
+                    <Button type='submit'>Save schedule</Button>
+                  </DialogFooter>
+                </form>
+              </Form>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
 
       <div className='space-y-4'>
         <h2 className='text-lg font-semibold text-foreground'>
           Active schedules
         </h2>
-        {schedules && schedules.length > 0 ? (
+        {!schedules ? (
+          <div className='flex items-center justify-center gap-3 rounded-2xl border border-border/70 bg-muted/20 p-10 text-sm text-muted-foreground'>
+            <Loader2 className='h-5 w-5 animate-spin text-primary' />
+            Loading payout schedules…
+          </div>
+        ) : schedules.length > 0 ? (
           <div className='space-y-4'>
             {schedules.map(schedule => {
               const scheduleId = schedule._id as Id<'payoutSchedules'>
@@ -735,7 +767,7 @@ export function PayoutSchedulesSection() {
           </div>
         ) : (
           <div className='rounded-2xl border border-dashed border-border/70 bg-muted/30 p-10 text-center text-sm text-muted-foreground'>
-            Define payout schedules to automate collaborator revenue splits.
+            Use the New payout schedule button above to automate collaborator revenue splits.
           </div>
         )}
       </div>

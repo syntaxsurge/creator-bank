@@ -6,7 +6,15 @@ import { useAction, useMutation, useQuery } from 'convex/react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
-import { Copy, RefreshCw, Trash2, Link2, Wallet } from 'lucide-react'
+import {
+  Copy,
+  Loader2,
+  Plus,
+  RefreshCw,
+  Trash2,
+  Link2,
+  Wallet
+} from 'lucide-react'
 
 import {
   AlertDialog,
@@ -20,6 +28,15 @@ import {
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
+} from '@/components/ui/dialog'
 import {
   Form,
   FormControl,
@@ -245,6 +262,7 @@ export function PaylinksSection() {
   const [appOrigin, setAppOrigin] = useState<string | null>(null)
   const [syncingHandle, setSyncingHandle] = useState<string | null>(null)
   const [archivingId, setArchivingId] = useState<Id<'paylinks'> | null>(null)
+  const [openCreate, setOpenCreate] = useState(false)
 
   const musdAddress = useMemo(
     () => getMusdContractAddress(chainId) || '',
@@ -280,6 +298,7 @@ export function PaylinksSection() {
 
       toast.success('SatsPay link created.')
       form.reset()
+      setOpenCreate(false)
     } catch (error) {
       console.error(error)
       toast.error(
@@ -326,95 +345,115 @@ export function PaylinksSection() {
 
   return (
     <div className='space-y-8'>
-      <div className='rounded-2xl border border-border bg-card/80 p-6 shadow-sm'>
-        <div className='mb-5 space-y-1'>
-          <h2 className='text-lg font-semibold text-foreground'>
-            Create a SatsPay link
-          </h2>
-          <p className='text-sm text-muted-foreground'>
-            Mint a permanent pay handle for instant MUSD deposits. Share{' '}
-            <span className='font-medium text-foreground'>
-              /pay/&lt;handle&gt;
-            </span>{' '}
-            anywhere you need fast settlement and sync receipts from this
-            dashboard when transfers clear on-chain.
-          </p>
+      <div className='rounded-2xl border border-border/80 bg-card/80 p-6 shadow-sm'>
+        <div className='flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between'>
+          <div className='space-y-2'>
+            <h2 className='text-xl font-semibold text-foreground'>
+              SatsPay link studio
+            </h2>
+            <p className='max-w-2xl text-sm text-muted-foreground'>
+              Mint a permanent pay handle for instant MUSD deposits and keep your
+              receipts synced as transfers finalize on-chain.
+            </p>
+          </div>
+          <Dialog open={openCreate} onOpenChange={setOpenCreate}>
+            <DialogTrigger asChild>
+              <Button type='button' size='sm' className='gap-2'>
+                <Plus className='h-4 w-4' />
+                Create SatsPay link
+              </Button>
+            </DialogTrigger>
+            <DialogContent className='max-w-3xl'>
+              <DialogHeader>
+                <DialogTitle>Create SatsPay link</DialogTitle>
+                <DialogDescription>
+                  Reserve a handle and route deposits straight to your connected
+                  wallet. All fields are optional except the handle.
+                </DialogDescription>
+              </DialogHeader>
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  className='grid grid-cols-1 gap-4 md:grid-cols-2'
+                  autoComplete='off'
+                >
+                  <FormField
+                    control={form.control}
+                    name='handle'
+                    rules={{
+                      required: 'Handle is required',
+                      minLength: {
+                        value: 3,
+                        message: 'Minimum length is 3 characters'
+                      }
+                    }}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Handle</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder='creator-name'
+                            {...field}
+                            className='font-mono'
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name='title'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Title</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder='Income stream name (optional)'
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name='description'
+                    render={({ field }) => (
+                      <FormItem className='md:col-span-2'>
+                        <FormLabel>Description</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder='Share context for contributors or clients.'
+                            rows={3}
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <DialogFooter className='md:col-span-2'>
+                    <Button type='submit'>Create link</Button>
+                  </DialogFooter>
+                </form>
+              </Form>
+            </DialogContent>
+          </Dialog>
         </div>
-
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className='grid grid-cols-1 gap-4 md:grid-cols-2'
-          >
-            <FormField
-              control={form.control}
-              name='handle'
-              rules={{
-                required: 'Handle is required',
-                minLength: {
-                  value: 3,
-                  message: 'Minimum length is 3 characters'
-                }
-              }}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Handle</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder='creator-name'
-                      {...field}
-                      className='font-mono'
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name='title'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Title</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder='Income stream name (optional)'
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name='description'
-              render={({ field }) => (
-                <FormItem className='md:col-span-2'>
-                  <FormLabel>Description</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder='Share context for contributors or clients.'
-                      rows={3}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <div className='flex items-center justify-end md:col-span-2'>
-              <Button type='submit'>Create link</Button>
-            </div>
-          </form>
-        </Form>
       </div>
 
       <div className={cn('space-y-6')}>
-        {paylinks && paylinks.length > 0 ? (
+        {!paylinks ? (
+          <div className='flex items-center justify-center gap-3 rounded-2xl border border-border/70 bg-muted/20 p-10 text-sm text-muted-foreground'>
+            <Loader2 className='h-5 w-5 animate-spin text-primary' />
+            Loading SatsPay links…
+          </div>
+        ) : paylinks.length > 0 ? (
           paylinks.map(paylink => (
             <PaylinkCard
               key={paylink._id}
@@ -429,8 +468,7 @@ export function PaylinksSection() {
           ))
         ) : (
           <div className='rounded-2xl border border-dashed border-border/70 bg-muted/30 p-10 text-center text-sm text-muted-foreground'>
-            You have not created any SatsPay links yet. Use the form above to
-            issue your first pay handle.
+            You have not created any SatsPay links yet. Use the Create SatsPay link button to issue your first pay handle.
           </div>
         )}
       </div>

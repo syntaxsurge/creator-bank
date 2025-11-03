@@ -11,6 +11,8 @@ import { toast } from 'sonner'
 import {
   Copy,
   FileText,
+  Loader2,
+  Plus,
   Send,
   Trash2,
   Calendar,
@@ -31,6 +33,15 @@ import {
 } from '@/components/ui/alert-dialog'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
+} from '@/components/ui/dialog'
 import {
   Form,
   FormControl,
@@ -137,6 +148,7 @@ export function InvoicesSection() {
   const [isSubmitting, setSubmitting] = useState(false)
   const [issuingSlug, setIssuingSlug] = useState<string | null>(null)
   const [archivingSlug, setArchivingSlug] = useState<string | null>(null)
+  const [openCreate, setOpenCreate] = useState(false)
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
@@ -307,6 +319,7 @@ export function InvoicesSection() {
           }
         ]
       })
+      setOpenCreate(false)
 
       const publishResult = await publishInvoiceOnchain({
         slug: created.slug,
@@ -422,257 +435,281 @@ export function InvoicesSection() {
 
   return (
     <div className='space-y-8'>
-      <div className='rounded-2xl border border-border bg-card/80 p-6 shadow-sm'>
-        <div className='mb-5 space-y-1'>
-          <h2 className='text-lg font-semibold text-foreground'>
-            Generate an on-chain invoice
-          </h2>
-          <p className='text-sm text-muted-foreground'>
-            Each invoice is priced in {SETTLEMENT_TOKEN_SYMBOL} and links
-            directly to your selected SatsPay handle.
-          </p>
-        </div>
-
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(handleSubmit)}
-            className='grid grid-cols-1 gap-4 md:grid-cols-2'
-          >
-            <FormField
-              control={form.control}
-              name='title'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Invoice title</FormLabel>
-                  <FormControl>
-                    <Input placeholder='Monthly retainer' {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name='paylinkHandle'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Paylink handle</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder='Use an existing @handle'
-                      list='paylink-options'
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    SatsPay handle that will receive payment. Leave blank to
-                    attach later.
-                  </FormDescription>
-                  <FormMessage />
-                  <datalist id='paylink-options'>
-                    {(paylinks ?? []).map(link => (
-                      <option key={link._id} value={`@${link.handle}`}>
-                        {link.title ?? `@${link.handle}`}
-                      </option>
-                    ))}
-                  </datalist>
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name='customerName'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Customer name</FormLabel>
-                  <FormControl>
-                    <Input placeholder='Client or organization' {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name='customerEmail'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Customer email</FormLabel>
-                  <FormControl>
-                    <Input placeholder='Optional contact email' {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name='payerAddress'
-              rules={{
-                validate: value =>
-                  !value || value.trim() === '' || isAddress(value.trim())
-                    ? true
-                    : 'Enter a valid EVM address'
-              }}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Payer wallet (optional)</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder='Restrict payment to a wallet address'
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    Leave blank to accept payment from any wallet. The
-                    registry enforces this address when provided.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name='dueDate'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Due date</FormLabel>
-                  <FormControl>
-                    <Input type='date' {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name='notes'
-              render={({ field }) => (
-                <FormItem className='md:col-span-2'>
-                  <FormLabel>Notes</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder='Optional footer or memo'
-                      rows={3}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <div className='space-y-4 md:col-span-2'>
-              <div className='flex items-center justify-between'>
-                <h3 className='text-sm font-medium text-foreground'>
-                  Line items
-                </h3>
-                <Button
-                  type='button'
-                  variant='outline'
-                  size='sm'
-                  onClick={() =>
-                    append({ description: '', quantity: 1, unitAmount: '' })
-                  }
+      <div className='rounded-2xl border border-border/80 bg-card/80 p-6 shadow-sm'>
+        <div className='flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between'>
+          <div className='space-y-2'>
+            <h2 className='text-xl font-semibold text-foreground'>
+              Invoice studio
+            </h2>
+            <p className='max-w-2xl text-sm text-muted-foreground'>
+              Price work in {SETTLEMENT_TOKEN_SYMBOL}, link client payments to SatsPay,
+              and push invoices on-chain with a single flow.
+            </p>
+          </div>
+          <Dialog open={openCreate} onOpenChange={setOpenCreate}>
+            <DialogTrigger asChild>
+              <Button type='button' size='sm' className='gap-2'>
+                <Plus className='h-4 w-4' />
+                Issue invoice
+              </Button>
+            </DialogTrigger>
+            <DialogContent className='max-w-4xl'>
+              <DialogHeader>
+                <DialogTitle>Issue invoice</DialogTitle>
+                <DialogDescription>
+                  Configure line items, link a SatsPay handle, and optionally lock a
+                  payer wallet before publishing on-chain.
+                </DialogDescription>
+              </DialogHeader>
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(handleSubmit)}
+                  className='grid grid-cols-1 gap-4 md:grid-cols-2'
+                  autoComplete='off'
                 >
-                  Add line item
-                </Button>
-              </div>
+                  <FormField
+                    control={form.control}
+                    name='title'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Invoice title</FormLabel>
+                        <FormControl>
+                          <Input placeholder='Monthly retainer' {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-              <div className='space-y-4'>
-                {fields.map((field, index) => (
-                  <div
-                    key={field.id}
-                    className='rounded-xl border border-border/70 bg-background/80 p-4 shadow-sm'
-                  >
-                    <div className='grid grid-cols-1 gap-3 md:grid-cols-6'>
-                      <FormField
-                        control={form.control}
-                        name={`lineItems.${index}.description`}
-                        render={({ field: fieldItem }) => (
-                          <FormItem className='md:col-span-3'>
-                            <FormLabel>Description</FormLabel>
-                            <FormControl>
-                              <Input
-                                placeholder='Describe the service'
-                                {...fieldItem}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name={`lineItems.${index}.quantity`}
-                        render={({ field: fieldItem }) => (
-                          <FormItem className='md:col-span-1'>
-                            <FormLabel>Qty</FormLabel>
-                            <FormControl>
-                              <Input
-                                type='number'
-                                min={1}
-                                step={1}
-                                {...fieldItem}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name={`lineItems.${index}.unitAmount`}
-                        render={({ field: fieldItem }) => (
-                          <FormItem className='md:col-span-2'>
-                            <FormLabel>
-                              Unit price ({SETTLEMENT_TOKEN_SYMBOL})
-                            </FormLabel>
-                            <FormControl>
-                              <Input placeholder='0.00' {...fieldItem} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
+                  <FormField
+                    control={form.control}
+                    name='paylinkHandle'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Paylink handle</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder='Use an existing @handle'
+                            list='paylink-options'
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          SatsPay handle that will receive payment. Leave blank to
+                          attach later.
+                        </FormDescription>
+                        <FormMessage />
+                        <datalist id='paylink-options'>
+                          {(paylinks ?? []).map(link => (
+                            <option key={link._id} value={`@${link.handle}`}>
+                              {link.title ?? `@${link.handle}`}
+                            </option>
+                          ))}
+                        </datalist>
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name='customerName'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Customer name</FormLabel>
+                        <FormControl>
+                          <Input placeholder='Client or organization' {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name='customerEmail'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Customer email</FormLabel>
+                        <FormControl>
+                          <Input placeholder='Optional contact email' {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name='payerAddress'
+                    rules={{
+                      validate: value =>
+                        !value || value.trim() === '' || isAddress(value.trim())
+                          ? true
+                          : 'Enter a valid EVM address'
+                    }}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Payer wallet (optional)</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder='Restrict payment to a wallet address'
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          Leave blank to accept payment from any wallet. The
+                          registry enforces this address when provided.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name='dueDate'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Due date</FormLabel>
+                        <FormControl>
+                          <Input type='date' {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name='notes'
+                    render={({ field }) => (
+                      <FormItem className='md:col-span-2'>
+                        <FormLabel>Notes</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder='Optional footer or memo'
+                            rows={3}
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <div className='space-y-4 md:col-span-2'>
+                    <div className='flex items-center justify-between'>
+                      <h3 className='text-sm font-medium text-foreground'>
+                        Line items
+                      </h3>
+                      <Button
+                        type='button'
+                        variant='outline'
+                        size='sm'
+                        onClick={() =>
+                          append({ description: '', quantity: 1, unitAmount: '' })
+                        }
+                      >
+                        Add line item
+                      </Button>
                     </div>
-                    <div className='mt-3 flex justify-end'>
-                      {fields.length > 1 ? (
-                        <Button
-                          type='button'
-                          variant='ghost'
-                          size='sm'
-                          onClick={() => remove(index)}
+
+                    <div className='space-y-4'>
+                      {fields.map((field, index) => (
+                        <div
+                          key={field.id}
+                          className='rounded-xl border border-border/70 bg-background/80 p-4 shadow-sm'
                         >
-                          Remove item
-                        </Button>
-                      ) : null}
+                          <div className='grid grid-cols-1 gap-3 md:grid-cols-6'>
+                            <FormField
+                              control={form.control}
+                              name={`lineItems.${index}.description`}
+                              render={({ field: fieldItem }) => (
+                                <FormItem className='md:col-span-3'>
+                                  <FormLabel>Description</FormLabel>
+                                  <FormControl>
+                                    <Input
+                                      placeholder='Describe the service'
+                                      {...fieldItem}
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            <FormField
+                              control={form.control}
+                              name={`lineItems.${index}.quantity`}
+                              render={({ field: fieldItem }) => (
+                                <FormItem className='md:col-span-1'>
+                                  <FormLabel>Qty</FormLabel>
+                                  <FormControl>
+                                    <Input
+                                      type='number'
+                                      min={1}
+                                      step={1}
+                                      {...fieldItem}
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            <FormField
+                              control={form.control}
+                              name={`lineItems.${index}.unitAmount`}
+                              render={({ field: fieldItem }) => (
+                                <FormItem className='md:col-span-2'>
+                                  <FormLabel>
+                                    Unit price ({SETTLEMENT_TOKEN_SYMBOL})
+                                  </FormLabel>
+                                  <FormControl>
+                                    <Input placeholder='0.00' {...fieldItem} />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                          </div>
+                          <div className='mt-3 flex justify-end'>
+                            {fields.length > 1 ? (
+                              <Button
+                                type='button'
+                                variant='ghost'
+                                size='sm'
+                                onClick={() => remove(index)}
+                              >
+                                Remove item
+                              </Button>
+                            ) : null}
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
-                ))}
-              </div>
-            </div>
 
-            <div className='flex items-center justify-end md:col-span-2'>
-              <Button type='submit' disabled={isSubmitting}>
-                {isSubmitting ? 'Issuing invoice…' : 'Issue invoice'}
-              </Button>
-            </div>
-          </form>
-        </Form>
+                  <DialogFooter className='md:col-span-2'>
+                    <Button type='submit' disabled={isSubmitting}>
+                      {isSubmitting ? 'Issuing invoice…' : 'Issue invoice'}
+                    </Button>
+                  </DialogFooter>
+                </form>
+              </Form>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
 
       <div className='space-y-6'>
         <h2 className='text-2xl font-bold text-foreground'>
           Recent Invoices
         </h2>
-        {invoices && invoices.length > 0 ? (
+        {!invoices ? (
+          <div className='flex items-center justify-center gap-3 rounded-3xl border border-border/70 bg-muted/20 p-12 text-sm text-muted-foreground'>
+            <Loader2 className='h-5 w-5 animate-spin text-primary' />
+            Loading invoices…
+          </div>
+        ) : invoices.length > 0 ? (
           <div className='space-y-6'>
             {invoices.map(invoice => {
               const total = formatSettlementToken(BigInt(invoice.totalAmount))
@@ -832,7 +869,7 @@ export function InvoicesSection() {
         ) : (
           <div className='rounded-3xl border border-dashed border-border/70 bg-muted/30 p-12 text-center'>
             <p className='text-base text-muted-foreground'>
-              Issue your first invoice to populate this list.
+              Use the Issue invoice button above to populate this list with your first record.
             </p>
           </div>
         )}

@@ -6,7 +6,14 @@ import { useMutation, useQuery } from 'convex/react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
-import { Plus, TrendingUp, TrendingDown, Trash2, Activity } from 'lucide-react'
+import {
+  Activity,
+  Loader2,
+  Plus,
+  TrendingDown,
+  TrendingUp,
+  Trash2
+} from 'lucide-react'
 
 import {
   AlertDialog,
@@ -289,7 +296,10 @@ function GoalActivityList({
 
   if (!movements) {
     return (
-      <p className='text-sm text-muted-foreground'>Loading activity&hellip;</p>
+      <div className='flex items-center gap-2 text-sm text-muted-foreground'>
+        <Loader2 className='h-4 w-4 animate-spin text-primary' />
+        Loading activity…
+      </div>
     )
   }
 
@@ -546,6 +556,7 @@ export function SaveGoalsSection() {
   const createGoal = useMutation(api.saveGoals.create)
 
   const [isSubmitting, setSubmitting] = useState(false)
+  const [openCreate, setOpenCreate] = useState(false)
 
   const form = useForm<GoalFormValues>({
     defaultValues: {
@@ -594,6 +605,7 @@ export function SaveGoalsSection() {
       })
       toast.success('Savings goal created.')
       form.reset()
+      setOpenCreate(false)
     } catch (error) {
       console.error(error)
       toast.error(
@@ -608,103 +620,115 @@ export function SaveGoalsSection() {
 
   return (
     <div className='space-y-10'>
-      <div className='rounded-2xl border border-border bg-card/80 p-6 shadow-sm'>
-        <div className='space-y-2'>
-          <h2 className='text-xl font-semibold text-foreground'>
-            New save goal
-          </h2>
-          <p className='text-sm text-muted-foreground'>
-            Create an envelope to track how much of your MUSD treasury you have
-            earmarked for a future payout or purchase. Funds stay in your wallet
-            &mdash; this table helps you measure progress while we prepare goal
-            locking with staking rewards.
-          </p>
-        </div>
-
-        <Separator className='my-6' />
-
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className='grid grid-cols-1 gap-5 md:grid-cols-2'
-            autoComplete='off'
-          >
-            <FormField
-              control={form.control}
-              name='name'
-              rules={{ required: true }}
-              render={({ field }) => (
-                <FormItem className='md:col-span-1'>
-                  <FormLabel>Goal name</FormLabel>
-                  <FormControl>
-                    <Input {...field} placeholder='e.g. Equipment fund' />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name='targetAmount'
-              render={({ field }) => (
-                <FormItem className='md:col-span-1'>
-                  <FormLabel>
-                    Target amount ({SETTLEMENT_TOKEN_SYMBOL})
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      type='number'
-                      min='0'
-                      step='0.01'
-                      placeholder='0.00'
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name='targetDate'
-              render={({ field }) => (
-                <FormItem className='md:col-span-1'>
-                  <FormLabel>Target date (optional)</FormLabel>
-                  <FormControl>
-                    <Input {...field} type='date' />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name='notes'
-              render={({ field }) => (
-                <FormItem className='md:col-span-2'>
-                  <FormLabel>Notes (optional)</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      {...field}
-                      rows={3}
-                      placeholder='Add context for this goal.'
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <div className='md:col-span-2'>
-              <Button type='submit' disabled={isSubmitting}>
-                {isSubmitting ? 'Creating goal...' : 'Create goal'}
+      <div className='rounded-2xl border border-border/80 bg-card/80 p-6 shadow-sm'>
+        <div className='flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between'>
+          <div className='space-y-2'>
+            <h2 className='text-xl font-semibold text-foreground'>
+              Savings goal studio
+            </h2>
+            <p className='max-w-2xl text-sm text-muted-foreground'>
+              Track how much MUSD you have earmarked for upcoming expenses while funds stay in your wallet.
+            </p>
+          </div>
+          <Dialog open={openCreate} onOpenChange={setOpenCreate}>
+            <DialogTrigger asChild>
+              <Button type='button' size='sm' className='gap-2'>
+                <Plus className='h-4 w-4' />
+                New savings goal
               </Button>
-            </div>
-          </form>
-        </Form>
+            </DialogTrigger>
+            <DialogContent className='max-w-3xl'>
+              <DialogHeader>
+                <DialogTitle>Create savings goal</DialogTitle>
+                <DialogDescription>
+                  Define a target amount, optional date, and notes to organize future payouts.
+                </DialogDescription>
+              </DialogHeader>
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  className='grid grid-cols-1 gap-5 md:grid-cols-2'
+                  autoComplete='off'
+                >
+                  <FormField
+                    control={form.control}
+                    name='name'
+                    rules={{ required: true }}
+                    render={({ field }) => (
+                      <FormItem className='md:col-span-1'>
+                        <FormLabel>Goal name</FormLabel>
+                        <FormControl>
+                          <Input {...field} placeholder='e.g. Equipment fund' />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name='targetAmount'
+                    render={({ field }) => (
+                      <FormItem className='md:col-span-1'>
+                        <FormLabel>
+                          Target amount ({SETTLEMENT_TOKEN_SYMBOL})
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            type='number'
+                            min='0'
+                            step='0.01'
+                            placeholder='0.00'
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name='targetDate'
+                    render={({ field }) => (
+                      <FormItem className='md:col-span-1'>
+                        <FormLabel>Target date (optional)</FormLabel>
+                        <FormControl>
+                          <Input {...field} type='date' />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name='notes'
+                    render={({ field }) => (
+                      <FormItem className='md:col-span-2'>
+                        <FormLabel>Notes (optional)</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            {...field}
+                            rows={3}
+                            placeholder='Add context for this goal.'
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <DialogFooter className='md:col-span-2 flex items-center justify-end'>
+                    <Button type='submit' disabled={isSubmitting}>
+                      {isSubmitting ? 'Creating goal...' : 'Create goal'}
+                    </Button>
+                  </DialogFooter>
+                </form>
+              </Form>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
 
       <div className='space-y-4'>
@@ -719,25 +743,24 @@ export function SaveGoalsSection() {
           </p>
         </div>
 
-        {goals && goals.length === 0 ? (
-          <div className='rounded-2xl border border-dashed border-border/70 bg-muted/20 p-8 text-center text-sm text-muted-foreground'>
-            No goals yet. Create your first envelope to start earmarking funds.
-          </div>
-        ) : null}
-
         {!goals ? (
-          <div className='rounded-2xl border border-border/60 bg-card/60 p-8 text-sm text-muted-foreground'>
-            Loading goals&hellip;
+          <div className='flex items-center justify-center gap-3 rounded-2xl border border-border/70 bg-muted/20 p-10 text-sm text-muted-foreground'>
+            <Loader2 className='h-5 w-5 animate-spin text-primary' />
+            Loading goals…
           </div>
-        ) : null}
-
-        {sortedGoals.map(goal => (
-          <GoalCard
-            key={goal._id}
-            goal={goal}
-            settlementTokenAddress={settlementTokenAddress}
-          />
-        ))}
+        ) : goals.length === 0 ? (
+          <div className='rounded-2xl border border-dashed border-border/70 bg-muted/20 p-8 text-center text-sm text-muted-foreground'>
+            Use the New savings goal button above to start earmarking funds.
+          </div>
+        ) : (
+          sortedGoals.map(goal => (
+            <GoalCard
+              key={goal._id}
+              goal={goal}
+              settlementTokenAddress={settlementTokenAddress}
+            />
+          ))
+        )}
       </div>
     </div>
   )
