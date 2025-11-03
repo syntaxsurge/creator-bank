@@ -46,16 +46,10 @@ const PUBLIC_ENV_VARS: Record<string, string> = {
     process.env.NEXT_PUBLIC_REVENUE_SPLIT_ROUTER_ADDRESS ?? '',
   NEXT_PUBLIC_PLATFORM_TREASURY_ADDRESS:
     process.env.NEXT_PUBLIC_PLATFORM_TREASURY_ADDRESS ?? '',
-  NEXT_PUBLIC_WRAPPED_BTC_ADDRESS:
-    process.env.NEXT_PUBLIC_WRAPPED_BTC_ADDRESS ?? '',
   NEXT_PUBLIC_MUSD_CONTRACT_ADDRESS:
     process.env.NEXT_PUBLIC_MUSD_CONTRACT_ADDRESS ?? '',
   NEXT_PUBLIC_PYTH_CONTRACT_ADDRESS:
-    process.env.NEXT_PUBLIC_PYTH_CONTRACT_ADDRESS ?? '',
-  NEXT_PUBLIC_TIGRIS_ROUTER_ADDRESS:
-    process.env.NEXT_PUBLIC_TIGRIS_ROUTER_ADDRESS ?? '',
-  NEXT_PUBLIC_TIGRIS_MUSD_BTC_POOL_ADDRESS:
-    process.env.NEXT_PUBLIC_TIGRIS_MUSD_BTC_POOL_ADDRESS ?? ''
+    process.env.NEXT_PUBLIC_PYTH_CONTRACT_ADDRESS ?? ''
 }
 
 function isSupportedChainId(value: unknown): value is MezoChainId {
@@ -223,10 +217,6 @@ export function getRevenueSplitRouterAddress(chainId?: MezoChainId): string {
   return getAddressForKey('NEXT_PUBLIC_REVENUE_SPLIT_ROUTER_ADDRESS', chainId)
 }
 
-export function getWrappedBtcContractAddress(chainId?: MezoChainId): string {
-  return getAddressForKey('NEXT_PUBLIC_WRAPPED_BTC_ADDRESS', chainId)
-}
-
 export function getMusdContractAddress(chainId?: MezoChainId): string {
   return getAddressForKey('NEXT_PUBLIC_MUSD_CONTRACT_ADDRESS', chainId) ?? ''
 }
@@ -236,17 +226,6 @@ export function getPythContractAddress(chainId?: MezoChainId): string {
     getAddressForKey('NEXT_PUBLIC_PYTH_CONTRACT_ADDRESS', chainId) ||
     '0x2880aB155794e7179c9eE2e38200202908C17B43'
   )
-}
-
-export function getTigrisRouterAddress(chainId?: MezoChainId): string {
-  return (
-    getAddressForKey('NEXT_PUBLIC_TIGRIS_ROUTER_ADDRESS', chainId) ||
-    '0x16A76d3cd3C1e3CE843C6680d6B37E9116b5C706'
-  )
-}
-
-export function getTigrisMusdBtcPoolAddress(chainId?: MezoChainId): string {
-  return getAddressForKey('NEXT_PUBLIC_TIGRIS_MUSD_BTC_POOL_ADDRESS', chainId)
 }
 
 export function getChainName(

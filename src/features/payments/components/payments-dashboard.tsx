@@ -9,14 +9,14 @@ import { PaylinksSection } from './paylinks-section'
 import { PayoutSchedulesSection } from './payout-schedules-section'
 import { SaveGoalsSection } from './save-goals-section'
 import { StatusOverviewBanner, StatusSection } from './status-section'
-import { SwapSection } from './swap-section'
+import { GetMusdSection } from './get-musd-section'
 
 const TAB_ITEMS = [
   { value: 'paylinks', label: 'SatsPay Links' },
   { value: 'invoices', label: 'Invoices' },
   { value: 'payouts', label: 'Recurring Payouts' },
   { value: 'goals', label: 'Save Goals' },
-  { value: 'swap', label: 'Swap' },
+  { value: 'get-musd', label: 'Get MUSD' },
   { value: 'status', label: 'Status' }
 ] as const
 
@@ -33,8 +33,7 @@ export function PaymentsDashboard() {
         <p className='text-sm text-muted-foreground'>
           Operate your creator bank end-to-end: accept MUSD with Passport
           wallets, reconcile invoices, earmark save goals, spin up recurring
-          payouts, swap into BTC, and monitor Mezo health from one command
-          center.
+          payouts, and monitor Mezo health from one command center.
         </p>
       </div>
 
@@ -71,8 +70,8 @@ export function PaymentsDashboard() {
           <SaveGoalsSection />
         </TabsContent>
 
-        <TabsContent value='swap'>
-          <SwapSection />
+        <TabsContent value='get-musd'>
+          <GetMusdSection />
         </TabsContent>
 
         <TabsContent value='status'>

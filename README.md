@@ -6,7 +6,7 @@ CreatorBank is a full-stack dApp for creators and communities to run bitcoin-bac
 
 - **Bitcoin-first onboarding.** Passport lets members connect with Bitcoin-native wallets alongside familiar EVM wallets, so there is no “pick a chain” friction.
 - **Recurring revenue without custodians.** Memberships, payouts, and marketplaces operate through audited smart contracts deployed to Mezo testnet/mainnet.
-- **Creator tooling in one place.** Courses, paylinks, invoices, swaps, and payouts live in a single UI wired to the same chain data and Convex backend.
+- **Creator tooling in one place.** Courses, paylinks, invoices, payouts, and a Mezo hub shortcut live in a single UI wired to the same chain data and Convex backend.
 
 ## Feature highlights
 
@@ -15,7 +15,7 @@ CreatorBank is a full-stack dApp for creators and communities to run bitcoin-bac
 - On-chain services for memberships, marketplace listings, registrar wiring, and split payouts built on viem `PublicClient` + wallet clients.
 - Convex-backed data model for groups, posts, classroom content, paylinks, invoices, and membership rosters.
 - Marketplace with listing, cancellation, renewal, and cooldown enforcement for membership passes.
-- Creator dashboard with save goals, payouts, and status monitors for RPC/oracle health.
+- Creator dashboard with save goals, payouts, a Mezo hub link for securing MUSD liquidity, and status monitors for RPC/oracle health.
 - Persistent network toggle in the header that switches between Mezo Testnet and Mainnet without a redeploy, updating RPCs, explorers, and contract wiring on the fly.
 
 ## Prerequisites
@@ -69,9 +69,6 @@ NEXT_PUBLIC_REVENUE_SPLIT_ROUTER_ADDRESS="0x..."
 NEXT_PUBLIC_PLATFORM_TREASURY_ADDRESS="0x..."
 NEXT_PUBLIC_MUSD_CONTRACT_ADDRESS="0x..."
 NEXT_PUBLIC_PYTH_CONTRACT_ADDRESS="0x2880aB155794e7179c9eE2e38200202908C17B43"
-NEXT_PUBLIC_TIGRIS_ROUTER_ADDRESS="0x..."
-NEXT_PUBLIC_TIGRIS_MUSD_BTC_POOL_ADDRESS="0x..."
-NEXT_PUBLIC_WRAPPED_BTC_ADDRESS="0x..."
 
 # Platform configuration
 NEXT_PUBLIC_SUBSCRIPTION_PRICE_USD="99"
