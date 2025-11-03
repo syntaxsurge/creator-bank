@@ -4,10 +4,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-import { Button } from '@/components/ui/button'
-import { MEZO_TESTNET_HUB_URL } from '@/lib/config'
-
 import { GroupSwitcher } from './group-switcher'
+import { HeaderUtilityMenu } from './header-utility-menu'
 import { ThemeToggle } from './theme-toggle'
 import { WalletMenu } from './wallet-menu'
 
@@ -67,16 +65,8 @@ export function AppNavbar() {
           </nav>
         </div>
         <div className='flex items-center gap-3'>
-          <Button asChild size='sm' variant='outline'>
-            <Link
-              href={MEZO_TESTNET_HUB_URL}
-              target='_blank'
-              rel='noreferrer noopener'
-            >
-              Get MUSD
-            </Link>
-          </Button>
           <ThemeToggle />
+          <HeaderUtilityMenu />
           <WalletMenu />
         </div>
       </div>
