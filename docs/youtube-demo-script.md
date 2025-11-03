@@ -11,10 +11,8 @@ This script outlines a 7–8 minute walkthrough of CreatorBank on the Mezo netwo
 
 ## Segment 2 – Connect Wallet & Network Choice (00:10 – 00:40)
 
-1. **On-screen:** Click `Connect wallet` in the navbar to open the Passport modal.
-   - **Voice-over:** “Let’s connect a wallet through Passport—RainbowKit favourites.”
-2. **On-screen:** Choose RainbowKit → MetaMask (or an equivalent EVM wallet) and confirm the connection; highlight the address and balance displayed in the header.
-   - **Voice-over:** “MetaMask connects instantly. The header now shows my active chain and MUSD balance.”
+1. **On-screen:** Click `Connect wallet`, choose RainbowKit → MetaMask in the Passport modal, approve in the wallet, then show the navbar updating with the active chain and MUSD balance.
+   - **Voice-over:** “Connect with Passport via RainbowKit and MetaMask—the header updates instantly to show the active chain and MUSD balance.”
 
 ## Segment 3 – Payments Dashboard Tour (00:40 – 02:15)
 
