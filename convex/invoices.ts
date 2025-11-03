@@ -44,11 +44,13 @@ export const listForOwner = query({
   handler: async (ctx, { ownerAddress }) => {
     const owner = await requireUserByWallet(ctx, ownerAddress)
 
-    return await ctx.db
+    const invoices = await ctx.db
       .query('invoices')
       .withIndex('by_ownerId', q => q.eq('ownerId', owner._id))
       .order('desc')
       .collect()
+
+    return invoices.filter(invoice => typeof invoice.archivedAt === 'undefined')
   }
 })
 
@@ -135,6 +137,7 @@ export const create = mutation({
       registryAddress: undefined,
       registryInvoiceId: undefined,
       referenceHash: undefined,
+      archivedAt: undefined,
       lineItems
     })
 
@@ -223,6 +226,34 @@ export const attachPaylink = mutation({
 
     await ctx.db.patch(invoice._id, {
       paylinkHandle: args.paylinkHandle,
+      updatedAt: Date.now()
+    })
+  }
+})
+
+export const archive = mutation({
+  args: {
+    ownerAddress: v.string(),
+    slug: v.string()
+  },
+  handler: async (ctx, args) => {
+    const owner = await requireUserByWallet(ctx, args.ownerAddress)
+
+    const invoice = await ctx.db
+      .query('invoices')
+      .withIndex('by_slug', q => q.eq('slug', args.slug))
+      .unique()
+
+    if (!invoice || invoice.ownerId !== owner._id) {
+      throw new Error('Invoice not found')
+    }
+
+    if (invoice.status === 'paid') {
+      throw new Error('Paid invoices cannot be removed.')
+    }
+
+    await ctx.db.patch(invoice._id, {
+      archivedAt: Date.now(),
       updatedAt: Date.now()
     })
   }

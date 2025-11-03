@@ -6,6 +6,8 @@ import { useAction, useMutation, useQuery } from 'convex/react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
+import { Trash2 } from 'lucide-react'
+
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -46,6 +48,8 @@ type PaylinkCardProps = {
   onSync: (handle: string) => Promise<void>
   syncing: boolean
   explorerUrl: string
+  onArchive: (paylinkId: Id<'paylinks'>) => Promise<void>
+  archiving: boolean
 }
 
 function PaylinkCard({
@@ -53,7 +57,9 @@ function PaylinkCard({
   origin,
   onSync,
   syncing,
-  explorerUrl
+  explorerUrl,
+  onArchive,
+  archiving
 }: PaylinkCardProps) {
   const shareUrl = useMemo(() => {
     if (!origin) return `/pay/${paylink.handle}`
@@ -115,16 +121,27 @@ function PaylinkCard({
             </span>
           </div>
         </div>
-        <Button
-          type='button'
-          variant='secondary'
-          size='sm'
-          className='self-end sm:self-start'
-          onClick={() => onSync(paylink.handle)}
-          disabled={syncing}
-        >
-          {syncing ? 'Syncing...' : 'Sync receipts'}
-        </Button>
+        <div className='flex flex-col gap-2 self-end sm:self-start'>
+          <Button
+            type='button'
+            variant='secondary'
+            size='sm'
+            onClick={() => onSync(paylink.handle)}
+            disabled={syncing}
+          >
+            {syncing ? 'Syncing...' : 'Sync receipts'}
+          </Button>
+          <Button
+            type='button'
+            variant='ghost'
+            size='sm'
+            className='justify-start text-destructive hover:text-destructive'
+            onClick={() => onArchive(paylink._id)}
+            disabled={archiving}
+          >
+            <Trash2 className='mr-2 h-4 w-4' /> Remove link
+          </Button>
+        </div>
       </div>
 
       <Separator className='my-6' />
@@ -151,9 +168,11 @@ export function PaylinksSection() {
   )
 
   const createPaylink = useMutation(api.paylinks.create)
+  const archivePaylink = useMutation(api.paylinks.archive)
   const syncTransfers = useAction(api.paylinks.syncTransfers)
   const [appOrigin, setAppOrigin] = useState<string | null>(null)
   const [syncingHandle, setSyncingHandle] = useState<string | null>(null)
+  const [archivingId, setArchivingId] = useState<Id<'paylinks'> | null>(null)
 
   const musdAddress = useMemo(
     () => getMusdContractAddress(chainId) || '',
@@ -210,6 +229,35 @@ export function PaylinksSection() {
       toast.error('Unable to sync payments. Please retry shortly.')
     } finally {
       setSyncingHandle(null)
+    }
+  }
+
+  const handleArchive = async (paylinkId: Id<'paylinks'>) => {
+    if (!address) {
+      toast.error('Connect your wallet to manage SatsPay links.')
+      return
+    }
+
+    if (typeof window !== 'undefined') {
+      const confirmed = window.confirm(
+        'Remove this SatsPay link? Existing payment history stays intact.'
+      )
+      if (!confirmed) {
+        return
+      }
+    }
+
+    try {
+      setArchivingId(paylinkId)
+      await archivePaylink({ ownerAddress: address, paylinkId })
+      toast.success('SatsPay link removed.')
+    } catch (error) {
+      console.error(error)
+      toast.error(
+        error instanceof Error ? error.message : 'Unable to remove this link.'
+      )
+    } finally {
+      setArchivingId(null)
     }
   }
 
@@ -312,6 +360,8 @@ export function PaylinksSection() {
               onSync={handleSync}
               syncing={syncingHandle === paylink.handle}
               explorerUrl={explorerUrl}
+              onArchive={handleArchive}
+              archiving={archivingId === paylink._id}
             />
           ))
         ) : (

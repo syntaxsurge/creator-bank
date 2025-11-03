@@ -7,6 +7,8 @@ import { useFieldArray, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import type { Address } from 'viem'
 
+import { Trash2 } from 'lucide-react'
+
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -63,6 +65,8 @@ type ScheduleCardProps = {
   runState: RunState
   onChangeAmount: (value: string) => void
   onExecute: () => Promise<void>
+  onDelete: () => void
+  isDeleting: boolean
   executions:
     | Array<{
         _id: Id<'payoutExecutions'>
@@ -115,6 +119,8 @@ function ScheduleCard({
   runState,
   onChangeAmount,
   onExecute,
+  onDelete,
+  isDeleting,
   executions
 }: ScheduleCardProps) {
   const totalShare = schedule.recipients.reduce((total, recipient) => {
@@ -151,6 +157,16 @@ function ScheduleCard({
             disabled={runState.pending || totalShare !== 10000}
           >
             {runState.pending ? 'Executing...' : 'Execute payout'}
+          </Button>
+          <Button
+            type='button'
+            variant='ghost'
+            size='sm'
+            className='text-destructive hover:text-destructive'
+            onClick={onDelete}
+            disabled={isDeleting}
+          >
+            <Trash2 className='mr-2 h-4 w-4' /> Remove
           </Button>
         </div>
       </div>
@@ -194,7 +210,9 @@ function ScheduleCardContainer({
   schedule,
   runState,
   onChangeAmount,
-  onExecute
+  onExecute,
+  onDelete,
+  isDeleting
 }: Omit<ScheduleCardProps, 'executions'>) {
   const executions = useQuery(api.payouts.executionsForSchedule, {
     scheduleId: schedule._id
@@ -206,6 +224,8 @@ function ScheduleCardContainer({
       runState={runState}
       onChangeAmount={onChangeAmount}
       onExecute={onExecute}
+      onDelete={onDelete}
+      isDeleting={isDeleting}
       executions={executions}
     />
   )
@@ -220,8 +240,12 @@ export function PayoutSchedulesSection() {
   )
   const createSchedule = useMutation(api.payouts.createSchedule)
   const recordExecution = useMutation(api.payouts.recordExecution)
+  const deleteSchedule = useMutation(api.payouts.deleteSchedule)
 
   const [runStates, setRunStates] = useState<Record<string, RunState>>({})
+  const [deletingId, setDeletingId] = useState<Id<'payoutSchedules'> | null>(
+    null
+  )
 
   const settlementTokenAddress = useMemo(
     () => getMusdContractAddress(chainId) || '',
@@ -337,6 +361,42 @@ export function PayoutSchedulesSection() {
         ...patch
       }
     }))
+  }
+
+  const handleDelete = async (scheduleId: Id<'payoutSchedules'>) => {
+    if (!address) {
+      toast.error('Connect your wallet to manage payout schedules.')
+      return
+    }
+
+    if (typeof window !== 'undefined') {
+      const confirmed = window.confirm(
+        'Remove this payout schedule? Execution history will be deleted.'
+      )
+      if (!confirmed) {
+        return
+      }
+    }
+
+    try {
+      setDeletingId(scheduleId)
+      await deleteSchedule({ ownerAddress: address, scheduleId })
+      setRunStates(prev => {
+        const next = { ...prev }
+        delete next[scheduleId]
+        return next
+      })
+      toast.success('Payout schedule removed.')
+    } catch (error) {
+      console.error(error)
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : 'Unable to remove this schedule right now.'
+      )
+    } finally {
+      setDeletingId(null)
+    }
   }
 
   const handleExecute = async (schedule: ScheduleCardProps['schedule']) => {
@@ -579,6 +639,8 @@ export function PayoutSchedulesSection() {
                     changeRunState(scheduleId, { amount: value })
                   }
                   onExecute={() => handleExecute(schedule)}
+                  onDelete={() => handleDelete(scheduleId)}
+                  isDeleting={deletingId === scheduleId}
                 />
               )
             })}

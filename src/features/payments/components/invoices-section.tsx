@@ -8,6 +8,8 @@ import { isAddress, keccak256, stringToBytes } from 'viem'
 import type { Address } from 'viem'
 import { toast } from 'sonner'
 
+import { Trash2 } from 'lucide-react'
+
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -93,6 +95,7 @@ export function InvoicesSection() {
   )
 
   const createInvoice = useMutation(api.invoices.create)
+  const archiveInvoice = useMutation(api.invoices.archive)
   const registerOnchain = useMutation(api.invoices.registerOnchain)
   const form = useForm<InvoiceFormValues>({
     defaultValues: {
@@ -114,6 +117,7 @@ export function InvoicesSection() {
   })
   const [isSubmitting, setSubmitting] = useState(false)
   const [issuingSlug, setIssuingSlug] = useState<string | null>(null)
+  const [archivingSlug, setArchivingSlug] = useState<string | null>(null)
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
@@ -365,6 +369,45 @@ export function InvoicesSection() {
       }
     },
     [publishInvoiceOnchain]
+  )
+
+  const handleArchiveInvoice = useCallback(
+    async (invoice: Doc<'invoices'>) => {
+      if (!address) {
+        toast.error('Connect your wallet to manage invoices.')
+        return
+      }
+
+      if (invoice.status === 'paid') {
+        toast.error('Paid invoices cannot be removed.')
+        return
+      }
+
+      if (typeof window !== 'undefined') {
+        const confirmed = window.confirm(
+          'Archive this invoice? This hides it from your dashboard but keeps on-chain records intact.'
+        )
+        if (!confirmed) {
+          return
+        }
+      }
+
+      try {
+        setArchivingSlug(invoice.slug)
+        await archiveInvoice({ ownerAddress: address, slug: invoice.slug })
+        toast.success('Invoice archived.')
+      } catch (error) {
+        console.error(error)
+        toast.error(
+          error instanceof Error
+            ? error.message
+            : 'Unable to archive this invoice. Please try again.'
+        )
+      } finally {
+        setArchivingSlug(null)
+      }
+    },
+    [address, archiveInvoice]
   )
 
   return (
@@ -626,6 +669,7 @@ export function InvoicesSection() {
               const shareUrl = invoiceShareUrl(invoice)
               const isDraft = invoice.status === 'draft'
               const issuingThis = issuingSlug === invoice.slug
+              const archivingThis = archivingSlug === invoice.slug
               const shareDescription = isDraft
                 ? 'Issue this invoice on-chain to activate payment links.'
                 : shareUrl
@@ -692,6 +736,16 @@ export function InvoicesSection() {
                         onClick={() => handleCopyShare(invoice)}
                       >
                         Copy payment link
+                      </Button>
+                      <Button
+                        type='button'
+                        variant='ghost'
+                        size='sm'
+                        className='justify-start text-destructive hover:text-destructive'
+                        disabled={invoice.status === 'paid' || archivingThis}
+                        onClick={() => handleArchiveInvoice(invoice)}
+                      >
+                        <Trash2 className='mr-2 h-4 w-4' /> Archive
                       </Button>
                     </div>
                   </div>

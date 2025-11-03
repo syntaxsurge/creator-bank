@@ -43,10 +43,12 @@ export const listForOwner = query({
   handler: async (ctx, { ownerAddress }) => {
     const owner = await requireUserByWallet(ctx, ownerAddress)
 
-    return await ctx.db
+    const paylinks = await ctx.db
       .query('paylinks')
       .withIndex('by_ownerId', q => q.eq('ownerId', owner._id))
       .collect()
+
+    return paylinks.filter(paylink => paylink.isActive)
   }
 })
 
@@ -123,7 +125,8 @@ export const create = mutation({
       lastSyncedBlock: undefined,
       createdAt: now,
       updatedAt: now,
-      isActive: true
+      isActive: true,
+      archivedAt: undefined
     })
 
     return paylinkId
@@ -168,6 +171,31 @@ export const update = mutation({
     }
 
     await ctx.db.patch(args.paylinkId, payload)
+  }
+})
+
+export const archive = mutation({
+  args: {
+    ownerAddress: v.string(),
+    paylinkId: v.id('paylinks')
+  },
+  handler: async (ctx, args) => {
+    const owner = await requireUserByWallet(ctx, args.ownerAddress)
+    const paylink = await ctx.db.get(args.paylinkId)
+
+    if (!paylink || paylink.ownerId !== owner._id) {
+      throw new Error('Paylink not found')
+    }
+
+    if (!paylink.isActive && paylink.archivedAt) {
+      return
+    }
+
+    await ctx.db.patch(args.paylinkId, {
+      isActive: false,
+      archivedAt: Date.now(),
+      updatedAt: Date.now()
+    })
   }
 })
 

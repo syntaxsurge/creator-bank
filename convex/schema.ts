@@ -96,7 +96,8 @@ export default defineSchema({
     lastSyncedBlock: v.optional(v.number()),
     createdAt: v.number(),
     updatedAt: v.number(),
-    isActive: v.boolean()
+    isActive: v.boolean(),
+    archivedAt: v.optional(v.number())
   })
     .index('by_handle', ['handle'])
     .index('by_ownerId', ['ownerId']),
@@ -134,6 +135,7 @@ export default defineSchema({
     registryAddress: v.optional(v.string()),
     registryInvoiceId: v.optional(v.string()),
     referenceHash: v.optional(v.string()),
+    archivedAt: v.optional(v.number()),
     lineItems: v.array(
       v.object({
         description: v.string(),
