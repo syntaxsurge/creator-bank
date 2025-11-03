@@ -6,9 +6,10 @@ This script walks through every core feature required for the Mezo hackathon sub
 
 ## Segment 1 – Hook & Mission (0:00 – 0:40)
 
-1. **Voice-over:** “Welcome to CreatorBank, the Bitcoin-native finance stack for creators building on Mezo. In the next few minutes I’ll show how we turn BTC collateral into day-to-day money flows using MUSD.”
-2. **On-screen:** Landing page hero (`/`) with CreatorBank logo, quick scroll to highlight value props.
-3. **Call-out:** Mention Mezo Passport support and that every payment settles in MUSD on chain.
+1. **On-screen:** Land on the homepage hero (`/`) with the CreatorBank logo and tagline framed center.
+   - **Voice-over:** “Welcome to CreatorBank, the Bitcoin-native finance stack for creators building on Mezo. In the next few minutes I’ll show how we turn BTC collateral into day-to-day money flows using MUSD.”
+2. **On-screen:** Slowly scroll through the value props, pausing on the Passport and MUSD settlement badges.
+   - **Voice-over:** “Every workflow here leans on Mezo Passport, and every payment settles trustlessly in MUSD so creators stay in control.”
 
 ## Segment 2 – Connect & Wallet Overview (0:40 – 1:30)
 
