@@ -75,7 +75,7 @@ This script outlines a 7–8 minute walkthrough of CreatorBank on the Mezo netwo
      - Tags (optional): `tech`
      - (Optional) Gallery image (link): Get on YouTube
   
-   - **Voice-over 11:** “Enter the group details and monthly pricing, and etc then click Create Community and approve the transactions.”
+   - **Voice-over 10:** “Let's now go to create community page, then enter the group details and monthly pricing, and etc then click Create Community and approve the transactions.”
 
 ## Segment 6 – About, Verify, Edit Details (04:10 – 04:55)
 
