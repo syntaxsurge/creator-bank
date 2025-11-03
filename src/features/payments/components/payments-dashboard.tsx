@@ -85,28 +85,28 @@ export function PaymentsDashboard() {
 
           {/* Tab Content with enhanced styling */}
           <div className='rounded-3xl border border-border/50 bg-card/50 p-8 backdrop-blur-sm'>
-            <TabsContent value='paylinks' className='mt-0'>
+            <TabsContent value='paylinks' className='mt-0' forceMount>
               <PaylinksSection />
             </TabsContent>
 
-            <TabsContent value='invoices' className='mt-0'>
+            <TabsContent value='invoices' className='mt-0' forceMount>
               <InvoicesSection />
             </TabsContent>
 
-            <TabsContent value='payouts' className='mt-0'>
+            <TabsContent value='payouts' className='mt-0' forceMount>
               <PayoutSchedulesSection />
             </TabsContent>
 
-            <TabsContent value='goals' className='mt-0'>
+            <TabsContent value='goals' className='mt-0' forceMount>
               <SaveGoalsSection />
             </TabsContent>
 
-            <TabsContent value='get-musd' className='mt-0'>
+            <TabsContent value='get-musd' className='mt-0' forceMount>
               <GetMusdSection />
             </TabsContent>
 
-            <TabsContent value='status' className='mt-0'>
-              {activeTab === 'status' ? <StatusSection /> : null}
+            <TabsContent value='status' className='mt-0' forceMount>
+              <StatusSection />
             </TabsContent>
           </div>
         </Tabs>
