@@ -256,6 +256,14 @@ export function PaylinksSection() {
     address ? { ownerAddress: address } : 'skip'
   )
 
+  const sortedPaylinks = useMemo(
+    () =>
+      paylinks
+        ? [...paylinks].sort((a, b) => b.createdAt - a.createdAt)
+        : null,
+    [paylinks]
+  )
+
   const createPaylink = useMutation(api.paylinks.create)
   const archivePaylink = useMutation(api.paylinks.archive)
   const syncTransfers = useAction(api.paylinks.syncTransfers)
@@ -448,13 +456,13 @@ export function PaylinksSection() {
       </div>
 
       <div className={cn('space-y-6')}>
-        {!paylinks ? (
+        {!sortedPaylinks ? (
           <div className='flex items-center justify-center gap-3 rounded-2xl border border-border/70 bg-muted/20 p-10 text-sm text-muted-foreground'>
             <Loader2 className='h-5 w-5 animate-spin text-primary' />
             Loading SatsPay links…
           </div>
-        ) : paylinks.length > 0 ? (
-          paylinks.map(paylink => (
+        ) : sortedPaylinks.length > 0 ? (
+          sortedPaylinks.map(paylink => (
             <PaylinkCard
               key={paylink._id}
               paylink={paylink}

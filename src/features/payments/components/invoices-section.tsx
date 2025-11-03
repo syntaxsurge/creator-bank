@@ -17,7 +17,8 @@ import {
   Trash2,
   Calendar,
   User,
-  Wallet
+  Wallet,
+  ExternalLink
 } from 'lucide-react'
 
 import {
@@ -61,6 +62,7 @@ import { useWalletAccount } from '@/hooks/use-wallet-account'
 import type { MezoChainId } from '@/lib/config'
 import {
   SETTLEMENT_TOKEN_SYMBOL,
+  getBlockExplorerUrl,
   getInvoiceRegistryAddress,
   getMusdContractAddress
 } from '@/lib/config'
@@ -101,6 +103,13 @@ function formatStatus(status: Doc<'invoices'>['status']) {
     default:
       return <Badge variant='outline'>Draft</Badge>
   }
+}
+
+function truncateHash(hash: string, front = 8, back = 6) {
+  if (hash.length <= front + back + 1) {
+    return hash
+  }
+  return `${hash.slice(0, front)}…${hash.slice(-back)}`
 }
 
 export function InvoicesSection() {
@@ -221,7 +230,8 @@ export function InvoicesSection() {
           slug: params.slug,
           registryAddress: resolvedRegistryAddress,
           registryInvoiceId: invoiceId.toString(),
-          referenceHash
+          referenceHash,
+          txHash: hash
         })
 
         return { invoiceId, referenceHash, hash }
@@ -717,6 +727,13 @@ export function InvoicesSection() {
               const isDraft = invoice.status === 'draft'
               const issuingThis = issuingSlug === invoice.slug
               const archivingThis = archivingSlug === invoice.slug
+              const explorerBaseUrl = getBlockExplorerUrl(
+                invoice.chainId as MezoChainId
+              )
+              const issuanceExplorerUrl =
+                invoice.issuanceTxHash && explorerBaseUrl
+                  ? `${explorerBaseUrl}/tx/${invoice.issuanceTxHash}`
+                  : null
 
               return (
                 <div
@@ -794,6 +811,32 @@ export function InvoicesSection() {
                             : 'Not attached'}
                         </p>
                       </div>
+
+                      {invoice.issuanceTxHash ? (
+                        <div className='rounded-2xl border border-border/40 bg-background/40 p-4 backdrop-blur-sm'>
+                          <div className='flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-muted-foreground'>
+                            <ExternalLink className='h-3.5 w-3.5' />
+                            On-chain proof
+                          </div>
+                          <p
+                            className='mt-2 break-all font-mono text-xs font-medium text-foreground'
+                            title={invoice.issuanceTxHash}
+                          >
+                            {truncateHash(invoice.issuanceTxHash)}
+                          </p>
+                          {issuanceExplorerUrl ? (
+                            <a
+                              href={issuanceExplorerUrl}
+                              target='_blank'
+                              rel='noreferrer'
+                              className='mt-3 inline-flex items-center gap-1 text-xs font-semibold text-primary underline-offset-4 hover:underline'
+                            >
+                              View on explorer
+                              <ExternalLink className='h-3 w-3' />
+                            </a>
+                          ) : null}
+                        </div>
+                      ) : null}
                     </div>
 
                     {/* Action Buttons */}

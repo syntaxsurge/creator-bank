@@ -130,6 +130,7 @@ export default defineSchema({
     updatedAt: v.number(),
     paidAt: v.optional(v.number()),
     paymentTxHash: v.optional(v.string()),
+    issuanceTxHash: v.optional(v.string()),
     paylinkHandle: v.optional(v.string()),
     payerAddress: v.optional(v.string()),
     registryAddress: v.optional(v.string()),

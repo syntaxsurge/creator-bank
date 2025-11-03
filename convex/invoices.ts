@@ -155,7 +155,8 @@ export const registerOnchain = mutation({
     slug: v.string(),
     registryAddress: v.string(),
     registryInvoiceId: v.string(),
-    referenceHash: v.string()
+    referenceHash: v.string(),
+    txHash: v.string()
   },
   handler: async (ctx, args) => {
     const owner = await requireUserByWallet(ctx, args.ownerAddress)
@@ -173,6 +174,7 @@ export const registerOnchain = mutation({
       registryAddress: normalizeAddress(args.registryAddress),
       registryInvoiceId: args.registryInvoiceId,
       referenceHash: args.referenceHash,
+      issuanceTxHash: args.txHash,
       status: 'issued',
       updatedAt: Date.now()
     })
