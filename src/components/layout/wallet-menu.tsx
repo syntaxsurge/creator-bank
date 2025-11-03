@@ -79,11 +79,6 @@ export function WalletMenu() {
                   className='flex items-center gap-2'
                 >
                   <span>{account.displayName}</span>
-                  {account.displayBalance ? (
-                    <span className='text-xs text-muted-foreground'>
-                      {account.displayBalance}
-                    </span>
-                  ) : null}
                 </Button>
               </>
             )}
