@@ -9,87 +9,99 @@ body {
 
 @layer base {
   :root {
-    /* Logo-based color palette - Light mode */
+    /* MEZO CreatorBank - Logo-based color palette (Teal + Orange) - Light mode */
     --background: 0 0% 98%;
-    --foreground: 217 25% 15%;
+    --foreground: 188 30% 12%;
 
     --card: 0 0% 100%;
-    --card-foreground: 217 25% 15%;
+    --card-foreground: 188 30% 12%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 217 25% 15%;
+    --popover-foreground: 188 30% 12%;
 
-    /* Primary: Logo Blue - vibrant and modern */
-    --primary: 217 91% 60%;
+    /* Primary: Logo Teal - vibrant and modern */
+    --primary: 188 65% 42%;
     --primary-foreground: 0 0% 100%;
 
-    /* Secondary: Lighter blue */
-    --secondary: 217 80% 95%;
-    --secondary-foreground: 217 25% 15%;
+    /* Secondary: Warm orange from logo */
+    --secondary: 25 95% 92%;
+    --secondary-foreground: 188 30% 12%;
 
-    --muted: 217 20% 96%;
-    --muted-foreground: 217 15% 45%;
+    --muted: 188 15% 95%;
+    --muted-foreground: 188 15% 45%;
 
-    /* Accent: Brighter blue for highlights */
-    --accent: 217 95% 55%;
+    /* Accent: Logo Orange - vibrant highlight */
+    --accent: 25 100% 55%;
     --accent-foreground: 0 0% 100%;
 
     /* Brand colors derived from logo */
-    --brand-blue: 217 91% 60%;
-    --brand-blue-light: 217 85% 70%;
-    --brand-blue-lighter: 217 80% 85%;
-    --brand-blue-dark: 217 85% 45%;
-    --brand-blue-darker: 217 80% 30%;
+    --brand-teal: 188 65% 42%;
+    --brand-teal-light: 188 60% 55%;
+    --brand-teal-lighter: 188 50% 75%;
+    --brand-teal-dark: 188 70% 32%;
+    --brand-teal-darker: 188 75% 22%;
+
+    --brand-orange: 25 100% 55%;
+    --brand-orange-light: 25 95% 65%;
+    --brand-orange-lighter: 25 90% 80%;
+    --brand-orange-dark: 25 100% 45%;
+    --brand-orange-darker: 25 100% 35%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 217 20% 88%;
-    --input: 217 20% 96%;
-    --ring: 217 91% 60%;
+    --border: 188 15% 88%;
+    --input: 188 15% 96%;
+    --ring: 188 65% 42%;
 
-    --radius: 0.75rem;
+    --radius: 0.875rem;
   }
 
   .dark {
-    /* Logo-based color palette - Dark mode */
-    --background: 217 25% 6%;
+    /* MEZO CreatorBank - Logo-based color palette (Teal + Orange) - Dark mode */
+    --background: 188 30% 6%;
     --foreground: 0 0% 98%;
 
-    --card: 217 20% 10%;
+    --card: 188 25% 10%;
     --card-foreground: 0 0% 98%;
 
-    --popover: 217 20% 10%;
+    --popover: 188 25% 10%;
     --popover-foreground: 0 0% 98%;
 
-    /* Primary: Logo Blue - vibrant and modern */
-    --primary: 217 91% 60%;
+    /* Primary: Logo Teal - vibrant and modern */
+    --primary: 188 65% 45%;
     --primary-foreground: 0 0% 100%;
 
-    /* Secondary: Darker blue */
-    --secondary: 217 30% 18%;
+    /* Secondary: Darker teal */
+    --secondary: 188 30% 18%;
     --secondary-foreground: 0 0% 98%;
 
-    --muted: 217 25% 16%;
-    --muted-foreground: 217 15% 65%;
+    --muted: 188 25% 16%;
+    --muted-foreground: 188 15% 65%;
 
-    /* Accent: Brighter blue for highlights */
-    --accent: 217 95% 65%;
+    /* Accent: Logo Orange - vibrant highlight */
+    --accent: 25 100% 58%;
     --accent-foreground: 0 0% 100%;
 
     /* Brand colors derived from logo */
-    --brand-blue: 217 91% 60%;
-    --brand-blue-light: 217 85% 70%;
-    --brand-blue-lighter: 217 80% 85%;
-    --brand-blue-dark: 217 85% 45%;
-    --brand-blue-darker: 217 80% 30%;
+    --brand-teal: 188 65% 45%;
+    --brand-teal-light: 188 60% 58%;
+    --brand-teal-lighter: 188 50% 75%;
+    --brand-teal-dark: 188 70% 35%;
+    --brand-teal-darker: 188 75% 25%;
+
+    --brand-orange: 25 100% 58%;
+    --brand-orange-light: 25 95% 68%;
+    --brand-orange-lighter: 25 90% 80%;
+    --brand-orange-dark: 25 100% 48%;
+    --brand-orange-darker: 25 100% 38%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 217 25% 20%;
-    --input: 217 25% 16%;
-    --ring: 217 91% 60%;
+    --border: 188 25% 20%;
+    --input: 188 25% 16%;
+    --ring: 188 65% 45%;
   }
 
   .default-light,

@@ -48,12 +48,19 @@ const config = {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))'
         },
-        'brand-blue': {
-          DEFAULT: 'hsl(var(--brand-blue))',
-          light: 'hsl(var(--brand-blue-light))',
-          lighter: 'hsl(var(--brand-blue-lighter))',
-          dark: 'hsl(var(--brand-blue-dark))',
-          darker: 'hsl(var(--brand-blue-darker))'
+        'brand-teal': {
+          DEFAULT: 'hsl(var(--brand-teal))',
+          light: 'hsl(var(--brand-teal-light))',
+          lighter: 'hsl(var(--brand-teal-lighter))',
+          dark: 'hsl(var(--brand-teal-dark))',
+          darker: 'hsl(var(--brand-teal-darker))'
+        },
+        'brand-orange': {
+          DEFAULT: 'hsl(var(--brand-orange))',
+          light: 'hsl(var(--brand-orange-light))',
+          lighter: 'hsl(var(--brand-orange-lighter))',
+          dark: 'hsl(var(--brand-orange-dark))',
+          darker: 'hsl(var(--brand-orange-darker))'
         }
       },
       borderRadius: {

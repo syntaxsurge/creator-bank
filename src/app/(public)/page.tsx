@@ -157,9 +157,9 @@ export default function HomePage() {
   return (
     <main className='relative overflow-hidden bg-gradient-to-b from-background via-background to-secondary/15'>
       <div className='pointer-events-none absolute inset-0' aria-hidden='true'>
-        <div className='absolute inset-x-0 top-0 h-[600px] bg-[radial-gradient(circle_at_top_right,_hsl(var(--brand-blue)/0.12),_transparent_55%)]' />
-        <div className='absolute right-0 top-[780px] h-[420px] w-[420px] rounded-full bg-[radial-gradient(circle,_hsl(var(--brand-blue-light)/0.12),_transparent_70%)] blur-3xl' />
-        <div className='absolute left-0 top-[1380px] h-[520px] w-[520px] rounded-full bg-[radial-gradient(circle,_hsl(var(--brand-blue)/0.08),_transparent_70%)] blur-3xl' />
+        <div className='absolute inset-x-0 top-0 h-[600px] bg-[radial-gradient(circle_at_top_right,_hsl(var(--brand-teal)/0.12),_transparent_55%)]' />
+        <div className='absolute right-0 top-[780px] h-[420px] w-[420px] rounded-full bg-[radial-gradient(circle,_hsl(var(--brand-orange)/0.08),_transparent_70%)] blur-3xl' />
+        <div className='absolute left-0 top-[1380px] h-[520px] w-[520px] rounded-full bg-[radial-gradient(circle,_hsl(var(--brand-teal)/0.08),_transparent_70%)] blur-3xl' />
       </div>
 
       <section className='relative'>
@@ -175,7 +175,7 @@ export default function HomePage() {
                 <h1 className='text-5xl font-bold leading-[1.1] tracking-tight sm:text-6xl lg:text-7xl'>
                   <span className='text-foreground'>Own your</span>
                   <br />
-                  <span className='bg-gradient-to-r from-brand-blue via-brand-blue-light to-accent bg-clip-text text-transparent'>
+                  <span className='bg-gradient-to-r from-brand-teal via-brand-teal-light to-accent bg-clip-text text-transparent'>
                     Payments & Memberships
                   </span>
                 </h1>
@@ -190,7 +190,7 @@ export default function HomePage() {
               <div className='flex flex-col gap-4 sm:flex-row sm:items-center'>
                 <Button
                   size='lg'
-                  className='bg-gradient-to-r from-brand-blue to-brand-blue-light text-base shadow-lg shadow-primary/20 hover:opacity-90'
+                  className='bg-gradient-to-r from-brand-teal to-brand-teal-light text-base shadow-lg shadow-primary/20 hover:opacity-90'
                   asChild
                 >
                   <Link href='/create'>
@@ -234,7 +234,7 @@ export default function HomePage() {
                         <p className='text-sm font-medium text-muted-foreground'>
                           Demo dashboard
                         </p>
-                        <p className='mt-1 bg-gradient-to-r from-brand-blue to-brand-blue-light bg-clip-text text-3xl font-bold text-transparent'>
+                        <p className='mt-1 bg-gradient-to-r from-brand-teal to-accent bg-clip-text text-3xl font-bold text-transparent'>
                           12.6k MUSD
                         </p>
                       </div>
@@ -317,7 +317,7 @@ export default function HomePage() {
                     <div className='mb-4 inline-flex rounded-2xl bg-primary/10 p-3 ring-1 ring-primary/20'>
                       <Icon className='h-6 w-6 text-primary' />
                     </div>
-                    <p className='bg-gradient-to-r from-brand-blue to-brand-blue-light bg-clip-text text-5xl font-bold text-transparent'>
+                    <p className='bg-gradient-to-r from-brand-teal to-accent bg-clip-text text-5xl font-bold text-transparent'>
                       {stat.value}
                     </p>
                     <p className='mt-2 text-lg font-semibold text-foreground'>
@@ -386,7 +386,7 @@ export default function HomePage() {
           <div className='mx-auto mb-16 max-w-2xl text-center'>
             <h2 className='mb-6 text-4xl font-bold tracking-tight text-foreground sm:text-5xl'>
               Go live in{' '}
-              <span className='bg-gradient-to-r from-brand-blue to-brand-blue-light bg-clip-text text-transparent'>
+              <span className='bg-gradient-to-r from-brand-teal to-accent bg-clip-text text-transparent'>
                 Three Steps
               </span>
             </h2>
@@ -519,7 +519,7 @@ export default function HomePage() {
               <div className='mb-8 flex flex-col gap-4 sm:flex-row sm:justify-center'>
                 <Button
                   size='lg'
-                  className='bg-gradient-to-r from-brand-blue to-brand-blue-light px-8 text-lg shadow-xl shadow-primary/30 hover:opacity-90'
+                  className='bg-gradient-to-r from-brand-teal to-accent px-8 text-lg shadow-xl shadow-primary/30 hover:opacity-90'
                   asChild
                 >
                   <Link href='/create'>
