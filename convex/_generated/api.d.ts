@@ -8,6 +8,7 @@
  * @module
  */
 
+import type * as chains from "../chains.js";
 import type * as comments from "../comments.js";
 import type * as courses from "../courses.js";
 import type * as groups from "../groups.js";
@@ -38,6 +39,7 @@ import type {
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  chains: typeof chains;
   comments: typeof comments;
   courses: typeof courses;
   groups: typeof groups;

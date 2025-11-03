@@ -1,6 +1,9 @@
 import { v } from 'convex/values'
+import { parseAbi } from 'viem'
 
-import { mutation, query } from './_generated/server'
+import { api } from './_generated/api'
+import { action, mutation, query } from './_generated/server'
+import { getPublicClientForChain } from './chains'
 import { normalizeAddress, requireUserByWallet } from './utils'
 
 type LineItemInput = {
@@ -8,6 +11,10 @@ type LineItemInput = {
   quantity: number
   unitAmount: string
 }
+
+const INVOICE_REGISTRY_ABI = parseAbi([
+  'function getInvoice(uint256 invoiceId) view returns (address issuer, address token, address payer, uint256 amount, bool paid, bytes32 referenceHash)'
+])
 
 function generateSlug() {
   const now = Date.now().toString(36)
@@ -72,11 +79,15 @@ export const create = mutation({
     ),
     tokenAddress: v.string(),
     chainId: v.number(),
-    paylinkHandle: v.optional(v.string())
+    paylinkHandle: v.optional(v.string()),
+    payerAddress: v.optional(v.string())
   },
   handler: async (ctx, args) => {
     const owner = await requireUserByWallet(ctx, args.ownerAddress)
     const normalizedToken = normalizeAddress(args.tokenAddress)
+    const normalizedPayer = args.payerAddress
+      ? normalizeAddress(args.payerAddress)
+      : undefined
 
     if (args.lineItems.length === 0) {
       throw new Error('Invoices require at least one line item')
@@ -110,7 +121,7 @@ export const create = mutation({
       customerName: args.customerName,
       customerEmail: args.customerEmail,
       dueAt: args.dueAt,
-      status: 'issued',
+      status: 'draft',
       notes: args.notes,
       totalAmount: totalAmount.toString(),
       tokenAddress: normalizedToken,
@@ -120,6 +131,10 @@ export const create = mutation({
       paidAt: undefined,
       paymentTxHash: undefined,
       paylinkHandle: args.paylinkHandle,
+      payerAddress: normalizedPayer,
+      registryAddress: undefined,
+      registryInvoiceId: undefined,
+      referenceHash: undefined,
       lineItems
     })
 
@@ -128,6 +143,36 @@ export const create = mutation({
       number,
       totalAmount: totalAmount.toString()
     }
+  }
+})
+
+export const registerOnchain = mutation({
+  args: {
+    ownerAddress: v.string(),
+    slug: v.string(),
+    registryAddress: v.string(),
+    registryInvoiceId: v.string(),
+    referenceHash: v.string()
+  },
+  handler: async (ctx, args) => {
+    const owner = await requireUserByWallet(ctx, args.ownerAddress)
+
+    const invoice = await ctx.db
+      .query('invoices')
+      .withIndex('by_slug', q => q.eq('slug', args.slug))
+      .unique()
+
+    if (!invoice || invoice.ownerId !== owner._id) {
+      throw new Error('Invoice not found')
+    }
+
+    await ctx.db.patch(invoice._id, {
+      registryAddress: normalizeAddress(args.registryAddress),
+      registryInvoiceId: args.registryInvoiceId,
+      referenceHash: args.referenceHash,
+      status: 'issued',
+      updatedAt: Date.now()
+    })
   }
 })
 
@@ -180,6 +225,81 @@ export const attachPaylink = mutation({
       paylinkHandle: args.paylinkHandle,
       updatedAt: Date.now()
     })
+  }
+})
+
+export const recordSettlement = action({
+  args: {
+    slug: v.string(),
+    txHash: v.string()
+  },
+  handler: async (ctx, args) => {
+    const invoice = await ctx.runQuery(api.invoices.getBySlug, {
+      slug: args.slug
+    })
+
+    if (!invoice) {
+      return { ok: false, reason: 'invoice_not_found' }
+    }
+
+    if (!invoice.registryAddress || !invoice.registryInvoiceId) {
+      return { ok: false, reason: 'invoice_not_registered' }
+    }
+
+    const registryInvoiceId = BigInt(invoice.registryInvoiceId)
+
+    const client = getPublicClientForChain(invoice.chainId)
+    const [, , payer, amount, paid, referenceHash] =
+      (await client.readContract({
+        address: invoice.registryAddress as `0x${string}`,
+        abi: INVOICE_REGISTRY_ABI,
+        functionName: 'getInvoice',
+        args: [registryInvoiceId]
+      })) as readonly [
+        string,
+        string,
+        string,
+        bigint,
+        boolean,
+        `0x${string}`
+      ]
+
+    if (!paid) {
+      return { ok: false, reason: 'invoice_unpaid' }
+    }
+
+    if (amount.toString() !== invoice.totalAmount) {
+      return { ok: false, reason: 'amount_mismatch' }
+    }
+
+    if (
+      invoice.referenceHash &&
+      invoice.referenceHash.toLowerCase() !==
+        referenceHash.toLowerCase()
+    ) {
+      return { ok: false, reason: 'reference_mismatch' }
+    }
+
+    const owner = await ctx.runQuery(api.users.getById, {
+      userId: invoice.ownerId
+    })
+
+    if (!owner) {
+      return { ok: false, reason: 'owner_missing' }
+    }
+
+    await ctx.runMutation(api.invoices.markPaid, {
+      ownerAddress: owner.walletAddress,
+      slug: args.slug,
+      paymentTxHash: args.txHash,
+      paidAt: Date.now()
+    })
+
+    return {
+      ok: true,
+      payer,
+      amount: amount.toString()
+    }
   }
 })
 

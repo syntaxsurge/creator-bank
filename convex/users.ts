@@ -3,6 +3,15 @@ import { v } from 'convex/values'
 import { mutation, query } from './_generated/server'
 import { getUserByWallet, normalizeAddress, requireUserByWallet } from './utils'
 
+export const getById = query({
+  args: {
+    userId: v.id('users')
+  },
+  handler: async (ctx, { userId }) => {
+    return await ctx.db.get(userId)
+  }
+})
+
 export const store = mutation({
   args: {
     address: v.string(),

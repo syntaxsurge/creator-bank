@@ -1,9 +1,11 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { useMutation, useQuery } from 'convex/react'
 import { useFieldArray, useForm } from 'react-hook-form'
+import { isAddress, keccak256, stringToBytes } from 'viem'
+import type { Address } from 'viem'
 import { toast } from 'sonner'
 
 import { Badge } from '@/components/ui/badge'
@@ -24,7 +26,13 @@ import { api } from '@/convex/_generated/api'
 import type { Doc } from '@/convex/_generated/dataModel'
 import { useChainPreference } from '@/hooks/use-chain-preference'
 import { useWalletAccount } from '@/hooks/use-wallet-account'
-import { SETTLEMENT_TOKEN_SYMBOL, getMusdContractAddress } from '@/lib/config'
+import type { MezoChainId } from '@/lib/config'
+import {
+  SETTLEMENT_TOKEN_SYMBOL,
+  getInvoiceRegistryAddress,
+  getMusdContractAddress
+} from '@/lib/config'
+import { InvoiceRegistryService } from '@/lib/onchain/services'
 import {
   formatSettlementToken,
   parseSettlementTokenAmount
@@ -43,6 +51,7 @@ type InvoiceFormValues = {
   dueDate?: string
   notes?: string
   paylinkHandle?: string
+  payerAddress?: string
   lineItems: InvoiceLineItemFormValues[]
 }
 
@@ -63,7 +72,7 @@ function formatStatus(status: Doc<'invoices'>['status']) {
 }
 
 export function InvoicesSection() {
-  const { address } = useWalletAccount()
+  const { address, publicClient, walletClient } = useWalletAccount()
   const { chainId } = useChainPreference()
   const [origin, setOrigin] = useState<string | null>(null)
 
@@ -84,6 +93,7 @@ export function InvoicesSection() {
   )
 
   const createInvoice = useMutation(api.invoices.create)
+  const registerOnchain = useMutation(api.invoices.registerOnchain)
   const form = useForm<InvoiceFormValues>({
     defaultValues: {
       title: '',
@@ -91,6 +101,7 @@ export function InvoicesSection() {
       customerEmail: '',
       dueDate: '',
       notes: '',
+      payerAddress: '',
       paylinkHandle: '',
       lineItems: [
         {
@@ -101,6 +112,8 @@ export function InvoicesSection() {
       ]
     }
   })
+  const [isSubmitting, setSubmitting] = useState(false)
+  const [issuingSlug, setIssuingSlug] = useState<string | null>(null)
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
@@ -111,6 +124,84 @@ export function InvoicesSection() {
     () => getMusdContractAddress(chainId) || '',
     [chainId]
   )
+  const registryAddress = useMemo(
+    () => getInvoiceRegistryAddress(chainId) || '',
+    [chainId]
+  )
+
+  const publishInvoiceOnchain = useCallback(
+    async (params: {
+      slug: string
+      number: string
+      totalAmount: string
+      tokenAddress: string
+      payerAddress?: string | null
+      chainId: number
+    }) => {
+      if (!address) {
+        throw new Error('Connect your wallet to issue invoices.')
+      }
+
+      if (!publicClient || !walletClient) {
+        throw new Error('Wallet client unavailable. Reconnect your wallet.')
+      }
+
+      const walletChainId = walletClient.chain?.id
+      if (walletChainId && walletChainId !== params.chainId) {
+        throw new Error('Switch your wallet to the invoice chain before issuing.')
+      }
+
+      const targetChainId = params.chainId as MezoChainId
+      const resolvedRegistryAddress =
+        getInvoiceRegistryAddress(targetChainId) || registryAddress
+
+      if (!resolvedRegistryAddress) {
+        throw new Error('Invoice registry contract address is not configured.')
+      }
+
+      setIssuingSlug(params.slug)
+
+      try {
+        const registryService = new InvoiceRegistryService({
+          publicClient,
+          walletClient,
+          account: address as `0x${string}`,
+          address: resolvedRegistryAddress as `0x${string}`
+        })
+
+        const referenceHash = keccak256(stringToBytes(params.slug))
+        const payer = params.payerAddress && isAddress(params.payerAddress)
+          ? (params.payerAddress as Address)
+          : undefined
+
+        const { hash, invoiceId } = await registryService.issueInvoice({
+          payer,
+          token: params.tokenAddress as `0x${string}`,
+          amount: BigInt(params.totalAmount),
+          referenceHash
+        })
+
+        await registerOnchain({
+          ownerAddress: address,
+          slug: params.slug,
+          registryAddress: resolvedRegistryAddress,
+          registryInvoiceId: invoiceId.toString(),
+          referenceHash
+        })
+
+        return { invoiceId, referenceHash, hash }
+      } finally {
+        setIssuingSlug(null)
+      }
+    },
+    [
+      address,
+      publicClient,
+      walletClient,
+      registryAddress,
+      registerOnchain
+    ]
+  )
 
   const handleSubmit = async (values: InvoiceFormValues) => {
     if (!address) {
@@ -120,6 +211,12 @@ export function InvoicesSection() {
 
     if (!musdAddress) {
       toast.error('Settlement token configuration missing. Contact support.')
+      return
+    }
+
+    const payerAddressInput = values.payerAddress?.trim()
+    if (payerAddressInput && !isAddress(payerAddressInput)) {
+      toast.error('Enter a valid payer wallet address or leave it blank.')
       return
     }
 
@@ -145,8 +242,17 @@ export function InvoicesSection() {
         ? new Date(values.dueDate).getTime()
         : undefined
 
+    let created:
+      | {
+          slug: string
+          number: string
+          totalAmount: string
+        }
+      | null = null
+
     try {
-      const result = await createInvoice({
+      setSubmitting(true)
+      created = await createInvoice({
         ownerAddress: address,
         title: values.title?.trim(),
         customerName: values.customerName?.trim(),
@@ -156,18 +262,19 @@ export function InvoicesSection() {
         paylinkHandle: values.paylinkHandle
           ? values.paylinkHandle.trim().replace(/^@/, '')
           : undefined,
+        payerAddress: payerAddressInput,
         lineItems: sanitizedLineItems,
         tokenAddress: musdAddress,
         chainId
       })
 
-      toast.success(`Invoice ${result.number} issued.`)
       form.reset({
         title: '',
         customerName: '',
         customerEmail: '',
         dueDate: '',
         notes: '',
+        payerAddress: '',
         paylinkHandle: '',
         lineItems: [
           {
@@ -177,13 +284,38 @@ export function InvoicesSection() {
           }
         ]
       })
+
+      const publishResult = await publishInvoiceOnchain({
+        slug: created.slug,
+        number: created.number,
+        totalAmount: created.totalAmount,
+        tokenAddress: musdAddress,
+        payerAddress: payerAddressInput,
+        chainId
+      })
+
+      toast.success(`Invoice ${created.number} issued on-chain.`, {
+        description: publishResult.hash
+      })
     } catch (error) {
       console.error(error)
-      toast.error(
-        error instanceof Error
-          ? error.message
-          : 'Unable to create invoice. Please try again.'
-      )
+      if (!created) {
+        toast.error(
+          error instanceof Error
+            ? error.message
+            : 'Unable to create invoice. Please try again.'
+        )
+      } else {
+        toast.warning(
+          'Invoice saved as draft. Issue it on-chain from the list once your wallet is ready.',
+          {
+            description:
+              error instanceof Error ? error.message : undefined
+          }
+        )
+      }
+    } finally {
+      setSubmitting(false)
     }
   }
 
@@ -209,6 +341,31 @@ export function InvoicesSection() {
       toast.error('Unable to copy link right now.')
     }
   }
+
+  const handleIssueDraft = useCallback(
+    async (invoice: Doc<'invoices'>) => {
+      try {
+        const publishResult = await publishInvoiceOnchain({
+          slug: invoice.slug,
+          number: invoice.number,
+          totalAmount: invoice.totalAmount,
+          tokenAddress: invoice.tokenAddress,
+          payerAddress: invoice.payerAddress ?? undefined,
+          chainId: invoice.chainId
+        })
+
+        toast.success(`Invoice ${invoice.number} issued on-chain.`, {
+          description: publishResult.hash
+        })
+      } catch (error) {
+        console.error(error)
+        toast.error('Unable to publish invoice on-chain.', {
+          description: error instanceof Error ? error.message : undefined
+        })
+      }
+    },
+    [publishInvoiceOnchain]
+  )
 
   return (
     <div className='space-y-8'>
@@ -294,6 +451,33 @@ export function InvoicesSection() {
                   <FormControl>
                     <Input placeholder='Optional contact email' {...field} />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name='payerAddress'
+              rules={{
+                validate: value =>
+                  !value || value.trim() === '' || isAddress(value.trim())
+                    ? true
+                    : 'Enter a valid EVM address'
+              }}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Payer wallet (optional)</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder='Restrict payment to a wallet address'
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Leave blank to accept payment from any wallet. The
+                    registry enforces this address when provided.
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -423,7 +607,9 @@ export function InvoicesSection() {
             </div>
 
             <div className='flex items-center justify-end md:col-span-2'>
-              <Button type='submit'>Issue invoice</Button>
+              <Button type='submit' disabled={isSubmitting}>
+                {isSubmitting ? 'Issuing invoice…' : 'Issue invoice'}
+              </Button>
             </div>
           </form>
         </Form>
@@ -438,6 +624,13 @@ export function InvoicesSection() {
             {invoices.map(invoice => {
               const total = formatSettlementToken(BigInt(invoice.totalAmount))
               const shareUrl = invoiceShareUrl(invoice)
+              const isDraft = invoice.status === 'draft'
+              const issuingThis = issuingSlug === invoice.slug
+              const shareDescription = isDraft
+                ? 'Issue this invoice on-chain to activate payment links.'
+                : shareUrl
+                  ? shareUrl
+                  : 'Attach a SatsPay handle to generate a link.'
 
               return (
                 <div
@@ -478,18 +671,29 @@ export function InvoicesSection() {
                   <Separator className='my-4' />
                   <div className='flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
                     <div className='text-xs text-muted-foreground'>
-                      {shareUrl
-                        ? shareUrl
-                        : 'Attach a SatsPay handle to generate a link.'}
+                      {shareDescription}
                     </div>
-                    <Button
-                      type='button'
-                      variant='outline'
-                      size='sm'
-                      onClick={() => handleCopyShare(invoice)}
-                    >
-                      Copy payment link
-                    </Button>
+                    <div className='flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end sm:gap-2'>
+                      {isDraft ? (
+                        <Button
+                          type='button'
+                          size='sm'
+                          onClick={() => handleIssueDraft(invoice)}
+                          disabled={issuingThis || isSubmitting}
+                        >
+                          {issuingThis ? 'Publishing…' : 'Issue on-chain'}
+                        </Button>
+                      ) : null}
+                      <Button
+                        type='button'
+                        variant='outline'
+                        size='sm'
+                        disabled={!shareUrl}
+                        onClick={() => handleCopyShare(invoice)}
+                      >
+                        Copy payment link
+                      </Button>
+                    </div>
                   </div>
                 </div>
               )

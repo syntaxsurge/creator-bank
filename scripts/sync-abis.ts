@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url'
 
 const CONTRACT_NAMES = [
   'Badge1155',
+  'InvoiceRegistry',
   'MembershipMarketplace',
   'MembershipPass1155',
   'Registrar',

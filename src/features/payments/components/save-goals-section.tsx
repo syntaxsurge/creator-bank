@@ -520,7 +520,8 @@ export function SaveGoalsSection() {
           <p className='text-sm text-muted-foreground'>
             Create an envelope to track how much of your MUSD treasury you have
             earmarked for a future payout or purchase. Funds stay in your wallet
-            &mdash; this table helps you measure progress.
+            &mdash; this table helps you measure progress while we prepare goal
+            locking with staking rewards.
           </p>
         </div>
 

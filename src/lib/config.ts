@@ -44,6 +44,8 @@ const PUBLIC_ENV_VARS: Record<string, string> = {
     process.env.NEXT_PUBLIC_BADGE_CONTRACT_ADDRESS ?? '',
   NEXT_PUBLIC_REVENUE_SPLIT_ROUTER_ADDRESS:
     process.env.NEXT_PUBLIC_REVENUE_SPLIT_ROUTER_ADDRESS ?? '',
+  NEXT_PUBLIC_INVOICE_REGISTRY_CONTRACT_ADDRESS:
+    process.env.NEXT_PUBLIC_INVOICE_REGISTRY_CONTRACT_ADDRESS ?? '',
   NEXT_PUBLIC_PLATFORM_TREASURY_ADDRESS:
     process.env.NEXT_PUBLIC_PLATFORM_TREASURY_ADDRESS ?? '',
   NEXT_PUBLIC_MUSD_CONTRACT_ADDRESS:
@@ -215,6 +217,13 @@ export function getMarketplaceContractAddress(chainId?: MezoChainId): string {
 
 export function getRevenueSplitRouterAddress(chainId?: MezoChainId): string {
   return getAddressForKey('NEXT_PUBLIC_REVENUE_SPLIT_ROUTER_ADDRESS', chainId)
+}
+
+export function getInvoiceRegistryAddress(chainId?: MezoChainId): string {
+  return getAddressForKey(
+    'NEXT_PUBLIC_INVOICE_REGISTRY_CONTRACT_ADDRESS',
+    chainId
+  )
 }
 
 export function getMusdContractAddress(chainId?: MezoChainId): string {

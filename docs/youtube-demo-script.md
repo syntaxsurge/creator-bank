@@ -8,17 +8,13 @@ This script outlines a 7–8 minute walkthrough of CreatorBank on the Mezo netwo
 
 1. **On-screen:** Start on the CreatorBank landing hero (`/`), slowly pan across the headline, feature cards, and primary CTA.
    - **Voice-over:** “CreatorBank helps creators launch paid communities, teach members, and manage revenue on the Mezo network, so every flow stays Bitcoin-aligned.”
-2. **On-screen:** Pause on the feature card that highlights Mezo Passport and MUSD settlements.
-   - **Voice-over:** “Supporters join with Mezo Passport, and every transaction settles in MUSD, giving predictable USD value on chain.”
 
 ## Segment 2 – Connect Wallet & Network Choice (00:10 – 00:40)
 
 1. **On-screen:** Click `Connect wallet` in the navbar to open the Passport modal.
-   - **Voice-over:** “Let’s connect a wallet through Passport—RainbowKit favourites sit beside native Mezo options.”
-2. **On-screen:** Cancel the modal, open the network toggle, switch from Mezo Mainnet to Testnet, and reopen `Connect wallet`.
-   - **Voice-over:** “I can swap between Mezo Mainnet and Testnet without reloading, so I’ll demo on testnet for easy funding.”
-3. **On-screen:** Choose RainbowKit → MetaMask (or an equivalent EVM wallet) and confirm the connection; highlight the address and balance displayed in the header.
-   - **Voice-over:** “MetaMask connects instantly. The header now shows my active chain and MUSD balance pulled live with viem.”
+   - **Voice-over:** “Let’s connect a wallet through Passport—RainbowKit favourites.”
+2. **On-screen:** Choose RainbowKit → MetaMask (or an equivalent EVM wallet) and confirm the connection; highlight the address and balance displayed in the header.
+   - **Voice-over:** “MetaMask connects instantly. The header now shows my active chain and MUSD balance.”
 
 ## Segment 3 – Payments Dashboard Tour (00:40 – 02:15)
 
@@ -44,12 +40,7 @@ This script outlines a 7–8 minute walkthrough of CreatorBank on the Mezo netwo
 2. **On-screen:** Click `Sync receipts` (if visible) or wait for auto‑detection and show the confirmation state.
    - **Voice-over:** “CreatorBank watches transfer logs for the right recipient and token, flipping to Paid the moment the chain confirms.”
 
-## Segment 5 – Shop Demo (02:55 – 03:20)
-
-1. **On-screen:** Visit `/shop/creatorbankdemo`, add two catalog items, and click `Checkout with MUSD`.
-   - **Voice-over:** “The demo shop reuses the same pay engine—one checkout, on‑chain settlement, and an instant status update.”
-
-## Segment 6 – Create a Paid Community (03:20 – 04:10)
+## Segment 5 – Create a Paid Community (03:20 – 04:10)
 
 1. **On-screen:** Navigate to `/create` with the connected wallet; show the pricing card quoting the monthly platform fee in MUSD.
    - **Voice-over:** “The create flow quotes the monthly platform fee in MUSD so creators know the exact cost upfront.”
@@ -60,7 +51,7 @@ This script outlines a 7–8 minute walkthrough of CreatorBank on the Mezo netwo
 4. **On-screen:** Return after funding, resubmit the create form, approve the MUSD spend, and confirm the MetaMask transaction. Show the success confirmation and redirect into the new community dashboard.
    - **Voice-over:** “Once the wallet holds enough MUSD, the contract call succeeds, registering the community on Mezo and seeding its dashboard.”
 
-## Segment 7 – About, Verify, Edit Details (04:10 – 04:55)
+## Segment 6 – About, Verify, Edit Details (04:10 – 04:55)
 
 1. **On-screen:** Land on the group About tab that displays the course ID and membership summary.
    - **Voice-over:** “The About tab exposes the on-chain course ID alongside membership details for quick auditing.”
@@ -71,7 +62,7 @@ This script outlines a 7–8 minute walkthrough of CreatorBank on the Mezo netwo
 4. **On-screen:** In the Membership course panel, click `Register on‑chain` (or `Retry registration`) to sync the course with Registrar; if needed, click `Reset course ID` then register again.
    - **Voice-over:** “If a course isn’t registered yet, a single click wires it on‑chain through the Registrar so paid memberships and listings can activate.”
 
-## Segment 8 – Classroom: Create Course, Modules, Lessons (04:55 – 05:35)
+## Segment 7 – Classroom: Create Course, Modules, Lessons (04:55 – 05:35)
 
 1. **On-screen:** Switch to the Classroom tab and click `Create a course`.
    - **Voice-over:** “Each community can bundle structured curriculum, so I’ll spin up a course.”
@@ -80,51 +71,51 @@ This script outlines a 7–8 minute walkthrough of CreatorBank on the Mezo netwo
 3. **On-screen:** Click `Edit course`, add a module titled “Introduction”, then add a lesson named “Welcome”, paste a YouTube URL, add a short lesson description, and save.
    - **Voice-over:** “Modules and lessons reuse the same data tree; pasting a YouTube link automatically renders a safe embed for learners.”
 
-## Segment 9 – Join the Paid Community as a Member (05:35 – 06:05)
+## Segment 8 – Join the Paid Community as a Member (05:35 – 06:05)
 
 1. **On-screen:** In a second browser profile or incognito window, connect a different wallet using Passport, navigate to the community page, and click `Join`.
    - **Voice-over:** “From a member wallet, I open the community and hit Join.”
 2. **On-screen:** Approve the spend if prompted, confirm the purchase, and show the unlocked tabs (`Feed`, `Classroom`, `Members`).
    - **Voice-over:** “After approving the MUSD transfer, the gated tabs unlock immediately.”
 
-## Segment 10 – Marketplace Cooldown After Joining (06:05 – 06:20)
+## Segment 9 – Marketplace Cooldown After Joining (06:05 – 06:20)
 
 1. **On-screen:** With the member wallet still active, open `/marketplace` and click `List your membership`.
    - **Voice-over:** “Listing too early triggers the cooldown guard—CreatorBank enforces holding periods to stop instant flips.”
 2. **On-screen:** Capture the cooldown message that displays remaining time before listing is allowed.
    - **Voice-over:** “The UI spells out exactly when selling becomes available.”
 
-## Segment 11 – My Memberships & Cooldown Status (06:20 – 06:35)
+## Segment 10 – My Memberships & Cooldown Status (06:20 – 06:35)
 
 1. **On-screen:** Navigate to `/memberships`, highlight the pass card with expiry timestamp and cooldown chip.
    - **Voice-over:** “Members can monitor expiry and cooldown status from one dashboard.”
 2. **On-screen:** Click `List pass` and show the disabled state or tooltip that references the active cooldown.
    - **Voice-over:** “Until the timer clears, the list action stays disabled, keeping timelines aligned with course access.”
 
-## Segment 12 – Feed: Admin Post (06:35 – 06:55)
+## Segment 11 – Feed: Admin Post (06:35 – 06:55)
 
 1. **On-screen:** Switch back to the creator’s wallet, open the group page, and go to the `Feed` tab.
    - **Voice-over:** “Back as the creator, the feed makes announcements effortless.”
 2. **On-screen:** Click `Write something`, compose a welcome post with links and expectations, then publish; show the post pinned at the top.
    - **Voice-over:** “I publish a welcome update with kickoff links, and it hits the top of the feed instantly.”
 
-## Segment 13 – Feed: Member Engagement (06:55 – 07:10)
+## Segment 12 – Feed: Member Engagement (06:55 – 07:10)
 
 1. **On-screen:** Return to the member wallet, open the same feed, click the thumbs-up icon on the post, and add a comment.
    - **Voice-over:** “Members can react and comment in real time—likes and replies sync through Convex without refreshes.”
 2. **On-screen:** Show the live incremented like count and new comment thread.
    - **Voice-over:** “The post updates immediately, reinforcing that engagement is two-way.”
 
-## Segment 14 – Classroom: Member Learning (07:10 – 07:30)
+## Segment 13 – Classroom: Member Learning (07:10 – 07:30)
 
 1. **On-screen:** Staying on the member wallet, open the `Classroom` tab, enter the course created earlier, click the “Introduction” module, and select the “Welcome” lesson.
    - **Voice-over:** “Members dive straight into the curriculum; lessons stream with the YouTube embed and supporting notes we just authored.”
 2. **On-screen:** Scroll through the lesson description and show the video playing.
    - **Voice-over:** “Everything stays within the community portal—no context switching required.”
 
-## Segment 15 – Discover & Join a Free Community (07:30 – 07:50)
+## Segment 14 – Discover & Join a Free Community (07:30 – 07:50)
 
-## Segment 16 – Marketplace: Primary, Listing, Floor Buy, Renew (07:50 – 08:30)
+## Segment 15 – Marketplace: Primary, Listing, Floor Buy, Renew (07:50 – 08:30)
 
 1. **On-screen:** Go to `/marketplace`; in the catalog, pick a course and click `Buy` on the primary price card; approve MUSD (if prompted) and confirm purchase.
    - **Voice-over:** “Primary mints settle in MUSD—approve once if needed, then confirm to mint the pass.”
@@ -135,7 +126,7 @@ This script outlines a 7–8 minute walkthrough of CreatorBank on the Mezo netwo
 4. **On-screen:** For a pass nearing expiry in your catalog grid, click `Renew` and confirm the MUSD spend.
    - **Voice-over:** “Renewals extend access without minting a new token.”
 
-## Segment 17 – Members: Invite by Wallet (08:30 – 08:45)
+## Segment 16 – Members: Invite by Wallet (08:30 – 08:45)
 
 1. **On-screen:** Open `/[groupId]/members` as the owner; in the invite card, paste a wallet address and click `Add member`.
    - **Voice-over:** “Owners can invite members directly by wallet—CreatorBank adds them to the roster immediately.”

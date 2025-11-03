@@ -221,15 +221,12 @@ export function PaylinksSection() {
             Create a SatsPay link
           </h2>
           <p className='text-sm text-muted-foreground'>
-            Mint a permanent pay handle for instant MUSD deposits. Drop it into{' '}
+            Mint a permanent pay handle for instant MUSD deposits. Share{' '}
             <span className='font-medium text-foreground'>
               /pay/&lt;handle&gt;
             </span>{' '}
-            and the live{' '}
-            <span className='font-medium text-foreground'>
-              /shop/&lt;handle&gt;
-            </span>{' '}
-            demo to showcase daily Bitcoin utility during pitches.
+            anywhere you need fast settlement and sync receipts from this
+            dashboard when transfers clear on-chain.
           </p>
         </div>
 

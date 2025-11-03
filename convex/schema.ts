@@ -130,6 +130,10 @@ export default defineSchema({
     paidAt: v.optional(v.number()),
     paymentTxHash: v.optional(v.string()),
     paylinkHandle: v.optional(v.string()),
+    payerAddress: v.optional(v.string()),
+    registryAddress: v.optional(v.string()),
+    registryInvoiceId: v.optional(v.string()),
+    referenceHash: v.optional(v.string()),
     lineItems: v.array(
       v.object({
         description: v.string(),
