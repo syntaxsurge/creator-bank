@@ -5,11 +5,12 @@ import Link from 'next/link'
 import { ArrowUpRight } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
-import { SETTLEMENT_TOKEN_SYMBOL } from '@/lib/config'
-
-const MEZO_TESTNET_BASE_URL = 'https://testnet.mezo.org/'
-const MEZO_TESTNET_SWAP_URL = 'https://testnet.mezo.org/swap'
-const MEZO_TESTNET_BORROW_URL = 'https://testnet.mezo.org/borrow'
+import {
+  MEZO_TESTNET_BORROW_URL,
+  MEZO_TESTNET_HUB_URL,
+  MEZO_TESTNET_SWAP_URL,
+  SETTLEMENT_TOKEN_SYMBOL
+} from '@/lib/config'
 
 export function GetMusdSection() {
   return (
@@ -28,7 +29,7 @@ export function GetMusdSection() {
           <p className='max-w-2xl text-sm text-muted-foreground'>
             Start from the{' '}
             <Link
-              href={MEZO_TESTNET_BASE_URL}
+              href={MEZO_TESTNET_HUB_URL}
               target='_blank'
               rel='noreferrer noopener'
               className='font-medium text-primary underline underline-offset-4'
