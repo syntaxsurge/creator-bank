@@ -6,7 +6,7 @@ This script walks through every core feature required for the Mezo hackathon sub
 
 ## Segment 1 – Hook & Mission (0:00 – 0:40)
 
-1. **Narration:** “Welcome to CreatorBank, the Bitcoin-native finance stack for creators building on Mezo. In the next few minutes I’ll show how we turn BTC collateral into day-to-day money flows using MUSD.”
+1. **Voice-over:** “Welcome to CreatorBank, the Bitcoin-native finance stack for creators building on Mezo. In the next few minutes I’ll show how we turn BTC collateral into day-to-day money flows using MUSD.”
 2. **On-screen:** Landing page hero (`/`) with CreatorBank logo, quick scroll to highlight value props.
 3. **Call-out:** Mention Mezo Passport support and that every payment settles in MUSD on chain.
 
@@ -14,7 +14,7 @@ This script walks through every core feature required for the Mezo hackathon sub
 
 1. **Action:** Click the `Connect wallet` button in the navbar.
    - **Voice-over:** “Let’s connect a wallet. CreatorBank ships with Passport, so every Mezo-ready wallet is just a click away.”
-2. **Narration:** “CreatorBank ships with Mezo Passport by default, so Bitcoin-native wallets like Xverse show up next to RainbowKit favourites.”
+2. **Voice-over:** “CreatorBank ships with Mezo Passport by default, so Bitcoin-native wallets like Xverse show up next to RainbowKit favourites.”
 3. **On-screen:** After connecting, point to the balance/network badges in the header. Mention live MUSD balance polling via viem.
    - **Voice-over:** “Once connected, the header lights up with my active chain and live MUSD balance, all pulled through viem in real time.”
 4. **Optional:** Toggle theme to show minimal UI polish.
@@ -26,7 +26,7 @@ Navigate to `/payments`.
 
 1. **Status overview**
    - Point to the health banner at the top.
-   - Narrate how it pings both Mezo Testnet/Mainnet RPCs plus the Pyth BTC→USD and MUSD→USD feeds, flagging staleness.
+   - Explain how it pings both Mezo Testnet/Mainnet RPCs plus the Pyth BTC→USD and MUSD→USD feeds, flagging staleness.
    - **Voice-over:** “Up top, a live status panel watches Mezo testnet and mainnet RPCs, plus Pyth price feeds for BTC and MUSD. If anything lags, this banner calls it out before creators feel the pain.”
 2. **SatsPay Links tab**
    - Create a new handle (`creatorbankdemo`) with title/description.
@@ -42,7 +42,7 @@ Navigate to `/payments`.
    - **Voice-over:** “Invoices are just as quick. Two line items, tie it back to the same handle, and CreatorBank outputs a payment URL that settles straight to MUSD on chain.”
 5. **Recurring Payouts tab**
    - Set up a payout schedule with two collaborators and custom basis points.
-   - Narrate that it calls the on-chain split router to push MUSD in a single click.
+   - Mention that it calls the on-chain split router to push MUSD in a single click.
    - **Voice-over:** “Recurring payouts keep collaborators happy. Define the split once, and behind the scenes we call the split router to push MUSD to every wallet in one transaction.”
 6. **Save Goals tab**
    - Create a “Equipment Fund” goal, earmark a portion of recent receipts.
@@ -52,7 +52,7 @@ Navigate to `/payments`.
 ## Segment 4 – Pay Handle & Live Checkout (3:20 – 4:40)
 
 1. **Open** a new tab with `/pay/creatorbankdemo`.
-   - Narrate the QR + share link and how it watches Transfer logs for a specific recipient/token.
+   - Explain the QR + share link and how it watches Transfer logs for a specific recipient/token.
    - **Voice-over:** “Here’s the public checkout. Every pay page listens for MUSD transfers to this handle, and the QR code drops you directly into the wallet flow.”
 2. **Trigger sync**
    - In Convex dashboard (optional) or via the UI, run “Sync receipts”.
@@ -61,7 +61,7 @@ Navigate to `/payments`.
    - Switch to `/shop/creatorbankdemo`.
    - Add a couple of catalog items, click “Checkout with MUSD”.
    - Highlight the right panel waiting for the chain confirmation via `PayPageClient`.
-   - Narrate how once the wallet signs and the payment confirms, the UI flips to “Paid” automatically.
+   - Explain how once the wallet signs and the payment confirms, the UI flips to “Paid” automatically.
    - **Voice-over:** “The same handle powers a storefront. I’ll add a few items, hit checkout, and watch the right panel switch states the moment the MUSD transfer hits the chain.”
 
 ## Segment 5 – Membership Marketplace (4:40 – 5:30)
@@ -70,7 +70,7 @@ Navigate to `/marketplace`.
 
 1. **Show** an available group.
    - **Voice-over:** “The marketplace lists every membership my wallet can mint right now.”
-2. **Narration:** “Memberships mint through `MembershipPass1155`, but settlement is MUSD via `MembershipMarketplace`.”
+2. **Voice-over:** “Memberships mint through `MembershipPass1155`, but settlement is MUSD via `MembershipMarketplace`.”
 3. **Action:** Purchase a pass (approve if needed) and highlight on-screen confirmation plus the balance change badge in the navbar.
    - **Voice-over:** “I’ll mint one—approve once, confirm the swap, and CreatorBank updates my balance badge the second the MUSD leaves my wallet.”
 4. **Optional:** Show secondary listing creation to underline ERC-20 settlement for peer-to-peer trades.
@@ -80,7 +80,8 @@ Navigate to `/marketplace`.
 
 1. **Visit** the group you just joined (`/creator-group-id/about` as applicable).
    - **Voice-over:** “Inside the group, everything is gated automatically because the NFT lives on the same chain we’ve been using all along.”
-2. **Narrate:** call out classroom, feed, and members tabs running through Convex.
+2. **Call-out:** Highlight classroom, feed, and members tabs running through Convex.
+   - **Voice-over:** “The classroom, feed, and members tabs all run through Convex, so every update stays in sync without extra backends.”
 3. **Open** the group settings form to show how pricing, collaborators, and registrar sync reuse the chain preference + MUSD configuration.
    - **Voice-over:** “Organisers manage pricing, collaborators, and registrar wiring without leaving the app—CreatorBank reuses the same chain preference and MUSD contract config everywhere.”
 4. **Highlight:** Recurring payouts pull from the same collaborator list, keeping Financial Access and Daily Bitcoin tracks aligned.
@@ -90,7 +91,7 @@ Navigate to `/marketplace`.
 
 1. **Return** to `/payments` status tab.
    - **Voice-over:** “Back on the payments dashboard, everything we touched—from paylinks to memberships—feeds into this single health view.”
-2. **Narration:** Summarise the loop — Passport onboarding → MUSD flows (paylinks, invoices, payouts, goals) → Marketplace memberships.
+2. **Voice-over:** “Summarise the loop — Passport onboarding → MUSD flows (paylinks, invoices, payouts, goals) → Marketplace memberships.”
    - **Voice-over:** “Passport onboarding, MUSD money flows, memberships, and collaborator ops—all in one BTC-native command center.”
 3. **Call-to-action:** Invite builders to clone CreatorBank, bridge testnet BTC via the hub, and submit their own creator banks to Mezo.
    - **Voice-over:** “Clone CreatorBank, bridge a little testnet BTC through the Mezo hub, and show us what your creator bank looks like on Mezo.”
