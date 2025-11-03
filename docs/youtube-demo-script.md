@@ -33,22 +33,19 @@ This script outlines a 7–8 minute walkthrough of CreatorBank on the Mezo netwo
      - Paylink handle: `@creatorbankdemo`
      - Customer name: `Acme Media LLC`
      - Customer email: `finance@acmemedia.test`
-     - Payer wallet (optional): `0x2222222222222222222222222222222222222222`
+     - Payer wallet (optional): Leave blank
      - Due date: `2025-11-30`
      - Notes: `Thank you! Payment secures production through November.`
      - Line items:
-       - 1) Description: `Content Strategy Sprint (4 weeks)` — Qty: `1` — Unit price (MUSD): `1200.00`
-       - 2) Description: `Video Editing Blocks (10 × 1hr)` — Qty: `10` — Unit price (MUSD): `45.00`
-5. **On-screen:** In `Recent invoices`, click `Copy payment link` on the new invoice and show the URL.
-   - **Voice-over:** “Each invoice includes a payment link that carries the amount and slug so the payer lands in the right checkout.”
-6. **On-screen:** Open `Recurring Payouts`, add two collaborators with shares, and save.
+       - 1) Description: `Content Strategy Sprint (4 weeks)` — Qty: `1` — Unit price (MUSD): `10`
+5. **On-screen:** Open `Recurring Payouts`, add two collaborators with shares, and save.
    - **Voice-over:** “Payout schedules use the split router to push MUSD to each wallet in one transaction.”
    - Field inputs — type exactly:
      - Schedule name: `Creator Ops 101 — Revenue Split`
      - Recipient 1 — Wallet address: `0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa` — Share (%): `70` — Label: `Creator`
      - Recipient 2 — Wallet address: `0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb` — Share (%): `30` — Label: `Editor`
      - Execute Payout (after saving) — Amount (MUSD): `100.00`
-7. **On-screen:** Open `Save Goals`, create an “Equipment Fund” with a target amount, and save.
+6. **On-screen:** Open `Save Goals`, create an “Equipment Fund” with a target amount, and save.
    - **Voice-over:** “Save Goals track earmarked MUSD while funds stay in your wallet.”
    - Field inputs — type exactly:
      - Goal name: `Equipment Fund`
@@ -60,9 +57,11 @@ This script outlines a 7–8 minute walkthrough of CreatorBank on the Mezo netwo
 
 ## Segment 4 – Invoice Checkout (02:15 – 02:55)
 
-1. **On-screen:** Switch to another browser profile (or incognito) with a different wallet connected. Paste the payment URL copied in Segment 3 to open `/pay/creatorbankdemo?invoice=<invoice-slug>`; show the invoice card with number, amount due, and status “Awaiting payment”.
-   - **Voice-over:** “Using the link we copied earlier, I’m in a separate browser with a different wallet to pay this invoice. The slug loads the exact amount and the registry ID registered on-chain.”
-2. **On-screen:** Click `Approve MUSD`, wait for confirmation, then click `Pay invoice`; show the success toast and the status switching to “Paid”. Return to `Payments → Invoices` in the original browser to confirm the row now shows `Paid` with the tx hash.
+1. **On-screen:** In `Payments → Invoices`, click `Copy payment link` on the newly issued invoice and show the URL.
+   - **Voice-over:** “Each invoice includes a payment link that carries the amount and slug so the payer lands in the right checkout.”
+2. **On-screen:** Switch to another browser profile (or incognito) with a different wallet connected. Paste the copied payment URL to open `/pay/creatorbankdemo?invoice=<invoice-slug>`; show the invoice card with number, amount due, and status “Awaiting payment”.
+   - **Voice-over:** “Using the copied link, I’m in a separate browser with a different wallet to pay this invoice. The slug loads the exact amount and the registry ID registered on-chain.”
+3. **On-screen:** Click `Approve MUSD`, wait for confirmation, then click `Pay invoice`; show the success toast and the status switching to “Paid”. Return to `Payments → Invoices` in the original browser to confirm the row now shows `Paid` with the tx hash.
    - **Voice-over:** “First approve the registry, then settle the invoice. CreatorBank records the settlement and updates the ledger the moment Mezo confirms.”
 
 ## Segment 5 – Create a Paid Community (03:20 – 04:10)
