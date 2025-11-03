@@ -190,8 +190,15 @@ export function InvoicesSection() {
         throw new Error('Wallet client unavailable. Reconnect your wallet.')
       }
 
-      const walletChainId = walletClient.chain?.id
-      if (walletChainId && walletChainId !== params.chainId) {
+      const walletChainId =
+        typeof walletClient.getChainId === 'function'
+          ? await walletClient.getChainId()
+          : walletClient.chain?.id
+
+      if (
+        typeof walletChainId === 'number' &&
+        walletChainId !== params.chainId
+      ) {
         throw new Error('Switch your wallet to the invoice chain before issuing.')
       }
 
