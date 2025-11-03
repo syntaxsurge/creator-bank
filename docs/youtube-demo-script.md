@@ -116,3 +116,7 @@ This script outlines a 7–8 minute walkthrough of CreatorBank on the Mezo netwo
 
 1. **On-screen:** Open Discover/Groups at /groups. Show a mix of free and paid groups. Click a free group card. On the group page, click Join for free. Tabs for Feed, Classroom, and Members appear. Open Feed to see a history of admin and user interactions. Open Classroom to view courses; click a course to see its modules and lessons. Navigate to another course and repeat.
    - **Voice-over 18:** “On the Discover page you can see both free and paid groups. We already joined a paid group, so now I’ll join a free group. I click the free group and hit Join for free. Access unlocks immediately, so Feed, Classroom, and Members appear. I can scroll the feed to see past admin posts and member activity. In the classroom I can open a course, browse its modules, and view lessons. I can also jump into other courses and do the same.”
+
+## Segment 14 – Thank You (07:50 – 08:00)
+
+- **Voice-over 19:** “Thanks for watching CreatorBank demo.”
