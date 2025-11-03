@@ -5,12 +5,7 @@ import Link from 'next/link'
 import { ArrowUpRight } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
-import {
-  MEZO_TESTNET_BORROW_URL,
-  MEZO_TESTNET_HUB_URL,
-  MEZO_TESTNET_SWAP_URL,
-  SETTLEMENT_TOKEN_SYMBOL
-} from '@/lib/config'
+import { MEZO_TESTNET_HUB_URL, SETTLEMENT_TOKEN_SYMBOL } from '@/lib/config'
 
 export function GetMusdSection() {
   return (
@@ -21,10 +16,10 @@ export function GetMusdSection() {
             Get {SETTLEMENT_TOKEN_SYMBOL}
           </h2>
           <p className='mt-2 max-w-2xl text-sm text-muted-foreground'>
-            Use the Mezo testnet hub to swap or borrow {SETTLEMENT_TOKEN_SYMBOL}
-            before managing invoices, payouts, and save goals in CreatorBank.
-            The hub opens in a new tab so you can follow the on-chain flow with
-            your connected wallet.
+            Use the Mezo testnet hub to bridge BTC and mint{' '}
+            {SETTLEMENT_TOKEN_SYMBOL} before managing invoices, payouts, and
+            save goals in CreatorBank. The hub opens in a new tab so you can
+            follow the on-chain flow with your connected wallet.
           </p>
           <p className='max-w-2xl text-sm text-muted-foreground'>
             Start from the{' '}
@@ -36,29 +31,28 @@ export function GetMusdSection() {
             >
               Mezo testnet hub
             </Link>{' '}
-            or jump straight into the dedicated swap and borrow experiences
-            below.
+            and follow the guided steps to fund your account.
           </p>
+          <div className='rounded-xl border border-border/70 bg-muted/20 p-4 text-sm text-muted-foreground'>
+            <p className='font-medium text-foreground'>
+              Quick funding checklist
+            </p>
+            <ol className='mt-2 list-decimal space-y-1 pl-5'>
+              <li>Connect a Passport-compatible wallet.</li>
+              <li>Bridge BTC to Mezo Testnet.</li>
+              <li>Mint {SETTLEMENT_TOKEN_SYMBOL} for spending in CreatorBank.</li>
+            </ol>
+          </div>
         </div>
 
         <div className='flex flex-col items-start gap-3 sm:flex-row'>
           <Button asChild>
             <Link
-              href={MEZO_TESTNET_SWAP_URL}
+              href={MEZO_TESTNET_HUB_URL}
               target='_blank'
               rel='noreferrer noopener'
             >
-              Swap for {SETTLEMENT_TOKEN_SYMBOL}
-              <ArrowUpRight className='ml-2 h-4 w-4' />
-            </Link>
-          </Button>
-          <Button asChild variant='outline'>
-            <Link
-              href={MEZO_TESTNET_BORROW_URL}
-              target='_blank'
-              rel='noreferrer noopener'
-            >
-              Borrow {SETTLEMENT_TOKEN_SYMBOL}
+              Open Mezo Testnet Hub
               <ArrowUpRight className='ml-2 h-4 w-4' />
             </Link>
           </Button>

@@ -241,8 +241,6 @@ export const SETTLEMENT_TOKEN_SYMBOL = 'MUSD'
 export const SETTLEMENT_TOKEN_DECIMALS = 18
 
 export const MEZO_TESTNET_HUB_URL = 'https://testnet.mezo.org/'
-export const MEZO_TESTNET_SWAP_URL = 'https://testnet.mezo.org/swap'
-export const MEZO_TESTNET_BORROW_URL = 'https://testnet.mezo.org/borrow'
 
 const DEFAULT_MEMBERSHIP_DURATION_SECONDS = 60 * 60 * 24 * 30
 const DEFAULT_MEMBERSHIP_TRANSFER_COOLDOWN_SECONDS = 60 * 60 * 24

@@ -287,9 +287,7 @@ export function ShopDemo({ handle }: { handle: string }) {
               </p>
               <ul className='mt-3 list-disc space-y-2 pl-5'>
                 <li>Connect with Mezo Passport in a second browser tab.</li>
-                <li>
-                  Bridge or borrow MUSD so you can settle the example order.
-                </li>
+                <li>Bridge BTC and mint MUSD via the Mezo hub.</li>
                 <li>Return here, add products, and click checkout.</li>
                 <li>
                   Submit the MUSD transfer in your wallet to watch the
