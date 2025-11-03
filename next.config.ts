@@ -48,6 +48,24 @@ const nextConfig: NextConfig = {
       }
     ]
   },
+  async redirects() {
+    const demoVideo = process.env.DEMO_VIDEO_URL || 'https://www.youtube.com/'
+    const pitchDeck =
+      process.env.PITCH_DECK_URL || 'https://example.com/pitch-deck'
+
+    return [
+      {
+        source: '/demo-video',
+        destination: demoVideo,
+        permanent: false
+      },
+      {
+        source: '/pitch-deck',
+        destination: pitchDeck,
+        permanent: false
+      }
+    ]
+  },
   webpack(config) {
     config.resolve.alias ??= {}
     config.resolve.alias['@react-native-async-storage/async-storage'] =
