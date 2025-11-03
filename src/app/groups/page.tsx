@@ -38,25 +38,22 @@ export default function GroupsPage() {
             <div className='inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 backdrop-blur-sm'>
               <div className='h-2 w-2 animate-pulse rounded-full bg-primary' />
               <p className='text-xs font-semibold uppercase tracking-wider text-primary'>
-                Universal Communities
+                CreatorBank Communities
               </p>
             </div>
 
             <h1 className='text-5xl font-bold leading-tight sm:text-6xl'>
-              <span className='text-foreground'>Your Cross-Chain</span>
+              <span className='text-foreground'>Join CreatorBank</span>
               <br />
               <span className='bg-gradient-to-r from-brand-blue to-brand-blue-light bg-clip-text text-transparent'>
-                Learning Communities
+                Communities on Mezo
               </span>
             </h1>
 
             <p className='max-w-2xl text-lg leading-relaxed text-muted-foreground'>
-              Connect any wallet to access communities across{' '}
-              <span className='font-semibold text-foreground'>
-                Ethereum, Solana, Base, and 15+ chains
-              </span>
-              . Jump into discussions, courses, and marketplace listings—all
-              from one universal hub.
+              Connect your Mezo wallet to access CreatorBank groups. Join gated
+              feeds, classrooms, and marketplace listings backed by MUSD
+              settlement and non-custodial memberships.
             </p>
           </div>
         </div>

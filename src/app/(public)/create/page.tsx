@@ -438,11 +438,11 @@ export default function Create() {
               </span>
             </h1>
             <p className='mx-auto max-w-2xl text-lg text-muted-foreground'>
-              Launch once on Mezo. Reach learners across the Bitcoin economy
-              with{' '}
+              Launch once on Mezo. Welcome your community with wallet-native
+              access,{' '}
               <span className='font-semibold text-foreground'>
-                Passport-enabled wallets and BTC-settled MUSD
-              </span>
+                Passport-enabled wallets, and MUSD settlement
+              </span>{' '}
               —no bridges required.
             </p>
           </div>
@@ -474,34 +474,34 @@ export default function Create() {
             <div className='mb-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3'>
               {[
                 {
-                  icon: '🌐',
-                  title: 'Universal Access',
-                  desc: 'Reach users on 15+ chains'
-                },
-                {
-                  icon: '💎',
-                  title: 'Any Wallet, Any Token',
-                  desc: 'No forced switching'
+                  icon: '💳',
+                  title: 'MUSD settlement',
+                  desc: 'All payments clear on Mezo'
                 },
                 {
                   icon: '🔗',
-                  title: 'Shared-State L1',
-                  desc: 'Powered by Mezo settlement'
+                  title: 'Satspay handles',
+                  desc: 'Shareable pay links with live sync'
                 },
                 {
-                  icon: '⚡',
-                  title: 'Zero Friction',
-                  desc: 'No bridges or relayers'
+                  icon: '👥',
+                  title: 'Wallet-gated groups',
+                  desc: 'Membership checks powered by CreatorBank'
                 },
                 {
-                  icon: '🎓',
-                  title: 'Built-In Classroom',
-                  desc: 'Courses & credentials'
+                  icon: '📚',
+                  title: 'Classroom ready',
+                  desc: 'Modules, lessons, and embedded media'
                 },
                 {
-                  icon: '🚀',
-                  title: 'Deploy Once',
-                  desc: 'Instant cross-chain reach'
+                  icon: '⚙️',
+                  title: 'Recurring payouts',
+                  desc: 'Split collaborator earnings in one tx'
+                },
+                {
+                  icon: '📊',
+                  title: 'Creator dashboards',
+                  desc: 'Track invoices, receipts, and balances'
                 }
               ].map((feature, i) => (
                 <div
@@ -526,8 +526,8 @@ export default function Create() {
                   Community Details
                 </h2>
                 <p className='mt-2 text-sm text-muted-foreground'>
-                  Configure your universal learning community. Once deployed,
-                  it'll be accessible across all supported chains.
+                  Configure your CreatorBank community. Once deployed, members
+                  with Mezo wallets can join instantly.
                 </p>
               </div>
 
@@ -761,7 +761,7 @@ export default function Create() {
                     </Button>
                     <p className='mt-3 text-center text-xs text-muted-foreground'>
                       By deploying, you agree to our terms. Your app will be
-                      accessible across all supported chains.
+                      accessible to Mezo wallets you onboard.
                     </p>
                   </div>
                 </form>
