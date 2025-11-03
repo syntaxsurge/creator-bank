@@ -16,6 +16,16 @@ import { useWalletAccount } from '@/hooks/use-wallet-account'
 import { getBlockExplorerUrl } from '@/lib/config'
 import { formatSettlementToken } from '@/lib/settlement-token'
 import { Erc20Service, InvoiceRegistryService } from '@/lib/onchain/services'
+import type { LucideIcon } from 'lucide-react'
+import {
+  ArrowUpRight,
+  AtSign,
+  Calendar,
+  CheckCircle2,
+  FileText,
+  User,
+  Wallet as WalletIcon
+} from 'lucide-react'
 
 type PayPageClientProps = {
   handle: string
@@ -46,6 +56,38 @@ function describeExpectedAmount(
     return formatSettlementToken(BigInt(expectedAmount))
   }
   return null
+}
+
+function formatDateTime(timestamp?: number | null) {
+  if (!timestamp) return null
+  return new Intl.DateTimeFormat('en-US', {
+    dateStyle: 'medium',
+    timeStyle: 'short'
+  }).format(new Date(timestamp))
+}
+
+function formatDateOnly(timestamp?: number | null) {
+  if (!timestamp) return null
+  return new Intl.DateTimeFormat('en-US', {
+    dateStyle: 'medium'
+  }).format(new Date(timestamp))
+}
+
+function truncateHash(hash: string, front = 8, back = 6) {
+  if (hash.length <= front + back + 1) return hash
+  return `${hash.slice(0, front)}…${hash.slice(-back)}`
+}
+
+function truncateAddress(address: string, front = 6, back = 4) {
+  if (address.length <= front + back + 1) return address
+  return `${address.slice(0, front)}…${address.slice(-back)}`
+}
+
+type DetailItem = {
+  label: string
+  value: string
+  icon: LucideIcon
+  title?: string
 }
 
 export function PayPageClient({
@@ -117,6 +159,91 @@ export function PayPageClient({
       invoice?.chainId ? (invoice.chainId as any) : undefined
     )
   }, [invoice?.chainId])
+
+  const explorerBaseNormalized = useMemo(() => {
+    return explorerBase.replace(/\/$/, '')
+  }, [explorerBase])
+
+  const paymentExplorerUrl = useMemo(() => {
+    if (invoice?.paymentTxHash) {
+      return `${explorerBaseNormalized}/tx/${invoice.paymentTxHash}`
+    }
+    return null
+  }, [explorerBaseNormalized, invoice?.paymentTxHash])
+
+  const paidAtFormatted = useMemo(
+    () => formatDateTime(invoice?.paidAt),
+    [invoice?.paidAt]
+  )
+
+  const dueDateFormatted = useMemo(
+    () => formatDateOnly(invoice?.dueAt),
+    [invoice?.dueAt]
+  )
+
+  const expectedAmountDescription = useMemo(
+    () => describeExpectedAmount(invoice, expectedAmount),
+    [expectedAmount, invoice]
+  )
+
+  const amountPaidDisplay = useMemo(() => {
+    if (invoice) {
+      try {
+        return formatSettlementToken(BigInt(invoice.totalAmount))
+      } catch {
+        return expectedAmountDescription ?? null
+      }
+    }
+    return expectedAmountDescription ?? null
+  }, [expectedAmountDescription, invoice])
+
+  const paidDetailItems = useMemo<DetailItem[]>(() => {
+    const items: DetailItem[] = []
+    if (invoice?.number) {
+      items.push({
+        label: 'Invoice number',
+        value: invoice.number,
+        icon: FileText
+      })
+    }
+    if (paidAtFormatted) {
+      items.push({
+        label: 'Paid on',
+        value: paidAtFormatted,
+        icon: Calendar
+      })
+    }
+    if (dueDateFormatted) {
+      items.push({
+        label: 'Due date',
+        value: dueDateFormatted,
+        icon: Calendar
+      })
+    }
+    if (paylink) {
+      items.push({
+        label: 'Pay handle',
+        value: `@${paylink.handle}`,
+        icon: AtSign
+      })
+    }
+    if (invoice?.customerName) {
+      items.push({
+        label: 'Billed to',
+        value: invoice.customerName,
+        icon: User
+      })
+    }
+    if (invoice?.payerAddress) {
+      items.push({
+        label: 'Payer wallet',
+        value: truncateAddress(invoice.payerAddress),
+        title: invoice.payerAddress,
+        icon: WalletIcon
+      })
+    }
+    return items
+  }, [dueDateFormatted, invoice, paidAtFormatted, paylink])
 
   useEffect(() => {
     if (!supportsRegistry || !invoice) {
@@ -197,11 +324,6 @@ export function PayPageClient({
     return formatSettlementToken(balance)
   }, [balance])
 
-  const expectedAmountDescription = useMemo(
-    () => describeExpectedAmount(invoice, expectedAmount),
-    [expectedAmount, invoice]
-  )
-
   const paymentDetected = useMemo(() => {
     if (supportsRegistry) {
       return invoice?.status === 'paid'
@@ -215,6 +337,10 @@ export function PayPageClient({
     }
     return payments.length > 0
   }, [expectedAmount, invoice?.status, invoiceSlug, payments, supportsRegistry])
+
+  const showPaidReceipt = paymentDetected
+  const paidHeroTitle =
+    invoice?.title ?? paylink?.title ?? 'Invoice payment confirmed'
 
   const handleCopyAddress = async () => {
     if (!paylink) return
@@ -395,7 +521,95 @@ export function PayPageClient({
       ) : null}
 
       <div className='rounded-xl border border-border/70 bg-background/70 p-5'>
-        {supportsRegistry && requiredAmount !== null ? (
+        {showPaidReceipt ? (
+          <div className='space-y-6'>
+            <div className='relative overflow-hidden rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/12 via-primary/5 to-accent/10 p-6'>
+              <div className='pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-accent/20 opacity-70 blur-3xl' />
+              <div className='relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
+                <div className='flex items-center gap-3'>
+                  <span className='flex h-12 w-12 items-center justify-center rounded-full bg-primary/15 text-primary'>
+                    <CheckCircle2 className='h-6 w-6' />
+                  </span>
+                  <div>
+                    <p className='text-xs font-semibold uppercase tracking-wider text-primary'>
+                      Payment complete
+                    </p>
+                    <h2 className='text-xl font-semibold text-foreground'>
+                      {paidHeroTitle}
+                    </h2>
+                  </div>
+                </div>
+                {invoice?.number ? (
+                  <Badge variant='secondary' className='self-start'>
+                    #{invoice.number}
+                  </Badge>
+                ) : null}
+              </div>
+              {amountPaidDisplay ? (
+                <div className='relative mt-6'>
+                  <p className='text-xs uppercase tracking-wide text-muted-foreground'>
+                    Amount paid
+                  </p>
+                  <p className='mt-2 text-3xl font-bold text-foreground'>
+                    {amountPaidDisplay}
+                  </p>
+                </div>
+              ) : null}
+            </div>
+
+            {paidDetailItems.length > 0 ? (
+              <div className='grid gap-4 sm:grid-cols-2'>
+                {paidDetailItems.map(item => {
+                  const Icon = item.icon
+                  return (
+                    <div
+                      key={item.label}
+                      className='flex items-start gap-3 rounded-xl border border-border/60 bg-background/80 p-4'
+                    >
+                      <span className='mt-1 flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary'>
+                        <Icon className='h-4 w-4' />
+                      </span>
+                      <div>
+                        <p className='text-xs uppercase tracking-wide text-muted-foreground'>
+                          {item.label}
+                        </p>
+                        <p
+                          className='mt-1 text-sm font-medium text-foreground'
+                          title={item.title ?? item.value}
+                        >
+                          {item.value}
+                        </p>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            ) : null}
+
+            {invoice?.notes ? (
+              <div className='rounded-xl border border-border/60 bg-background/80 p-4'>
+                <p className='text-xs uppercase tracking-wide text-muted-foreground'>
+                  Notes
+                </p>
+                <p className='mt-2 text-sm leading-relaxed text-foreground'>
+                  {invoice.notes}
+                </p>
+              </div>
+            ) : null}
+
+            {paymentExplorerUrl ? (
+              <a
+                className='inline-flex items-center gap-2 text-sm font-semibold text-primary underline-offset-4 hover:underline'
+                href={paymentExplorerUrl}
+                target='_blank'
+                rel='noreferrer'
+              >
+                View transaction on Mezo Explorer
+                <ArrowUpRight className='h-4 w-4' />
+              </a>
+            ) : null}
+          </div>
+        ) : supportsRegistry && requiredAmount !== null ? (
           <div className='space-y-4'>
             <div>
               <p className='text-xs uppercase tracking-wide text-muted-foreground'>
@@ -499,39 +713,52 @@ export function PayPageClient({
 
       <div className='space-y-3'>
         <h2 className='text-sm font-medium text-foreground'>Payment status</h2>
-        {invoice ? (
-          <div className='rounded-xl border border-border/70 bg-background/70 p-4 text-sm text-muted-foreground'>
-            <p>
-              Invoice {invoice.number}{' '}
-              {invoice.status === 'paid'
-                ? 'has been settled. Thank you!'
-                : 'is pending payment.'}
+        <div className='rounded-xl border border-border/70 bg-background/70 p-4 text-sm text-muted-foreground'>
+          {showPaidReceipt ? (
+            <p className='text-foreground'>
+              {invoice ? (
+                <>
+                  Invoice {invoice.number}{' '}
+                  {paidAtFormatted
+                    ? `was settled on ${paidAtFormatted}.`
+                    : 'has been settled.'}{' '}
+                  Thank you for your payment!
+                </>
+              ) : (
+                'Payment received and recorded. Thank you!'
+              )}
             </p>
-            {invoice.status !== 'paid' && expectedAmountDescription ? (
-              <p className='mt-1'>
-                Amount due:{' '}
-                <span className='font-semibold text-foreground'>
-                  {expectedAmountDescription}
-                </span>
+          ) : invoice ? (
+            <>
+              <p className='text-foreground'>
+                Invoice {invoice.number} is pending payment.
               </p>
-            ) : null}
-          </div>
-        ) : null}
+              {expectedAmountDescription ? (
+                <p className='mt-1'>
+                  Amount due:{' '}
+                  <span className='font-semibold text-foreground'>
+                    {expectedAmountDescription}
+                  </span>
+                </p>
+              ) : null}
+            </>
+          ) : (
+            <p>
+              Awaiting a transfer to @{paylink.handle}. This page refreshes as
+              soon as funds are detected.
+            </p>
+          )}
+        </div>
         <div className='rounded-xl border border-border/60 bg-background/70 p-4 text-sm'>
-          {supportsRegistry ? (
-            paymentDetected ? (
-              <p className='font-medium text-foreground'>
-                Payment confirmed on-chain. The creator ledger is now up to date.
-              </p>
-            ) : (
-              <p className='text-muted-foreground'>
-                Approve MUSD and submit the pay transaction above to settle this invoice.
-              </p>
-            )
-          ) : paymentDetected ? (
+          {showPaidReceipt ? (
             <p className='font-medium text-foreground'>
-              Payment detected. You can close this tab once the recipient
-              confirms receipt.
+              Payment confirmed. You can safely close this tab or return to the
+              dashboard.
+            </p>
+          ) : supportsRegistry ? (
+            <p className='text-muted-foreground'>
+              Approve MUSD and submit the pay transaction above to settle this
+              invoice.
             </p>
           ) : (
             <p className='text-muted-foreground'>
