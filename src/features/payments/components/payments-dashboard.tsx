@@ -43,8 +43,11 @@ export function PaymentsDashboard() {
             <span>MEZO Payments Hub</span>
           </div>
 
-          <h1 className='bg-gradient-to-r from-brand-teal-dark via-brand-teal to-accent bg-clip-text text-5xl font-bold tracking-tight text-transparent drop-shadow-[0_2px_8px_rgba(0,0,0,0.2)]'>
-            Payments Command Center
+          <h1 className='text-5xl font-bold tracking-tight'>
+            <span className='text-foreground'>Payments</span>{' '}
+            <span className='bg-gradient-to-r from-brand-teal to-accent bg-clip-text text-transparent drop-shadow-sm'>
+              Command Center
+            </span>
           </h1>
           <p className='max-w-3xl text-lg leading-relaxed text-muted-foreground'>
             Operate your creator bank end-to-end: accept MUSD with Passport

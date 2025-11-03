@@ -738,10 +738,13 @@ function Hero({
           </p>
         </div>
         <h1 className='text-5xl font-bold leading-tight sm:text-6xl'>
-          Discover & Trade
-          <br />
-          <span className='bg-gradient-to-r from-brand-teal-dark to-accent-dark bg-clip-text text-transparent drop-shadow-[0_2px_12px_rgba(0,0,0,0.5)]'>
-            Course Memberships
+          <span className='text-white'>
+            Discover & Trade
+            <br />
+            Course{' '}
+            <span className='bg-gradient-to-r from-brand-teal to-accent bg-clip-text text-transparent drop-shadow-sm'>
+              Memberships
+            </span>
           </span>
         </h1>
         <p className='max-w-2xl text-lg leading-relaxed text-slate-300'>
