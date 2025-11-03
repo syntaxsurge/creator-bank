@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { useQuery } from 'convex/react'
 import { ChevronDown, Compass, Plus } from 'lucide-react'
@@ -26,6 +26,11 @@ export function GroupSwitcher() {
   const groupContext = useOptionalGroupContext()
 
   const [open, setOpen] = useState(false)
+  const [isMounted, setIsMounted] = useState(false)
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
 
   const ownedGroups = useQuery(
     api.groups.list,
@@ -51,11 +56,21 @@ export function GroupSwitcher() {
 
   const handleSelect = (groupId: Id<'groups'>) => {
     router.push(`/${groupId}/about`)
-    setOpen(false)
+    if (isMounted) {
+      setOpen(false)
+    }
+  }
+
+  const handleOpenChange = (nextOpen: boolean) => {
+    if (!isMounted) return
+    setOpen(nextOpen)
   }
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover
+      open={isMounted ? open : undefined}
+      onOpenChange={handleOpenChange}
+    >
       <PopoverTrigger asChild>
         <button
           type='button'
@@ -93,7 +108,9 @@ export function GroupSwitcher() {
           type='button'
           onClick={() => {
             router.push('/create')
-            setOpen(false)
+            if (isMounted) {
+              setOpen(false)
+            }
           }}
           className='flex w-full items-center gap-2 rounded-md px-2 py-2 text-sm font-medium hover:bg-muted'
         >
@@ -102,7 +119,11 @@ export function GroupSwitcher() {
 
         <Link
           href='/groups'
-          onClick={() => setOpen(false)}
+          onClick={() => {
+            if (isMounted) {
+              setOpen(false)
+            }
+          }}
           className='flex items-center gap-2 rounded-md px-2 py-2 text-sm font-medium hover:bg-muted'
         >
           <Compass className='h-4 w-4' /> Discover groups
