@@ -878,6 +878,31 @@ export function InvoicesSection() {
                           ) : null}
                         </div>
                       ) : null}
+                      {invoice.paymentTxHash ? (
+                        <div className='rounded-2xl border border-border/40 bg-background/40 p-4 backdrop-blur-sm'>
+                          <div className='flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-muted-foreground'>
+                            <ExternalLink className='h-3.5 w-3.5 text-emerald-500' />
+                            Settlement proof
+                          </div>
+                          <p
+                            className='mt-2 break-all font-mono text-xs font-medium text-foreground'
+                            title={invoice.paymentTxHash}
+                          >
+                            {truncateHash(invoice.paymentTxHash)}
+                          </p>
+                          {invoice.paymentTxHash ? (
+                            <a
+                              href={`${explorerBaseUrl}/tx/${invoice.paymentTxHash}`}
+                              target='_blank'
+                              rel='noreferrer'
+                              className='mt-3 inline-flex items-center gap-1 text-xs font-semibold text-primary underline-offset-4 hover:underline'
+                            >
+                              View payment on explorer
+                              <ExternalLink className='h-3 w-3' />
+                            </a>
+                          ) : null}
+                        </div>
+                      ) : null}
                     </div>
 
                     {/* Action Buttons */}
