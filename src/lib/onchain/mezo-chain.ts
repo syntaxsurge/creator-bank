@@ -13,12 +13,11 @@ let cachedChainId: MezoChainId = getActiveChainId()
 
 function buildChain(chainId: MezoChainId) {
   const rpcUrls = getRpcUrls(chainId)
-  const isMainnet = chainId === 31612
 
   return defineChain({
     id: chainId,
-    name: isMainnet ? 'Mezo' : 'Mezo Testnet',
-    network: isMainnet ? 'mezo-mainnet' : 'mezo-testnet',
+    name: 'Mezo Testnet',
+    network: 'mezo-testnet',
     nativeCurrency: {
       name: 'Bitcoin',
       symbol: 'BTC',
@@ -34,7 +33,7 @@ function buildChain(chainId: MezoChainId) {
         url: getBlockExplorerUrl(chainId)
       }
     },
-    testnet: !isMainnet
+    testnet: true
   })
 }
 

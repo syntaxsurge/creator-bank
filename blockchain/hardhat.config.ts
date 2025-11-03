@@ -5,7 +5,6 @@ import "dotenv/config";
 
 const PRIVATE_KEY = process.env.PRIVATE_KEY ?? "";
 const MEZO_TESTNET_RPC_URL = process.env.MEZO_TESTNET_RPC_URL ?? "https://rpc.test.mezo.org";
-const MEZO_MAINNET_RPC_URL = process.env.MEZO_MAINNET_RPC_URL ?? "https://rpc-http.mezo.boar.network";
 
 const config: HardhatUserConfig = {
   solidity: {
@@ -20,11 +19,6 @@ const config: HardhatUserConfig = {
     mezotestnet: {
       url: MEZO_TESTNET_RPC_URL,
       chainId: 31611,
-      accounts: PRIVATE_KEY ? [PRIVATE_KEY] : [],
-    },
-    mezomainnet: {
-      url: MEZO_MAINNET_RPC_URL,
-      chainId: 31612,
       accounts: PRIVATE_KEY ? [PRIVATE_KEY] : [],
     },
   },

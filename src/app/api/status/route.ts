@@ -21,8 +21,8 @@ const CHAIN_CONFIGS = getSupportedChainIds().map(chainId => {
   return {
     chainId,
     name: getChainName(chainId),
-    network: chainId === 31612 ? 'mezo-mainnet' : 'mezo-testnet',
-    testnet: chainId !== 31612,
+    network: 'mezo-testnet',
+    testnet: true,
     rpcUrls,
     explorerUrl: getBlockExplorerUrl(chainId)
   }
@@ -107,7 +107,7 @@ function defineMezoChain(config: (typeof CHAIN_CONFIGS)[number]) {
     blockExplorers: {
       default: { name: 'Mezo Explorer', url: config.explorerUrl }
     },
-    testnet: config.testnet
+    testnet: true
   })
 }
 

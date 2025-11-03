@@ -62,7 +62,6 @@ import { useWalletAccount } from '@/hooks/use-wallet-account'
 import type { MezoChainId } from '@/lib/config'
 import {
   SETTLEMENT_TOKEN_SYMBOL,
-  getChainName,
   getBlockExplorerUrl,
   getInvoiceRegistryAddress,
   getMusdContractAddress
@@ -219,8 +218,8 @@ export function InvoicesSection() {
         | null
 
       const describeChain = (id: number | null) => {
-        if (id === 31611 || id === 31612) {
-          return `${getChainName(id)} (chain ${id})`
+        if (id === 31611) {
+          return 'Mezo Testnet (chain 31611)'
         }
         if (id === null) {
           return 'an unknown network'

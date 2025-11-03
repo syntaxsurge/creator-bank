@@ -1,32 +1,22 @@
 /**
  * Runtime configuration helpers for Mezo integrations.
  *
- * The previous implementation exposed build-time constants, which made it
- * impossible to switch between Mezo Testnet (31611) and Mezo Mainnet (31612)
- * without rebuilding the bundle. The hackathon demo requires a toggle, so the
- * helpers below normalise environment variables, persist the preferred chain in
- * localStorage, and notify subscribers whenever the user switches networks.
+ * The platform now targets Mezo Testnet (31611) exclusively, so the helpers
+ * below still expose the same API surface while constraining all operations to
+ * the single supported chain.
  */
 
-export type MezoChainId = 31611 | 31612
+export type MezoChainId = 31611
 
 type ChainConfig = { rpcUrls: string[]; explorerUrl: string }
 
-const SUPPORTED_CHAIN_IDS: readonly MezoChainId[] = [31611, 31612]
+const SUPPORTED_CHAIN_IDS: readonly MezoChainId[] = [31611]
 const CHAIN_STORAGE_KEY = 'creatorbank:preferred-chain-id'
 
 const DEFAULT_CHAIN_CONFIG: Record<MezoChainId, ChainConfig> = {
   31611: {
     rpcUrls: ['https://rpc.test.mezo.org'],
     explorerUrl: 'https://explorer.test.mezo.org/'
-  },
-  31612: {
-    rpcUrls: [
-      'https://rpc-http.mezo.boar.network',
-      'https://rpc_evm-mezo.imperator.co',
-      'https://mainnet.mezo.public.validationcloud.io'
-    ],
-    explorerUrl: 'https://explorer.mezo.org/'
   }
 }
 
@@ -55,7 +45,7 @@ const PUBLIC_ENV_VARS: Record<string, string> = {
 }
 
 function isSupportedChainId(value: unknown): value is MezoChainId {
-  return value === 31611 || value === 31612
+  return value === 31611
 }
 
 function parseChainId(value: unknown): MezoChainId | null {
@@ -240,7 +230,8 @@ export function getPythContractAddress(chainId?: MezoChainId): string {
 export function getChainName(
   chainId: MezoChainId = getActiveChainId()
 ): string {
-  return chainId === 31612 ? 'Mezo Mainnet' : 'Mezo Testnet'
+  void chainId
+  return 'Mezo Testnet'
 }
 
 export const SUBSCRIPTION_PRICE_USD =

@@ -56,7 +56,6 @@ import {
   getBlockExplorerUrl,
   getMusdContractAddress
 } from '@/lib/config'
-import type { MezoChainId } from '@/lib/config'
 import {
   formatSettlementToken,
   parseSettlementTokenAmount
@@ -112,8 +111,8 @@ function renderProgressBar(progress: number) {
 }
 
 function explorerUrlForChain(chainId: number) {
-  if (chainId === 31611 || chainId === 31612) {
-    return getBlockExplorerUrl(chainId as MezoChainId)
+  if (chainId === 31611) {
+    return getBlockExplorerUrl(31611)
   }
 
   return getBlockExplorerUrl()

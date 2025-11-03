@@ -30,7 +30,6 @@ Populate `.env` using the template below. Scripts bail out when required values 
 | --- | --- | --- |
 | `PRIVATE_KEY` | Deployer/admin wallet for all scripts. | Before first deployment |
 | `MEZO_TESTNET_RPC_URL` | Mezo testnet RPC (default `https://rpc.test.mezo.org`). | Before first deployment |
-| `MEZO_MAINNET_RPC_URL` | Mezo mainnet RPC (default `https://rpc-http.mezo.boar.network`). | When promoting to mainnet |
 | `MEMBERSHIP_METADATA_URI` | Base URI for membership token metadata. | Optional |
 | `BADGE_METADATA_URI` | Base URI for badge metadata. | Optional |
 | `MARKETPLACE_TREASURY_ADDRESS` | Address receiving platform fees. | Before marketplace deployment |
@@ -71,6 +70,6 @@ Registrar deploys a fresh `SplitPayout` per course. Minting and renewals always 
 
 - After compiling or deploying, run `pnpm contracts:sync-abis` from the repo root to refresh frontend ABIs.
 - `pnpm lint:check-solidity` enforces Solhint rules. Use `pnpm lint:fix-solidity` for autofixes.
-- Hardhat networks: `mezotestnet` (31611) and `mezomainnet` (31612) share London EVM config. Update `.env` and frontend envs when switching environments.
+- Hardhat network: `mezotestnet` (31611) shares London EVM config with production, so contracts behave consistently across local and test deployments.
 
 Happy building on Mezo!

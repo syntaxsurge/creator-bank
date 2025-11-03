@@ -21,7 +21,7 @@ type Result = {
 }
 
 function toMezoChainId(chainId?: number | null): MezoChainId | null {
-  if (chainId === 31611 || chainId === 31612) {
+  if (chainId === 31611) {
     return chainId
   }
   return null

@@ -10,25 +10,13 @@ type ChainConfig = {
   name: string
   rpcUrls: string[]
   explorerUrl: string
-  testnet: boolean
 }
 
 const DEFAULT_CHAIN_CONFIGS: Record<number, ChainConfig> = {
   31611: {
     name: 'Mezo Testnet',
     rpcUrls: ['https://rpc.test.mezo.org'],
-    explorerUrl: 'https://explorer.test.mezo.org',
-    testnet: true
-  },
-  31612: {
-    name: 'Mezo',
-    rpcUrls: [
-      'https://rpc-http.mezo.boar.network',
-      'https://rpc_evm-mezo.imperator.co',
-      'https://mainnet.mezo.public.validationcloud.io'
-    ],
-    explorerUrl: 'https://explorer.mezo.org',
-    testnet: false
+    explorerUrl: 'https://explorer.test.mezo.org'
   }
 }
 
@@ -64,7 +52,7 @@ export function getPublicClientForChain(chainId: number) {
   const chain = defineChain({
     id: chainId,
     name: config.name,
-    network: config.testnet ? 'mezo-testnet' : 'mezo-mainnet',
+    network: 'mezo-testnet',
     nativeCurrency: {
       name: 'Bitcoin',
       symbol: 'BTC',
@@ -77,7 +65,7 @@ export function getPublicClientForChain(chainId: number) {
     blockExplorers: {
       default: { name: 'Mezo Explorer', url: config.explorerUrl }
     },
-    testnet: config.testnet
+    testnet: true
   })
 
   const client = createPublicClient({

@@ -5,18 +5,18 @@ CreatorBank is a full-stack dApp for creators and communities to run bitcoin-bac
 ## Why it matters
 
 - **Bitcoin-first onboarding.** Passport lets members connect with Bitcoin-native wallets alongside familiar EVM wallets, so there is no “pick a chain” friction.
-- **Recurring revenue without custodians.** Memberships, payouts, and marketplaces operate through audited smart contracts deployed to Mezo testnet/mainnet.
+- **Recurring revenue without custodians.** Memberships, payouts, and marketplaces operate through audited smart contracts deployed to Mezo Testnet.
 - **Creator tooling in one place.** Courses, paylinks, invoices, payouts, and a Mezo hub shortcut live in a single UI wired to the same chain data and Convex backend.
 
 ## Feature highlights
 
-- Mezo Passport login via RainbowKit + Wagmi configuration (testnet by default, mainnet-ready).
+- Mezo Passport login via RainbowKit + Wagmi configuration (testnet by default).
 - MUSD pricing with direct USD parity; Pyth helpers backstop additional asset conversions when needed.
 - On-chain services for memberships, marketplace listings, registrar wiring, and split payouts built on viem `PublicClient` + wallet clients.
 - Convex-backed data model for groups, posts, classroom content, paylinks, invoices, and membership rosters.
 - Marketplace with listing, cancellation, renewal, and cooldown enforcement for membership passes.
 - Creator dashboard with save goals, payouts, a Mezo hub link for securing MUSD liquidity, and status monitors for RPC/oracle health.
-- Persistent network toggle in the header that switches between Mezo Testnet and Mainnet without a redeploy, updating RPCs, explorers, and contract wiring on the fly.
+- Network controls pin the experience to Mezo Testnet, keeping RPCs, explorer links, and contract wiring consistent for demos.
 
 ## Prerequisites
 
@@ -24,7 +24,6 @@ CreatorBank is a full-stack dApp for creators and communities to run bitcoin-bac
 - `pnpm` ≥ 9
 - Convex CLI (`npm install -g convex`) to run/query Convex locally
 - A Mezo wallet (Passport-compatible) funded on **Mezo Testnet** for development
-- Optional: Mezo mainnet wallet + RPC access for production verification
 
 ## Quick start
 
@@ -41,11 +40,9 @@ pnpm convex:dev &
 pnpm dev
 ```
 
-The default setup connects to Mezo Testnet (`chainId: 31611`). Update `.env.local` to point at mainnet values when you are ready to promote.
+The default setup connects to Mezo Testnet (`chainId: 31611`) and remains fixed there for all CreatorBank testing flows.
 
-> The network selector in the header persists your preference (Testnet/Mainnet)
-> in local storage and hot-swaps RPCs, explorers, and contract wiring without
-> restarting the app.
+> The header’s network control now simply confirms Mezo Testnet usage, ensuring RPCs, explorers, and contract wiring always target the demo environment.
 
 ## Environment variables (frontend)
 
@@ -74,8 +71,7 @@ NEXT_PUBLIC_PYTH_CONTRACT_ADDRESS="0x2880aB155794e7179c9eE2e38200202908C17B43"
 NEXT_PUBLIC_SUBSCRIPTION_PRICE_USD="99"
 ```
 
-> **Tip:** The network selector in the UI just reuses these values; update the
-> single source of truth in `.env` / `.env.local` before switching chains.
+> **Tip:** Keep these values pointed at chain 31611—CreatorBank runs exclusively against Mezo Testnet.
 
 ## Environment variables (Hardhat workspace)
 
@@ -84,13 +80,12 @@ Inside `blockchain/.env` configure:
 ```env
 PRIVATE_KEY="0xyour_private_key"                # never commit this
 MEZO_TESTNET_RPC_URL="https://rpc.test.mezo.org"
-MEZO_MAINNET_RPC_URL="https://rpc-http.mezo.boar.network"
 MARKETPLACE_TREASURY_ADDRESS="0x..."
 MEMBERSHIP_METADATA_URI="ipfs://..."
 BADGE_METADATA_URI="ipfs://..."
 ```
 
-Run scripts with `cd blockchain && pnpm install && npx hardhat compile`. Networks `mezotestnet` (31611) and `mezomainnet` (31612) are preconfigured.
+Run scripts with `cd blockchain && pnpm install && npx hardhat compile`. The Hardhat workspace ships with `mezotestnet` (31611) configured out of the box.
 
 ## Core contracts
 
