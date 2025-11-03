@@ -21,24 +21,23 @@ This script outlines a 7–8 minute walkthrough of CreatorBank on the Mezo netwo
 2. **On-screen:** Open the `SatsPay Links` tab, create a handle, and copy the generated pay URL.
    - **Voice-over:** “SatsPay Links turn any handle into a payable URL—perfect for donations or tips.”
    - Field inputs — type exactly:
-     - Handle: `opsstudio2025`
+     - Handle: `creatorbankdemo`
      - Title: `Creator Ops 101 — Tip Jar`
      - Description: `Support the Creator Ops 101 cohort with a quick tip.`
 3. **On-screen:** Open the `Get MUSD` tab and reveal the Mezo testnet hub buttons for Swap and Borrow.
    - **Voice-over:** “When a wallet needs funds, the Get MUSD tab deep‑links to the Mezo hub’s swap and borrow flows.”
-4. **On-screen:** Open the `Invoices` tab, add two line items, set an optional `Payer wallet`, attach a SatsPay handle, and click `Issue invoice`.
+4. **On-screen:** Open the `Invoices` tab, add one line item, set an optional `Payer wallet`, attach a SatsPay handle, and click `Issue invoice`.
    - **Voice-over:** “Invoices are issued on‑chain via the Invoice Registry. CreatorBank hashes the invoice slug, records token and amount, and keeps the registry ID for later verification.”
    - Field inputs — type exactly:
      - Invoice title: `Q4 Campaign — Signal Studio`
-     - Paylink handle: `@opsstudio2025`
+     - Paylink handle: `@creatorbankdemo`
      - Customer name: `Harbor & Pine Co.`
      - Customer email: `payables@harborpine.test`
      - Payer wallet (optional): Leave blank
      - Due date: `2025-12-15`
      - Notes: `Includes priority support and two revision cycles.`
      - Line items:
-       - 1) Description: `Channel Audit & Roadmap (2 weeks)` — Qty: `1` — Unit price (MUSD): `950.00`
-       - 2) Description: `Short‑form Editing Pack (20 clips)` — Qty: `5` — Unit price (MUSD): `5.00`
+       - 1) Description: `Channel Audit (starter pack)` — Qty: `1` — Unit price (MUSD): `9.00`
 5. **On-screen:** Open `Recurring Payouts`, add two collaborators with shares, and save.
    - **Voice-over:** “Payout schedules use the split router to push MUSD to each wallet in one transaction.”
    - Field inputs — type exactly:
@@ -60,7 +59,7 @@ This script outlines a 7–8 minute walkthrough of CreatorBank on the Mezo netwo
 
 1. **On-screen:** In `Payments → Invoices`, click `Copy payment link` on the newly issued invoice and show the URL.
    - **Voice-over:** “Each invoice includes a payment link that carries the amount and slug so the payer lands in the right checkout.”
-2. **On-screen:** Switch to another browser profile (or incognito) with a different wallet connected. Paste the copied payment URL to open `/pay/opsstudio2025?invoice=<invoice-slug>`; show the invoice card with number, amount due, and status “Awaiting payment”.
+2. **On-screen:** Switch to another browser profile (or incognito) with a different wallet connected. Paste the copied payment URL to open `/pay/creatorbankdemo?invoice=<invoice-slug>`; show the invoice card with number, amount due, and status “Awaiting payment”.
    - **Voice-over:** “Using the copied link, I’m in a separate browser with a different wallet to pay this invoice. The slug loads the exact amount and the registry ID registered on-chain.”
 3. **On-screen:** Click `Approve MUSD`, wait for confirmation, then click `Pay invoice`; show the success toast and the status switching to “Paid”. Return to `Payments → Invoices` in the original browser to confirm the row now shows `Paid` with the tx hash.
    - **Voice-over:** “First approve the registry, then settle the invoice. CreatorBank records the settlement and updates the ledger the moment Mezo confirms.”
