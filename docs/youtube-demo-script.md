@@ -80,126 +80,44 @@ This script outlines a 7–8 minute walkthrough of CreatorBank on the Mezo netwo
 ## Segment 6 – About, Verify, Edit Details (04:10 – 04:55)
 
 1. **On-screen:** Land on the group About tab that displays the course ID and membership summary.
-   - **Voice-over 12:** “The About tab exposes the on-chain course ID alongside membership details for quick auditing.”
-2. **On-screen:** Click `View on Mezo Explorer` (or equivalent link) to open the course on the block explorer in a new tab.
-   - **Voice-over 13:** “One click jumps to the Mezo explorer so anyone can verify the contract state.”
-3. **On-screen:** Open `Edit group details`, scroll the platform subscription card, click `Renew subscription` (confirm if needed), then update description, tagline, pricing, thumbnail, intro video URL, tags, and add collaborators with revenue splits; save and return.
-   - **Voice-over 14:** “Renew the platform subscription, update pricing and content, and define collaborator splits—CreatorBank applies changes instantly.”
-   - Field inputs — type exactly:
-     - Tagline: `Systems to run a profitable creator business`
-     - Membership pricing: `Paid subscription`
-     - Monthly price (MUSD): `29`
-     - Thumbnail (link): `https://images.unsplash.com/photo-1526948128573-703ee1aeb6fa?w=1200&q=80`
-     - Intro video URL: `https://www.youtube.com/watch?v=ysz5S6PUM-U`
-     - Tags: `creator, education, operations, mezo`
-     - Revenue administrators:
-       - 1) Wallet address: `0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb` — Share (%): `10`
-       - 2) Wallet address: `0xcccccccccccccccccccccccccccccccccccccccc` — Share (%): `5`
-4. **On-screen:** In the Membership course panel, click `Register on‑chain` (or `Retry registration`) to sync the course with Registrar; if needed, click `Reset course ID` then register again.
-   - **Voice-over 15:** “If a course isn’t registered yet, a single click wires it on‑chain through the Registrar so paid memberships and listings can activate.”
+   - **Voice-over 11:** “The About page surfaces the onchain course ID with a Mezo explorer link for verification. Inside Edit group details I can check the renewable 30‑day subscription, tweak the description, tagline, pricing, thumbnail, intro video URL, tags, every About section field, and add administrators with share percentages. Saving applies everything instantly.”
 
 ## Segment 7 – Classroom: Create Course, Modules, Lessons (04:55 – 05:35)
 
 1. **On-screen:** Switch to the Classroom tab and click `Create a course`.
-   - **Voice-over 16:** “Each community can bundle structured curriculum, so I’ll spin up a course.”
-2. **On-screen:** Enter a course name, description, and thumbnail, then click `Create` to reach the course page.
-   - **Voice-over 17:** “Course metadata lives in Convex, giving creators a fast editing loop.”
-   - Field inputs — type exactly:
-     - Course name: `Creator Ops Essentials`
-     - Description: `Core systems for content planning, production, and analytics.`
-     - Thumbnail (link): `https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=1200&q=80`
-3. **On-screen:** Click `Edit course`, add a module titled “Introduction”, then add a lesson named “Welcome”, paste a YouTube URL, add a short lesson description, and save.
-   - **Voice-over 18:** “Modules and lessons reuse the same data tree; pasting a YouTube link automatically renders a safe embed for learners.”
-   - Field inputs — type exactly (Lesson editor):
-     - Lesson Title: `Welcome`
-     - YouTube Video URL: `https://youtu.be/ysz5S6PUM-U`
-     - Description: `What to expect and how to use the provided templates.`
+   - **Voice-over 12:** “I create a course that will hold modules and lessons. In this tutorial I will copy sample content from a public YouTube playlist and paste the titles and details here so you can see the flow. In production, creators use this same flow to publish their own lessons and sell access as part of their community. I add a module and a lesson, paste a YouTube link which the app converts to a safe embed, write a short lesson description, and save.”
 
 ## Segment 8 – Join the Paid Community as a Member (05:35 – 06:05)
 
 1. **On-screen:** In a second browser profile or incognito window, connect a different wallet using Passport, navigate to the community page, and click `Join`.
-   - **Voice-over 19:** “From a member wallet, I open the community and hit Join.”
-2. **On-screen:** Approve the spend if prompted, confirm the purchase, and show the unlocked tabs (`Feed`, `Classroom`, `Members`).
-   - **Voice-over 20:** “After approving the MUSD transfer, the gated tabs unlock immediately.”
+   - **Voice-over 13:** “I switch to a second wallet in another browser. I open the paid group and click Join. If prompted I approve the spend and confirm the purchase.”
 
 ## Segment 9 – Marketplace Cooldown After Joining (06:05 – 06:20)
 
 1. **On-screen:** With the member wallet still active, open `/marketplace` and click `List your membership`.
-   - **Voice-over 21:** “Listing too early triggers the cooldown guard—CreatorBank enforces holding periods to stop instant flips.”
-2. **On-screen:** Capture the cooldown message that displays remaining time before listing is allowed.
-   - **Voice-over 22:** “The UI spells out exactly when selling becomes available.”
+   - **Voice-over 14:** “I open the Marketplace page and click List Your Membership. Because I just joined there is a transfer cooldown. This prevents quick flip abuse and keeps value aligned with course timelines.”
 
 ## Segment 10 – My Memberships & Cooldown Status (06:20 – 06:35)
 
 1. **On-screen:** Navigate to `/memberships`, highlight the pass card with expiry timestamp and cooldown chip.
-   - **Voice-over 23:** “Members can monitor expiry and cooldown status from one dashboard.”
-2. **On-screen:** Click `List pass` and show the disabled state or tooltip that references the active cooldown.
-   - **Voice-over 24:** “Until the timer clears, the list action stays disabled, keeping timelines aligned with course access.”
+   - **Voice-over 15:** “In My Memberships I can see expiry and cooldown clearly. Listing stays blocked until the cooldown ends.”
 
 ## Segment 11 – Feed: Admin Post (06:35 – 06:55)
 
 1. **On-screen:** Switch back to the creator’s wallet, open the group page, and go to the `Feed` tab.
-   - **Voice-over 25:** “Back as the creator, the feed makes announcements effortless.”
-2. **On-screen:** Click `Write something`, compose a welcome post with links and expectations, then publish; show the post pinned at the top.
-   - **Voice-over 26:** “I publish a welcome update with kickoff links, and it hits the top of the feed instantly.”
-   - Field inputs — type exactly:
-     - Post title: `Welcome to Creator Ops 101`
-     - Post content:
-       - `Kickoff call — Nov 5, 10:00 AM ET: https://meet.example/creator-ops`
-       - `Syllabus: https://creatorbank.example/syllabus`
-       - `House rules: Be kind, share wins, ask questions.`
+   - **Voice-over 16:** “I switch back to the owner account, open my group, and go to the Feed tab. I click Write something, add a short welcome update with key links and expectations for the cohort, then publish it.”
 
 ## Segment 12 – Feed: Member Engagement (06:55 – 07:10)
 
 1. **On-screen:** Return to the member wallet, open the same feed, click the thumbs-up icon on the post, and add a comment.
-   - **Voice-over 27:** “Members can react and comment in real time—likes and replies sync through Convex without refreshes.”
-   - Field input — type exactly (comment):
-     - `Pumped to get started! 🔥`
-2. **On-screen:** Show the live incremented like count and new comment thread.
-   - **Voice-over 28:** “The post updates immediately, reinforcing that engagement is two-way.”
+   - **Voice-over 17:** “As a member I like the post and add a comment. The feed updates in real time.”
 
 ## Segment 13 – Classroom: Member Learning (07:10 – 07:30)
 
 1. **On-screen:** Staying on the member wallet, open the `Classroom` tab, enter the course created earlier, click the “Introduction” module, and select the “Welcome” lesson.
-   - **Voice-over 29:** “Members dive straight into the curriculum; lessons stream with the YouTube embed and supporting notes we just authored.”
-2. **On-screen:** Scroll through the lesson description and show the video playing.
-   - **Voice-over 30:** “Everything stays within the community portal—no context switching required.”
+   - **Voice-over 18:** “This course uses sample content from a YouTube playlist so you can see the flow. In production, creators publish their own lessons and grow a paid community around them.”
 
 ## Segment 14 – Discover & Join a Free Community (07:30 – 07:50)
 
-## Segment 15 – Marketplace: Primary, Listing, Floor Buy, Renew (07:50 – 08:30)
-
-1. **On-screen:** Go to `/marketplace`; in the catalog, pick a course and click `Buy` on the primary price card; approve MUSD (if prompted) and confirm purchase.
-   - **Voice-over 31:** “Primary mints settle in MUSD—approve once if needed, then confirm to mint the pass.”
-2. **On-screen:** Pick an owned course that is transfer‑eligible and click `List`; choose a duration (e.g., 3 days), enter a price, and submit.
-   - **Voice-over 32:** “Listings respect cooldowns and durations; set a price and duration, and your pass appears in live listings.”
-   - Field inputs — type exactly (List membership dialog):
-     - Listing price (MUSD): `79.00`
-     - Listing duration: `3 days`
-3. **On-screen:** Scroll to `Live listings`, locate the lowest‑priced listing for a different course, and click `Buy floor`; confirm the purchase.
-   - **Voice-over 33:** “Buying the floor uses the same MUSD allowance flow, then pulls the pass into your wallet.”
-4. **On-screen:** For a pass nearing expiry in your catalog grid, click `Renew` and confirm the MUSD spend.
-   - **Voice-over 34:** “Renewals extend access without minting a new token.”
-
-## Segment 16 – Members: Invite by Wallet (08:30 – 08:45)
-
-1. **On-screen:** Open `/[groupId]/members` as the owner; in the invite card, paste a wallet address and click `Add member`.
-   - **Voice-over 35:** “Owners can invite members directly by wallet—CreatorBank adds them to the roster immediately.”
-   - Field input — type exactly:
-     - Wallet address: `0x3333333333333333333333333333333333333333`
-
-1. **On-screen:** Visit `/groups` to show the directory with filtering chips for free vs paid communities.
-   - **Voice-over 36:** “CreatorBank also highlights discoverability with a directory of free and paid groups.”
-2. **On-screen:** Click a free community card, press `Join for free`, and reveal the unlocked tabs (`Feed`, `Classroom`, `Members`).
-   - **Voice-over 37:** “Free groups unlock instantly, so new members can explore content without friction.”
-3. **On-screen:** Open the feed to scroll through historic posts, then hop into Classroom to open a different course and module.
-   - **Voice-over 38:** “Even without payment, the experience mirrors paid cohorts—rich feeds, structured lessons, and transparent membership rosters.”
-
----
-
-### Recording Tips
-
-- Keep wallet pop-ups visible when approving MUSD transactions so the Mezo settlement flow is obvious.
-- Run `pnpm convex:dev` and `pnpm dev` locally to keep status checks and pay pages responsive.
-- Pre-fund test wallets with MUSD on Mezo Testnet via the Get MUSD shortcut to avoid delays mid-recording.
-- If a transaction confirmation lags, cut to a prepared clip of the post-confirmation state to maintain pacing.
+1. **On-screen:** Open Discover/Groups at /groups. Show a mix of free and paid groups. Click a free group card. On the group page, click Join for free. Tabs for Feed, Classroom, and Members appear. Open Feed to see a history of admin and user interactions. Open Classroom to view courses; click a course to see its modules and lessons. Navigate to another course and repeat.
+   - **Voice-over 19:** “On the Discover page you can see both free and paid groups. We already joined a paid group, so now I’ll join a free group. I click the free group and hit Join for free. Access unlocks immediately, so Feed, Classroom, and Members appear. I can scroll the feed to see past admin posts and member activity. In the classroom I can open a course, browse its modules, and view lessons. I can also jump into other courses and do the same.
