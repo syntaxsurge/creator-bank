@@ -70,14 +70,14 @@ This script outlines a 7–8 minute walkthrough of CreatorBank on the Mezo netwo
 2. **On-screen:** Fill in sample details (name, tagline, description, pricing, media). Attempt to submit while the wallet has zero MUSD; capture the toast or banner warning about insufficient balance.
    - **Voice-over 12:** “With no MUSD in this wallet, the submission fails—CreatorBank blocks the transaction before it ever hits chain.”
    - Field inputs — type exactly:
-     - Group name: `Creator Ops 101`
-     - Tagline: `Systems to run a profitable creator business`
+     - Group name: `Telusko Group`
+     - Tagline: `Learn Java, Spring/Spring Boot/Spring AI, DevOps (with AWS), REST API/Web Services, Hibernate/ORM frameworks, and microservices live and self-paced from telusko`
      - Membership pricing: `Paid (Monthly)`
-     - Monthly price (USD): `29.00`
-     - Thumbnail (link tab): `https://images.unsplash.com/photo-1526948128573-703ee1aeb6fa?w=1200&q=80`
-     - Intro Video URL (optional): `https://www.youtube.com/watch?v=ysz5S6PUM-U`
-     - Tags (optional): `creator, education, operations, mezo`
-     - (Optional) Gallery image (link): `https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=1200&q=80`
+     - Monthly price (USD): `5.00`
+     - Thumbnail (link tab): Get on YouTube
+     - Intro Video URL (optional): `https://www.youtube.com/watch?v=7xIpeyBc-jY`
+     - Tags (optional): `tech`
+     - (Optional) Gallery image (link): Get on YouTube
 3. **On-screen:** Open the Header `Get MUSD` button or the Payments dashboard `Get MUSD` tab in a new tab, reveal the Mezo testnet hub swap/borrow link.
    - **Voice-over 13:** “Funding is a click away: the Get MUSD shortcut opens Mezo’s testnet hub so creators can bridge, swap, or borrow test liquidity.”
 4. **On-screen:** Return after funding, resubmit the create form, approve the MUSD spend, and confirm the MetaMask transaction. Show the success confirmation and redirect into the new community dashboard.
