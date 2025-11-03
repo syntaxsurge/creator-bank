@@ -33,12 +33,12 @@ This script outlines a 7–8 minute walkthrough of CreatorBank on the Mezo netwo
 7. **On-screen:** Open `Save Goals`, create an “Equipment Fund”, assign a percentage of receipts, and save.
    - **Voice-over:** “Save Goals earmark revenue while funds stay in your wallet. A future update adds goal locking with staking rewards.”
 
-## Segment 4 – Pay Handle & Live Checkout (02:15 – 02:55)
+## Segment 4 – Invoice Checkout (02:15 – 02:55)
 
-1. **On-screen:** Open a new tab with `/pay/creatorbankdemo`; show the QR and the share link.
-   - **Voice-over:** “Every pay page listens for MUSD transfers to the target handle—scan the QR or use the link.”
-2. **On-screen:** Click `Sync receipts` (if visible) or wait for auto‑detection and show the confirmation state; then jump back to `Payments → Invoices` and briefly refresh to reflect the on‑chain settlement.
-   - **Voice-over:** “CreatorBank watches wallet transfers and confirms in the Invoice Registry; once paid, the invoice flips to Paid automatically.”
+1. **On-screen:** Open `/pay/creatorbankdemo?invoice=<invoice-slug>`; show the invoice card with number, amount due, and status “Awaiting payment”.
+   - **Voice-over:** “The invoice link carries the slug, so this page loads the exact amount and registry ID registered on-chain.”
+2. **On-screen:** Click `Approve MUSD`, wait for confirmation, then click `Pay invoice`; show the success toast and the status switching to “Paid”. Return to `Payments → Invoices` to confirm the row now shows `Paid` with the tx hash.
+   - **Voice-over:** “First we approve the registry, then settle the invoice. CreatorBank records the settlement and updates the ledger the moment Mezo confirms.”
 
 ## Segment 5 – Create a Paid Community (03:20 – 04:10)
 
