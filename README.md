@@ -4,8 +4,8 @@ CreatorBank is a fullâ€‘stack dApp for creators and communities to run bitcoinâ€
 
 Demo links
 
-- Demo video: https://youtu.be/_4w0iCNmg_g
-- Pitch deck: https://www.canva.com/design/DAG3puGNEN4/Txd86aRzcxg_ulGLafL2RA/edit?utm_content=DAG3puGNEN4&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
+- Demo video: https://creator-bank.vercel.app/demo-video
+- Pitch deck: https://creator-bank.vercel.app/pitch-deck
 
 ## Why it matters
 
