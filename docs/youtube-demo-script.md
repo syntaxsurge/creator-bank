@@ -14,7 +14,8 @@ This script walks through every core feature required for the Mezo hackathon sub
 
 1. **Action:** Click the `Connect wallet` button in the navbar.
    - **Voice-over:** “Let’s connect a wallet. CreatorBank ships with Passport, so every Mezo-ready wallet is just a click away.”
-2. **Voice-over:** “CreatorBank ships with Mezo Passport by default, so Bitcoin-native wallets like Xverse show up next to RainbowKit favourites.”
+2. **On-screen:** Keep the Passport modal visible showing Xverse, Leather, and RainbowKit options.
+   - **Voice-over:** “CreatorBank ships with Mezo Passport by default, so Bitcoin-native wallets like Xverse show up next to RainbowKit favourites.”
 3. **On-screen:** After connecting, point to the balance/network badges in the header. Mention live MUSD balance polling via viem.
    - **Voice-over:** “Once connected, the header lights up with my active chain and live MUSD balance, all pulled through viem in real time.”
 4. **Optional:** Toggle theme to show minimal UI polish.
@@ -70,7 +71,8 @@ Navigate to `/marketplace`.
 
 1. **Show** an available group.
    - **Voice-over:** “The marketplace lists every membership my wallet can mint right now.”
-2. **Voice-over:** “Memberships mint through `MembershipPass1155`, but settlement is MUSD via `MembershipMarketplace`.”
+2. **On-screen:** Hover the info tooltip next to the listing price to reveal the on-chain contract summary.
+   - **Voice-over:** “Memberships mint through `MembershipPass1155`, but settlement is MUSD via `MembershipMarketplace`.”
 3. **Action:** Purchase a pass (approve if needed) and highlight on-screen confirmation plus the balance change badge in the navbar.
    - **Voice-over:** “I’ll mint one—approve once, confirm the swap, and CreatorBank updates my balance badge the second the MUSD leaves my wallet.”
 4. **Optional:** Show secondary listing creation to underline ERC-20 settlement for peer-to-peer trades.
@@ -91,8 +93,8 @@ Navigate to `/marketplace`.
 
 1. **Return** to `/payments` status tab.
    - **Voice-over:** “Back on the payments dashboard, everything we touched—from paylinks to memberships—feeds into this single health view.”
-2. **Voice-over:** “Summarise the loop — Passport onboarding → MUSD flows (paylinks, invoices, payouts, goals) → Marketplace memberships.”
-   - **Voice-over:** “Passport onboarding, MUSD money flows, memberships, and collaborator ops—all in one BTC-native command center.”
+2. **On-screen:** Display a quick recap overlay (Passport > Payments > Marketplace) while scrubbing through captured highlights.
+   - **Voice-over:** “Passport onboarding → MUSD flows for paylinks, invoices, payouts, and goals → Marketplace memberships.”
 3. **Call-to-action:** Invite builders to clone CreatorBank, bridge testnet BTC via the hub, and submit their own creator banks to Mezo.
    - **Voice-over:** “Clone CreatorBank, bridge a little testnet BTC through the Mezo hub, and show us what your creator bank looks like on Mezo.”
 
