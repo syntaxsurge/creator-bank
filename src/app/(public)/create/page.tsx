@@ -436,13 +436,13 @@ export default function Create() {
               <span className='text-foreground'>
                 Create Your{' '}
                 <span className='bg-gradient-to-r from-brand-teal to-accent bg-clip-text text-transparent drop-shadow-sm'>
-                  Universal App
+                  Creator Group
                 </span>
               </span>
             </h1>
             <p className='mx-auto max-w-2xl text-lg text-muted-foreground'>
-              Launch once on Mezo. Welcome your community with wallet-native
-              access,{' '}
+              Launch a Mezo-native community hub. Invite free or paid members
+              with wallet-gated access,{' '}
               <span className='font-semibold text-foreground'>
                 Passport-enabled wallets, and MUSD settlement
               </span>{' '}
