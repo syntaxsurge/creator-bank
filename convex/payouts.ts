@@ -25,9 +25,7 @@ function sanitizeRecipients(recipients: RecipientInput[]) {
   }, 0)
 
   if (totalShare !== 10000) {
-    throw new Error(
-      'Recipient allocations must total 10000 basis points (100%)'
-    )
+    throw new Error('Recipient allocations must total 100%.')
   }
 
   return sanitized

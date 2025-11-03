@@ -43,7 +43,7 @@ Navigate to `/payments`.
    - Copy the share link (points to `/pay/<handle>?invoice=…&amount=…`).
    - **Voice-over:** “Invoices are just as quick. Two line items, tie it back to the same handle, and CreatorBank outputs a payment URL that settles straight to MUSD on chain.”
 5. **Recurring Payouts tab**
-   - Set up a payout schedule with two collaborators and custom basis points.
+   - Set up a payout schedule with two collaborators and custom percentages.
    - Mention that it calls the on-chain split router to push MUSD in a single click.
    - **Voice-over:** “Recurring payouts keep collaborators happy. Define the split once, and behind the scenes we call the split router to push MUSD to every wallet in one transaction.”
 6. **Save Goals tab**

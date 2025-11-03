@@ -471,20 +471,51 @@ export function PayoutSchedulesSection() {
                       <FormField
                         control={form.control}
                         name={`recipients.${index}.shareBps`}
-                        render={({ field: fieldItem }) => (
-                          <FormItem>
-                            <FormLabel>Share (basis points)</FormLabel>
-                            <FormControl>
-                              <Input
-                                type='number'
-                                min={0}
-                                max={10000}
-                                {...fieldItem}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
+                        render={({ field: fieldItem }) => {
+                          const { value, onChange, onBlur, name, ref, ...rest } =
+                            fieldItem
+
+                          const displayValue =
+                            typeof value === 'number'
+                              ? (value / 100).toString()
+                              : ''
+
+                          return (
+                            <FormItem>
+                              <FormLabel>Share (%)</FormLabel>
+                              <FormControl>
+                                <Input
+                                  type='number'
+                                  inputMode='decimal'
+                                  min={0}
+                                  max={100}
+                                  step='0.01'
+                                  name={name}
+                                  ref={ref}
+                                  {...rest}
+                                  value={displayValue}
+                                  onChange={event => {
+                                    const inputValue = event.target.value
+                                    const numeric = Number(inputValue)
+                                    if (Number.isNaN(numeric)) return
+                                    const clamped = Math.min(
+                                      100,
+                                      Math.max(0, numeric)
+                                    )
+                                    onChange(Math.round(clamped * 100))
+                                  }}
+                                  onBlur={event => {
+                                    if (event.target.value === '') {
+                                      onChange(0)
+                                    }
+                                    onBlur()
+                                  }}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )
+                        }}
                       />
                     </div>
                     <div className='mt-3 grid grid-cols-1 gap-3 md:grid-cols-3'>
