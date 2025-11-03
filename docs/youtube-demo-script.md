@@ -7,7 +7,7 @@ This script outlines a 7–8 minute walkthrough of CreatorBank on the Mezo netwo
 ## Segment 1 – Ecosystem Intro (00:00 – 00:10)
 
 1. **On-screen:** Start on the CreatorBank landing hero (`/`), slowly pan across the headline, feature cards, and primary CTA.
-   - **Voice-over:** “CreatorBank helps creators launch paid communities, teach members, and manage revenue on the Mezo network, so every flow stays Bitcoin-aligned.”
+   - **Voice-over:** “CreatorBank helps creators launch paid communities, teach members, and manage revenue on the Mezo network.”
 
 ## Segment 2 – Connect Wallet & Network Choice (00:10 – 00:40)
 
@@ -20,19 +20,17 @@ This script outlines a 7–8 minute walkthrough of CreatorBank on the Mezo netwo
 
 1. **On-screen:** Navigate to `/payments`; the overview banner renders at the top.
    - **Voice-over:** “The payments dashboard is the command center—status, links, invoices, payouts, and goals in one place.”
-2. **On-screen:** Point to the status banner and then click the `Status` tab; show RPC health and Pyth feed freshness.
-   - **Voice-over:** “CreatorBank polls Mezo Testnet/Mainnet RPCs and the Pyth BTC→USD and MUSD→USD feeds, flagging any staleness.”
-3. **On-screen:** Open the `SatsPay Links` tab, create a handle (e.g., `creatorbankdemo`), and copy the generated pay URL.
-   - **Voice-over:** “SatsPay Links turn any handle into a payable URL—perfect for donations or one‑off sales.”
-4. **On-screen:** Open the `Get MUSD` tab and reveal the Mezo testnet hub buttons for Swap and Borrow.
+2. **On-screen:** Open the `SatsPay Links` tab, create a handle (e.g., `creatorbankdemo`), and copy the generated pay URL.
+   - **Voice-over:** “SatsPay Links turn any handle into a payable URL—perfect for donations or tips.”
+3. **On-screen:** Open the `Get MUSD` tab and reveal the Mezo testnet hub buttons for Swap and Borrow.
    - **Voice-over:** “When a wallet needs funds, the Get MUSD tab deep‑links to the Mezo hub’s swap and borrow flows.”
-5. **On-screen:** Open the `Invoices` tab, add two line items, optionally set a `Payer address`, tie it to a SatsPay handle, and click `Issue invoice`.
+4. **On-screen:** Open the `Invoices` tab, add two line items, optionally set a `Payer address`, tie it to a SatsPay handle, and click `Issue invoice`.
    - **Voice-over:** “Invoices are issued on‑chain via the Invoice Registry. CreatorBank hashes the invoice slug, records token and amount, and keeps the registry ID for later verification.”
-6. **On-screen:** In `Recent invoices`, click `Copy payment link` on the new invoice and show the URL.
+5. **On-screen:** In `Recent invoices`, click `Copy payment link` on the new invoice and show the URL.
    - **Voice-over:** “Each invoice includes a payment link that carries the amount and slug so the payer lands in the right checkout.”
-7. **On-screen:** Open `Recurring Payouts`, add two collaborators with basis points, and save.
+6. **On-screen:** Open `Recurring Payouts`, add two collaborators with basis points, and save.
    - **Voice-over:** “Payout schedules use the split router to push MUSD to each wallet in one transaction.”
-8. **On-screen:** Open `Save Goals`, create an “Equipment Fund”, assign a percentage of receipts, and save.
+7. **On-screen:** Open `Save Goals`, create an “Equipment Fund”, assign a percentage of receipts, and save.
    - **Voice-over:** “Save Goals earmark revenue while funds stay in your wallet. A future update adds goal locking with staking rewards.”
 
 ## Segment 4 – Pay Handle & Live Checkout (02:15 – 02:55)
